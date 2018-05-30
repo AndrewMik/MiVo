@@ -1,0 +1,40 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background-color: azure;
+}
+
+.grid-container {
+    height: 100vh;
+    display: grid;
+    justify-content: center;
+    align-content: center;
+}
+
+button:focus {
+    outline: 0;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: yellow;
+    color: black;
+}
+
+button:active {
+    background-color: green;
+    color: white;
+}
+
+.button-play {
+    width: 100px;
+    height: 100px;
+    border-radius: 50px;
+    border: none;
+    background-color: red;
+    color: white;
+    user-select: none;
+}
