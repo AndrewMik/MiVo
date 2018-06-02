@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,10 +8,47 @@
     <title>MiVo</title>
     <link rel="stylesheet" href="./dist/style.css">
 </head>
+
 <body>
-    <div class="grid-container">
-        <button class="button-play">Play</button>
+    <div class="landing-container">
+        <div class="grid-container">
+            <button class="button-play">Play</button>
+        </div>
+    </div>
+    <div class="game-container game-container--hidden">
+        <form class="register-form register-form--hidden">
+            <label>Enter Login:
+                <input type="text">
+            </label>
+            <label>Enter Email:
+                <input type="text">
+            </label>
+            <h2>Choose your character:</h2>
+
+            <!-- Copied from another document -->
+            <div class="notif">
+                <!-- <span class="notif__close-button"></span> -->
+                <div class="notif__slider">
+                </div>
+
+                <div class="notif__controls">
+                    <!-- <input class="checkbox" type="checkbox" id="disable-tips"> -->
+                    <!-- <label class="checkbox__label" for="disable-tips">Disable Tips</label> -->
+                    <div class="notif__slider-controls">
+                        <span class="notif__prev-button"></span>
+                        <ul class="notif__indicators indicators">
+
+                        </ul>
+                        <span class="notif__next-button"></span>
+                    </div>
+                </div>
+            </div>
+
+
+            <input type="button" value="Start Game">
+        </form>
     </div>
     <script src="./dist/main.js"></script>
 </body>
+
 </html>
