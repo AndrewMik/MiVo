@@ -19,6 +19,15 @@ let conf = {
         //exclude: '/node_modules/'
       },
       {
+        test: /\.(png|svg|jpg|gif)$/,
+        // include: [
+        //   path.resolve(__dirname, "../vasya/")
+        // ],
+        use: [
+          'file-loader'
+        ]
+      },
+      {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           //fallback: "style-loader",
@@ -41,6 +50,6 @@ module.exports = (env, options) => {
   let production = options.mode === 'production';
 
   conf.devtool = production ? 'source-map' : 'eval-sourcemap';
-  
+
   return conf;
 }

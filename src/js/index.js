@@ -1,4 +1,5 @@
 import '../css/style.css';
+import Icon from '../img/battlefield.jpg';
 
 let playButton = document.querySelector('.button-play');
 playButton.addEventListener('click', loadGame);
@@ -10,4 +11,5 @@ function loadGame() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   let c = canvas.getContext('2d');
+  // canvas.style.backgroundImage = 'url(' + Icon + ')';
 }
