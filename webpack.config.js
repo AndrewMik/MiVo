@@ -6,7 +6,7 @@ let conf = {
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'main.js',
-    publicPath: 'dist/'
+    publicPath: '/dist/'
   },
   devServer: {
     overlay: true
@@ -20,9 +20,6 @@ let conf = {
       },
       {
         test: /\.(png|svg|jpg|gif)$/,
-        // include: [
-        //   path.resolve(__dirname, "../vasya/")
-        // ],
         use: [
           'file-loader'
         ]
