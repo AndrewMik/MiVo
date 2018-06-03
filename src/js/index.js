@@ -1,26 +1,23 @@
 import '../css/style.css';
-import char1 from '../img/char1.gif';
-import char2 from '../img/char2.gif';
-import char3 from '../img/char3.gif';
-
 
 const playButton = document.querySelector('.button-play');
 playButton.addEventListener('click', loadGame);
 
-//loadGame();
-
-// document.addEventListener('DOMContentLoaded', loadGame);
+// Temporary loads the game
+// TODO: Remove in last version
+document.addEventListener('DOMContentLoaded', loadGame);
 
 function loadGame() {
   hideLandingPage();
   showGameField();
   registerPlayer();
+}
+
+function startGame(char) {
+  let character = characters[0][char];
+  
   let canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
-
-  // canvas.width = window.innerWidth;
-  // canvas.height = window.innerHeight;
-  // let c = canvas.getContext('2d');
 
   const WIDTH = window.innerWidth;
   const WIDTH_HALF = WIDTH / 2;
@@ -98,7 +95,7 @@ function loadGame() {
   // }
 
   const player = document.createElement('img');
-  player.setAttribute('src', './src/img/player-1.png');
+  player.setAttribute('src', './src/img/' + character);
 
   // player.onload = function () {
   //   c.drawImage(player, WIDTH / 8, HEIGHT - 415);
@@ -142,10 +139,6 @@ function loadGame() {
   animate();
 }
   
-  // canvas.style.backgroundImage = 'url(' + Icon + ')';
-  
-// }
-
 function showGameField() {
   let gameField = document.querySelector('.game-container');
   gameField.classList.remove('game-container--hidden');
@@ -159,167 +152,136 @@ function hideLandingPage() {
 
 function showRegisterField() {
   let form = document.querySelector('.register-form');
-  form.classList.remove('register-form--hidden');
+  form.classList.toggle('register-form--hidden');
 }
 
-let characters = [
-  char1,
-  char2,
-  char3
-];
+
 
 function registerPlayer() {
   showRegisterField(); 
-  initializeCharacterSelect(characters);
+  initCharacterSelectField();
+  let login;
+  let mail;
+  let char;
+
+  let form = document.querySelector('.register-form');
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    login = document.getElementById('login').value;
+    mail = document.getElementById('email').value;
+    char = document.querySelector('.role__slide--active').getAttribute('data-slide');
+    showRegisterField();
+    startGame(char);
+  });
 }
 
-//
-// IMPORTANT
-// Copied JS
-//
-
-// document.addEventListener('DOMContentLoaded', function() {
-//   // check if user disabled notifications
-//   // if(localStorage.getItem('disabled') !== 'true') {
-//     initializeNotif(tipsArray);
-//   //   setTimeout(showNotif, 5000);
-//   // }
-
-//   // function showNotif() {
-//   //   document.querySelector('.notif').style.cssText = 'opacity: 1; z-index: 20';
-//   // }
-// });
-
-function initializeCharacterSelect(array) {
-  // set a limit on number of tips 
-  let tipsNumber = array.length;
-  // if (array.length > 10) {
-  //   tipsNumber = 10;
-  // }
-
-  // take every tip string, split it into title and text
-  for (let index = 0; index < tipsNumber; index++) {
-    // let tipString = array[index];
-    // let title = tipString.slice(0, tipString.indexOf(':'));
-    // let text = tipString.slice(tipString.indexOf(':') + 2);
+// this array can be used to make character consist of several parts
+// you have to add in array below array of sources to images
+// that will be different variants of a body part
+// you also have to duplicate .part-select element in index.html
+let characters = [
+  ['char1.gif',
+  'char2.gif',
+  'char3.gif']
+];
 
 
-    setNotifContent(array[index], index);
-  }
+function initCharacterSelectField() {
+
+  let characterSelect = document.querySelector('.character-select');  
+  let partSelect = [...document.querySelectorAll('.part-select')]; 
+  let roleSliders = [...document.querySelectorAll('.role__slider')];
   
-  setSliderIndicators(tipsNumber);
-
-  setNotifEvents();
+  roleSliders.forEach((slider, index) => {
+    setParts(slider, characters[index], index);
+  });
+  
+  partSelect.forEach((slider) => {
+    setSliderEvents(slider);
+  });
+ 
 }
 
-function setNotifContent(src, index) {
-  let slider = document.querySelector('.notif__slider');
+function setParts(slider, sources, index) {
 
-  // create notification slide and set it's position
-  let notifSlide = document.createElement('div');
-  notifSlide.classList.add('notif__slide');
-  notifSlide.setAttribute('data-slide', index);
-  notifSlide.style.left = index * 248 + 'px';
+  for (let i = 0; i < sources.length; i++) {
+    let partSlide = document.createElement('div');
+    partSlide.classList.add('role__slide');
+    partSlide.setAttribute('data-slide', i);
+    partSlide.style.left = i * 248 + 'px';
+  
+    let character = document.createElement('img');
+    character.setAttribute('src', './src/img/'+ sources[i]);
 
-  let character = document.createElement('div');
-  var myIcon = new Image();
-  myIcon.src = src;
-
-  character.appendChild(myIcon);
-
-  // add slide to the DOM
-  slider.appendChild(notifSlide);
-  notifSlide.appendChild(character);
-
-}
-
-function setSliderIndicators(tipsNumber) {
-  let indicatorsList = document.querySelector('.notif__indicators');
-
-  // create every indicator and add it to DOM
-  for (let index = 0; index < tipsNumber; index++) {
-    let indicator = document.createElement('li');
-    indicator.classList.add('indicator__item');
-    indicator.setAttribute('data-slide', index);
-
-    if (index === 0) {
-     indicator.classList.add('indicator__item--active');
-    }
-
-    indicatorsList.appendChild(indicator);
+    if (i === 0) {
+      partSlide.classList.add('role__slide--active');
+     }
+  
+    slider.appendChild(partSlide);
+    partSlide.appendChild(character);  
   }
 }
 
-function setNotifEvents() {
-
-  
-  // set event listener to slider controls
-  let sliderControls = document.querySelector('.notif__slider-controls');
-  sliderControls.addEventListener('click', slide);
-
-  //function removeNotifEvents() {
-  //  sliderControls.removeEventListener('click', slide);
-  //  notif.removeEventListener('keydown', slide);
-  //  notif.removeEventListener('keydown', close);
-  //  notif.removeEventListener('focus', listenKeyboard);
-  //  checkbox.removeEventListener('change', disableTips);
-  //  closeButton.removeEventListener('click', hideNotif);
-  //} 
+function setSliderEvents(slider) {
+  // TODO: add listeners for keyboard
+  slider.addEventListener('click', slide);
 }
 
 function slide(e) {
 
-  let slider = document.querySelector('.notif__slider');
-  let slides = [...slider.children];
-  let indicatorsList = document.querySelector('.notif__indicators');
-  let activeIndicator = document.querySelector('.indicator__item--active');
+  let slider = this;
+  let slides = [...(slider.querySelector('.role__slider')).children];
+  
+  let slidesList = slider.querySelector('.role__slider');
+  let activeSlide = slider.querySelector('.role__slide--active');
+  
   let clickedButton = e.target;
 
   // PREVIOUS BUTTON
   // check if clicked button is 'previous button'
-  if (clickedButton.classList.contains('notif__prev-button')) {
+  if (clickedButton.classList.contains('role__prev-button')) {    
 
     // check if active indicator is the first one
-    if (activeIndicator === indicatorsList.firstElementChild) {
-
-      // make the last indicator active
-      let lastIndicator = indicatorsList.lastElementChild;
-      lastIndicator.classList.add('indicator__item--active');
+    if (activeSlide === slidesList.firstElementChild) {
+      
+      // make the last slide active
+      let lastSlide = slidesList.lastElementChild;
+      lastSlide.classList.add('role__slide--active');
 
       // switch to the last slide
-      let lastSlideNumber = lastIndicator.getAttribute('data-slide');
+      let lastSlideNumber = lastSlide.getAttribute('data-slide');
       slides.forEach(slide => {
         slide.style.transform = 'translateX(' + lastSlideNumber * -248 + 'px)';
       });
 
     } else {
       // make previous indicator active
-      let prevIndicator = activeIndicator.previousElementSibling;
-      prevIndicator.classList.add('indicator__item--active');
+      let prevSlide = activeSlide.previousElementSibling;
+      prevSlide.classList.add('role__slide--active');
 
       // switch to previous slide
-      let prevSlideNumber = prevIndicator.getAttribute('data-slide');
+      let prevSlideNumber = prevSlide.getAttribute('data-slide');
       slides.forEach(slide => {
         slide.style.transform = 'translateX(' + prevSlideNumber * -248 + 'px)';
       });
     }
 
-    activeIndicator.classList.remove('indicator__item--active');
+    activeSlide.classList.remove('role__slide--active');
   }
 
   // NEXT BUTTON
   // check if clicked button is 'next button'
-  if (clickedButton.classList.contains('notif__next-button')) {
+  if (clickedButton.classList.contains('role__next-button')) {
 
     //check if active indicator is the last one
-    if (activeIndicator === indicatorsList.lastElementChild) {
+    if (activeSlide === slidesList.lastElementChild) {
 
       // make the first indicator active
-      let firstIndicator = indicatorsList.firstElementChild;
-      firstIndicator.classList.add('indicator__item--active');
+      let firstSlide = slidesList.firstElementChild;
+      firstSlide.classList.add('role__slide--active');
 
       // switch to the first slide
-      let firstSlideNumber = firstIndicator.getAttribute('data-slide');
+      let firstSlideNumber = firstSlide.getAttribute('data-slide');
       slides.forEach(slide => {
         slide.style.transform = 'translateX(' + firstSlideNumber * -248 + 'px)';
       });
@@ -327,32 +289,16 @@ function slide(e) {
     } else {
 
       // make next indicator active
-      let nextIndicator = activeIndicator.nextElementSibling;
-      nextIndicator.classList.add('indicator__item--active');
+      let nextSlide = activeSlide.nextElementSibling;
+      nextSlide.classList.add('role__slide--active');
 
       // switch to the next slide
-      let nextSlideNumber = nextIndicator.getAttribute('data-slide');
+      let nextSlideNumber = nextSlide.getAttribute('data-slide');
       slides.forEach(slide => {
         slide.style.transform = 'translateX(' + nextSlideNumber * -248 + 'px)';
       });
     }
 
-    activeIndicator.classList.remove('indicator__item--active');
-  }
-
-  // SLIDER-INDICATOR
-  // check if clicked button is 'slider-indicator'
-  if (clickedButton.classList.contains('indicator__item')) {
-    let indicator = clickedButton;
-    let slideNumber = indicator.getAttribute('data-slide');
-    let newActiveIndicator = document.querySelector('.indicator__item[data-slide = "'+slideNumber+'"]');
-
-    // switch to selected slide
-    slides.forEach(slide => {
-      slide.style.transform = 'translateX(' + slideNumber * -248 + 'px)';
-    });
-
-    newActiveIndicator.classList.add('indicator__item--active');
-    activeIndicator.classList.remove('indicator__item--active');
+    activeSlide.classList.remove('role__slide--active');
   }
 }

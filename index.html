@@ -18,34 +18,39 @@
     <div class="game-container game-container--hidden">
         <form class="register-form register-form--hidden">
             <label>Enter Login:
-                <input type="text">
+                <input type="text" id="login">
             </label>
+            <br>
             <label>Enter Email:
-                <input type="text">
+                <input type="text" id="email">
             </label>
             <h2>Choose your character:</h2>
 
             <!-- Copied from another document -->
-            <div class="notif">
-                <!-- <span class="notif__close-button"></span> -->
-                <div class="notif__slider">
-                </div>
-
-                <div class="notif__controls">
-                    <!-- <input class="checkbox" type="checkbox" id="disable-tips"> -->
-                    <!-- <label class="checkbox__label" for="disable-tips">Disable Tips</label> -->
-                    <div class="notif__slider-controls">
-                        <span class="notif__prev-button"></span>
-                        <ul class="notif__indicators indicators">
-
-                        </ul>
-                        <span class="notif__next-button"></span>
+            <div class="character-select role">
+                <div class="part-select">
+                    <span class="role__prev-button"></span>
+                    <div class="role__slider">
                     </div>
+                    <span class="role__next-button"></span>
                 </div>
+                <!-- <div class="part-select">
+                    <span class="role__prev-button"></span>
+                    <div class="role__slider">
+                    </div>
+                    <span class="role__next-button"></span>
+                </div> -->
+                <!-- <div class="part-select">
+                    <span class="role__prev-button"></span>
+                    <div class="role__slider">
+                    </div>
+                    <span class="role__next-button"></span>
+                </div> -->
+                
             </div>
 
 
-            <input type="button" value="Start Game">
+            <input type="submit" value="Start Game">
         </form>
     </div>
     <script src="./dist/main.js"></script>
