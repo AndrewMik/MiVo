@@ -16,7 +16,7 @@ function loadGame() {
 
 function startGame(char) {
   let character = characters[0][char];
-  
+
   let canvas = document.createElement('canvas');
   document.body.appendChild(canvas);
 
@@ -75,7 +75,6 @@ function startGame(char) {
   c.fillText('Ronaldo', WIDTH_QUOTER, HEIGHT - 435 - 100);
 
 
-
   //Mosnter's Health
   c.strokeStyle = 'white';
   c.strokeRect(WIDTH_QUOTER * 3 - 150, HEIGHT - 435 - 50, HEALTH, HEALTHBAR_HEIGHT);
@@ -91,16 +90,8 @@ function startGame(char) {
   const monster = document.createElement('img');
   monster.setAttribute('src', pathToImgs('./monster-1.png', true));
 
-  // monster.onload = function () {
-  //   c.drawImage(monster, WIDTH / 8 * 5.5, HEIGHT - 435);
-  // }
-
   const player = document.createElement('img');
   player.setAttribute('src', pathToImgs(character, true));
-
-  // player.onload = function () {
-  //   c.drawImage(player, WIDTH / 8, HEIGHT - 415);
-  // }
 
   const messageFight = document.createElement('img');
   messageFight.setAttribute('src', pathToImgs('./fight.png', true));
@@ -123,23 +114,90 @@ function startGame(char) {
 
     } else {
 
-      // c.fillStyle = 'black';
-      // c.fillText('Fight!', WIDTH_HALF, HEIGHT_HALF);
-
       const widthMessageFight = 250;
       const timeToDisplayMessageFight = 1000;
-    
-      c.drawImage(messageFight, WIDTH_HALF - widthMessageFight/2, HEIGHT_HALF, widthMessageFight, widthMessageFight/2);
+
+      c.drawImage(messageFight, WIDTH_HALF - widthMessageFight / 2, HEIGHT_HALF, widthMessageFight, widthMessageFight / 2);
 
       setTimeout(() => {
-        c.clearRect(WIDTH_HALF - widthMessageFight/2, HEIGHT_HALF, widthMessageFight, HEIGHT);
+        c.clearRect(WIDTH_HALF - widthMessageFight / 2, HEIGHT_HALF, widthMessageFight, HEIGHT);
       }, timeToDisplayMessageFight);
     }
   }
 
   animate();
 }
+
+onclickConfirmNewGame(document.body);
+
+function onclickConfirmNewGame(element) {
+  let modalChooseSpell = document.getElementById('modal-choose-spell');
+
+  element.addEventListener('click', () => {
+    modalChooseSpell.classList.add('show')
+    modalChooseSpell.classList.remove('hide');
+  });
+
+  document.body.addEventListener('click', (event) => {
+      if ( event.target === modalChooseSpell ) {
+        modalChooseSpell.classList.add('hide')
+        modalChooseSpell.classList.remove('show'); 
+      } 
+  });
+
+  let canvas = document.getElementById('canvas-choose-spell');
+
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+
+  const c = canvas.getContext('2d');
+
+  let fontSize = 110;
+
+  c.font = fontSize + 'pt Impact';
+  c.textBaseline = 'middle';
+  c.textAlign = 'center';
+
+
+  c.fillStyle = '#fff';
+
+  c.fillText('Choose a Spell', window.innerWidth/2, 100);
+
+
+  //Spells
+  const spellImageWidth = 300;
+  const paddingBetweenSpells = 100;
+  const marginFirstSpell = 20;
   
+  const spell_1 = document.createElement('img');
+  spell_1.setAttribute('src', pathToImgs('./spell-1.jpg', true));
+
+  spell_1.onload = function () {
+    c.drawImage(spell_1, marginFirstSpell,  window.innerHeight/2 - 50)
+  };
+
+  const spell_2 = document.createElement('img');
+  spell_2.setAttribute('src', pathToImgs('./spell-2.jpg', true));
+
+  spell_2.onload = function () {
+    c.drawImage(spell_2, marginFirstSpell + spellImageWidth + paddingBetweenSpells,  window.innerHeight/2 - 50)
+  };
+
+  const spell_3 = document.createElement('img');
+  spell_3.setAttribute('src', pathToImgs('./spell-3.jpg', true));
+
+  spell_3.onload = function () {
+    c.drawImage(spell_3, marginFirstSpell + (spellImageWidth + paddingBetweenSpells) * 2,  window.innerHeight/2 - 50)
+  };
+
+  const spell_4 = document.createElement('img');
+  spell_4.setAttribute('src', pathToImgs('./spell-4.jpg', true));
+
+  spell_4.onload = function () {
+    c.drawImage(spell_4, marginFirstSpell + (spellImageWidth + paddingBetweenSpells) * 3,  window.innerHeight/2 - 50)
+  };
+}
+
 function showGameField() {
   let gameField = document.querySelector('.game-container');
   gameField.classList.remove('game-container--hidden');
@@ -159,7 +217,7 @@ function showRegisterField() {
 
 
 function registerPlayer() {
-  showRegisterField(); 
+  showRegisterField();
   initCharacterSelectField();
   let login;
   let mail;
@@ -182,25 +240,25 @@ function registerPlayer() {
 // you also have to duplicate .part-select element in index.html
 let characters = [
   ['./char1.gif',
-  './char2.gif',
-  './char3.gif']
+    './char2.gif',
+    './char3.gif']
 ];
 
 
 function initCharacterSelectField() {
 
-  let characterSelect = document.querySelector('.character-select');  
-  let partSelect = [...document.querySelectorAll('.part-select')]; 
+  let characterSelect = document.querySelector('.character-select');
+  let partSelect = [...document.querySelectorAll('.part-select')];
   let roleSliders = [...document.querySelectorAll('.role__slider')];
-  
+
   roleSliders.forEach((slider, index) => {
     setParts(slider, characters[index], index);
   });
-  
+
   partSelect.forEach((slider) => {
     setSliderEvents(slider);
   });
- 
+
 }
 
 function setParts(slider, sources, index) {
@@ -210,16 +268,16 @@ function setParts(slider, sources, index) {
     partSlide.classList.add('role__slide');
     partSlide.setAttribute('data-slide', i);
     partSlide.style.left = i * 248 + 'px';
-  
-    let character = document.createElement('img');   
+
+    let character = document.createElement('img');
     character.setAttribute('src', pathToImgs(sources[i], true));
 
     if (i === 0) {
       partSlide.classList.add('role__slide--active');
-     }
-  
+    }
+
     slider.appendChild(partSlide);
-    partSlide.appendChild(character);  
+    partSlide.appendChild(character);
   }
 }
 
@@ -232,19 +290,19 @@ function slide(e) {
 
   let slider = this;
   let slides = [...(slider.querySelector('.role__slider')).children];
-  
+
   let slidesList = slider.querySelector('.role__slider');
   let activeSlide = slider.querySelector('.role__slide--active');
-  
+
   let clickedButton = e.target;
 
   // PREVIOUS BUTTON
   // check if clicked button is 'previous button'
-  if (clickedButton.classList.contains('role__prev-button')) {    
+  if (clickedButton.classList.contains('role__prev-button')) {
 
     // check if active indicator is the first one
     if (activeSlide === slidesList.firstElementChild) {
-      
+
       // make the last slide active
       let lastSlide = slidesList.lastElementChild;
       lastSlide.classList.add('role__slide--active');
