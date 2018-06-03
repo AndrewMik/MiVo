@@ -1,4 +1,5 @@
 import '../css/style.css';
+const pathToImgs = require.context('../img', true);
 
 const playButton = document.querySelector('.button-play');
 playButton.addEventListener('click', loadGame);
@@ -88,21 +89,21 @@ function startGame(char) {
   c.fillText('Irina Shayk', WIDTH_QUOTER * 3, HEIGHT - 435 - 100);
 
   const monster = document.createElement('img');
-  monster.setAttribute('src', './src/img/monster-1.png');
+  monster.setAttribute('src', pathToImgs('./monster-1.png', true));
 
   // monster.onload = function () {
   //   c.drawImage(monster, WIDTH / 8 * 5.5, HEIGHT - 435);
   // }
 
   const player = document.createElement('img');
-  player.setAttribute('src', './src/img/' + character);
+  player.setAttribute('src', pathToImgs(character, true));
 
   // player.onload = function () {
   //   c.drawImage(player, WIDTH / 8, HEIGHT - 415);
   // }
 
   const messageFight = document.createElement('img');
-  messageFight.setAttribute('src', './src/img/fight.png');
+  messageFight.setAttribute('src', pathToImgs('./fight.png', true));
 
   const ANIMATION_SPEED = 3;
   let x = 0;
@@ -180,9 +181,9 @@ function registerPlayer() {
 // that will be different variants of a body part
 // you also have to duplicate .part-select element in index.html
 let characters = [
-  ['char1.gif',
-  'char2.gif',
-  'char3.gif']
+  ['./char1.gif',
+  './char2.gif',
+  './char3.gif']
 ];
 
 
@@ -210,8 +211,8 @@ function setParts(slider, sources, index) {
     partSlide.setAttribute('data-slide', i);
     partSlide.style.left = i * 248 + 'px';
   
-    let character = document.createElement('img');
-    character.setAttribute('src', './src/img/'+ sources[i]);
+    let character = document.createElement('img');   
+    character.setAttribute('src', pathToImgs(sources[i], true));
 
     if (i === 0) {
       partSlide.classList.add('role__slide--active');

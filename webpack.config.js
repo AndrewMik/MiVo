@@ -1,12 +1,13 @@
 let path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let conf = {
   entry: './src/js/index.js',
   output: {
     path: path.resolve(__dirname, './dist'),
     filename: 'main.js',
-    publicPath: '/dist/'
+    // publicPath: '/dist/'
   },
   devServer: {
     overlay: true
@@ -40,6 +41,11 @@ let conf = {
   },
   plugins: [
     new ExtractTextPlugin("style.css"),
+    new HtmlWebpackPlugin({
+      title: 'MiVo',
+      filename: 'index.html',
+      template: 'src/index.html'
+    })
   ]
 };
 
