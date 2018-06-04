@@ -16,15 +16,12 @@
         </div>
     </div>
     <div class="game-container game-container--hidden">
-        <form class="register-form register-form--hidden">
-            <label>Enter Login:
-                <input type="text" id="login">
-            </label>
+        <form class="register-form register-form--hidden form">
+            <h2 class="form__title">MiVo Game</h2>
+            <input type="text" id="login" placeholder="Login" autofocus>
             <br>
-            <label>Enter Email:
-                <input type="text" id="email">
-            </label>
-            <h2>Choose your character:</h2>
+            <input type="text" id="email" placeholder="Email">
+            <h3 class="form__choose-char-label">Choose your character:</h3>
 
             <!-- Copied from another document -->
             <div class="character-select role">
@@ -40,23 +37,24 @@
                     </div>
                     <span class="role__next-button"></span>
                 </div> -->
-                <!-- <div class="part-select">
-                    <span class="role__prev-button"></span>
-                    <div class="role__slider">
-                    </div>
-                    <span class="role__next-button"></span>
-                </div> -->
-                
             </div>
 
 
             <input type="submit" value="Start Game">
         </form>
+
+        <div class="hero">
+
+        </div>
+        <div class="monster">
+            
+        </div>
     </div>
 
     <section class="modal" id="modal-choose-spell">
         <div class="modal__modal-content">
-            <canvas class="modal__choose-spell" id="canvas-choose-spell"><canvas>
+            <canvas class="modal__choose-spell" id="canvas-choose-spell">
+                <canvas>
         </div>
     </section>
     <!-- <script src="./dist/main.js"></script> -->

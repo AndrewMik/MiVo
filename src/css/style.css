@@ -1,219 +1,266 @@
 * {
-    margin: 0;
-    padding: 0;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-    background-color: azure;
-    overflow: hidden;
+  background-color: azure;
+  overflow: hidden;
 }
 
 .grid-container {
-    height: 100vh;
-    display: grid;
-    justify-content: center;
-    align-content: center;
+  height: 100vh;
+  display: grid;
+  justify-content: center;
+  align-content: center;
 }
 
 button:focus {
-    outline: 0;
+  outline: 0;
 }
 
 button:hover {
-    cursor: pointer;
-    background-color: yellow;
-    color: black;
+  cursor: pointer;
+  background-color: yellow;
+  color: black;
 }
 
 button:active {
-    background-color: green;
-    color: white;
+  background-color: green;
+  color: white;
 }
 
 .button-play {
-    width: 100px;
-    height: 100px;
-    border-radius: 50px;
-    border: none;
-    background-color: red;
-    color: white;
-    user-select: none;
+  width: 100px;
+  height: 100px;
+  border-radius: 50px;
+  border: none;
+  background-color: red;
+  color: white;
+  user-select: none;
 }
 
 canvas {
-    background-image: url("../img/battlefield-3.jpg");
-    background-size: cover;
+  background-image: url("../img/battlefield-3.jpg");
+  background-size: cover;
+}
+
+.register-form {
+  background-color: #f3f4f5;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+  font-family: "Open Sans", sans-serif;
+  /* justify-content: flex-end; */
+  /* position: fixed; */
+  margin: 0 auto;
+  width: 300px;
+  height: 92vh;
+  color: #494949;
+  padding: 30px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 .landing-container--hidden,
 .game-container--hidden,
 .register-form--hidden {
-    display: none;
+  display: none;
 }
 
+input[type="text"] {
+  padding: 0;
+  border: none;
+  border-bottom: 1px solid #dddee1;
+  box-sizing: border-box;
+  transition: all 0.3s;
 
-
-form {
-    position: fixed;
-    width: fit-content;
-    height: fit-content;
-    background-color: gray;
-    color: white;
-
+  font-weight: 400;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  height: 40px;
+  font-size: 100%;
+  line-height: 1.15;
+  margin: 0;
 }
 
+input[type="text"]:focus {
+  border: none !important;
+  border-bottom: 1px solid #3b8ad6 !important;
+}
 
+input:placeholder-shown {
+  color: #787878;
+  font-weight: 400;
+}
+
+input[type="submit"] {
+    margin-top: 20px;
+  background-color: #fecc00;
+  border: 2px solid #fecc00;
+  color: #494949;
+  font-weight: 600;
+  font-size: 1.375em;
+  height: 3rem;
+  display: inline-block;
+  transition: opacity 0.3s, color 0.3s, background-color 0.3s, border-color 0.3s;
+  cursor: pointer;
+  vertical-align: middle;
+  width: 200px;
+}
+
+input[type="submit"]:hover {
+  background-color: #f2c201;
+  border: 2px solid #f2c201;
+}
 
 /* 
  * Copied css 
  */
 
+.role__slide img {
+  height: inherit;
+}
+
 .character-select {
-    /* position: fixed; */
-    font-family: 'Roboto', sans-serif;
-    font-size: 14px;
-    font-weight: 400;
-    top: 20px;
-    right: 20px;
-    width: 300px;
-    /* height: 205px;
+  /* position: fixed; */
+  font-family: "Roboto", sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  /* height: 205px;
     background-color: rgb(245, 245, 245);
     box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
     border-radius: 3px;
     transition: box-shadow 0.3s, opacity 1s; */
-    /* z-index: -1;
+  /* z-index: -1;
     opacity: 0; */
 }
 
- .role__slider {
-    box-sizing: border-box;
-    font-weight: 300;
-    line-height: 20px;
-    margin: 10px 0 10px 10px;
-    width: 250px;
-    height: 150px;
-    /* border: 1px solid rgba(0,0,0,0.1); */
-    overflow: hidden;
-    position: relative;
-  }
-  
-  .role__slide {
-    transition: transform 1s;
-    /* background-color: #fff; */
-    float: left;
-    padding: 0 10px;
-    width: 248px;
-    height: 150px;
-    overflow: auto;
-    box-sizing: border-box;
-    position: absolute;
-    top: 0;
-    left: 0;
-  }
-  
-  .role__title {
-    margin: 10px 0;
-    font-size: 18px;
-    color: rgb(64, 84, 178);
-  }
-  
-  .role__text {
-    margin: 10px 0;
-    text-align: justify;
-  }
-  
-  .role__controls {
-    width: 100%;
-    height: 45px;
-    padding: 15px 15px 15px 10px;
-    line-height: 15px;
-    box-sizing: border-box;
-    background-color: rgba(64, 84, 178, 0.07);
-    border-radius: 0 0 3px 3px;
-  }
+.role__slider {
+  box-sizing: border-box;
+  font-weight: 300;
+  line-height: 20px;
+  margin: 10px;
+  width: 280px;
+  height: 150px;
+  /* border: 1px solid rgba(0,0,0,0.1); */
+  overflow: hidden;
+  position: relative;
+}
 
-  .role__slider-controls {
-    /* float: right; */
-    text-align: center;
-    font-size: 0;
-  }
-  
-  .role__prev-button, .role__next-button {
-    width: 10px;
-    height: 10px;
-    border-top: 2px solid rgba(0, 0, 0, 0.54);
-    border-left: 2px solid rgba(0, 0, 0, 0.54);
-    box-sizing: border-box;
-    border-radius: 2px;
-    display: inline-block;
-    cursor: pointer;
-    vertical-align: middle;
-    transition: 0.5s;
-  }
-  
-  .role__prev-button:hover, .role__next-button:hover {
-    border-color: #4054b2;
-  }
-  
-  .role__prev-button {
-    transform: rotate(-45deg);
-  }
-  
-  .role__next-button {
-    transform: rotate(135deg);
-  }
-  
-  .role__indicators {
-    margin: 0 15px;
-    padding: 0;
-    list-style-type: none;
-    display: inline-block;
-    font-size: 0;
-  }
-  
-  .indicator__item {
-    display: inline-block;
-    vertical-align: middle;
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-    margin-right: 8px;
-    background-color: rgba(0, 0, 0, 0.24);
-    cursor: pointer;
-    transition: 0.5s;
-  }
-  
-  .indicator__item:last-child {
-    margin-right: 0;
-  }
-  
-  .indicator__item--active, .indicator__item:hover {
-    background-color: #4054b2;
-    transform: scale(1.5);
-  }
+.role__slide {
+  transition: transform 1s;
+  /* background-color: #fff; */
+  text-align: center;
+  padding: 0 10px;
+  width: 280px;
+  height: 150px;
+  overflow: auto;
+  box-sizing: border-box;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
 
+.part-select {
+  position: relative;
+}
 
-  .modal {
-    width: 100%;
-    height: 100%;
-    position: fixed;
-    display: none;
-    padding-top: 10rem;
-    left: 0;
-    top: 0;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.4);
-    user-select: none;
-    z-index: 1;
+.form__choose-char-label {
+  margin-top: 20px;
+}
+
+.game-container {
+    background-image: url("../img/cosmo-bg.png");
+    background-size: cover;
+    width: 100vw;
+    height: 100vh;
+}
+
+.role__prev-button,
+.role__next-button {
+  width: 15px;
+  height: 15px;
+  border-top: 2px solid rgba(0, 0, 0, 0.54);
+  border-left: 2px solid rgba(0, 0, 0, 0.54);
+  box-sizing: border-box;
+  border-radius: 2px;
+  display: inline-block;
+  cursor: pointer;
+  vertical-align: middle;
+  transition: 0.5s;
+  position: absolute;
+  top: 40%;
+}
+
+.role__prev-button:hover,
+.role__next-button:hover {
+  border-color: #4054b2;
+}
+
+.role__prev-button {
+  transform: rotate(-45deg);
+}
+
+.role__next-button {
+  transform: rotate(135deg);
+  right: 0;
+}
+
+.role__indicators {
+  margin: 0 15px;
+  padding: 0;
+  list-style-type: none;
+  display: inline-block;
+  font-size: 0;
+}
+
+.indicator__item {
+  display: inline-block;
+  vertical-align: middle;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  margin-right: 8px;
+  background-color: rgba(0, 0, 0, 0.24);
+  cursor: pointer;
+  transition: 0.5s;
+}
+
+.indicator__item:last-child {
+  margin-right: 0;
+}
+
+.indicator__item--active,
+.indicator__item:hover {
+  background-color: #4054b2;
+  transform: scale(1.5);
+}
+
+.modal {
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  display: none;
+  padding-top: 10rem;
+  left: 0;
+  top: 0;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  user-select: none;
+  z-index: 1;
 }
 
 .modal__modal-content {
-    width: 50%;
-    margin: auto;
-    padding: 2rem;
-    border: 0.1rem solid #888;
-    background-color: #fefefe;
-    text-align: center;
+  width: 50%;
+  margin: auto;
+  padding: 2rem;
+  border: 0.1rem solid #888;
+  background-color: #fefefe;
+  text-align: center;
 }
 
 .modal__choose-spell {
@@ -227,4 +274,46 @@ form {
 
 .show {
   display: block;
+}
+
+.hero, .monster {
+    width: 300px;
+}
+
+.hero {
+    position: absolute;
+    left: -300px;
+}
+
+.monster {
+    position: absolute;
+    right: -300px;
+}
+
+.hero--appear {
+    animation: heroAppear 2s forwards;
+}
+
+.monster--appear {
+    animation: monsterAppear 2s forwards;
+}
+
+@keyframes heroAppear {
+    from {
+        transform: translateX(-300px);
+    }
+
+    to {
+        transform: translateX(500px);
+    }
+}
+
+@keyframes monsterAppear {
+    from {
+        transform: translateX(300px);
+    }
+
+    to {
+        transform: translateX(-500px);
+    }
 }

@@ -12,190 +12,46 @@ function loadGame() {
   hideLandingPage();
   showGameField();
   registerPlayer();
+
+  // Temporary loads game
+  // TODO: Remove in last version
+  showRegisterField();
+  startGame(0);
 }
 
-function startGame(char) {
-  let character = characters[0][char];
+function generateMonster() {
+  // Array for monster parts
+  // Now we use only one part for the whole body
+  let parts = [];
+  let monster = document.createElement('img');
+  monster.src = pathToImgs('./monster-1.png', true);
 
-  let canvas = document.createElement('canvas');
-  document.body.appendChild(canvas);
-
-  const WIDTH = window.innerWidth;
-  const WIDTH_HALF = WIDTH / 2;
-  const WIDTH_QUOTER = WIDTH / 4;
-  const HEIGHT = window.innerHeight;
-  const HEIGHT_HALF = HEIGHT / 2;
-  const HEIGHT_QUOTER = HEIGHT / 4;
-
-  canvas.width = WIDTH;
-  canvas.height = HEIGHT;
-
-  const c = canvas.getContext('2d');
-
-  let fontSize = 110;
-
-  c.font = fontSize + 'pt Impact';
-  c.textBaseline = 'middle';
-  c.textAlign = 'center';
-
-
-  const gradient = c.createLinearGradient(205, 25, 205, 200);
-
-  gradient.addColorStop(0.00, 'red');
-  gradient.addColorStop(0.16, 'orange');
-  gradient.addColorStop(0.33, 'yellow');
-  gradient.addColorStop(0.50, 'green');
-  gradient.addColorStop(0.66, 'blue');
-  gradient.addColorStop(0.83, 'indigo');
-  gradient.addColorStop(1.00, 'violet');
-
-  c.fillStyle = gradient;
-
-  let i = 1;
-  c.fillText('Round ' + i, WIDTH_HALF, 100);
-
-
-  //Player's Health
-  const HEALTH = 300;
-  const HEALTHBAR_HEIGHT = 30;
-
-  c.lineWidth = 2;
-  c.strokeStyle = 'white';
-  c.strokeRect(WIDTH_QUOTER - 150, HEIGHT - 435 - 50, HEALTH, HEALTHBAR_HEIGHT);
-
-  c.fillStyle = 'red';
-  c.fillRect(WIDTH_QUOTER - 150, HEIGHT - 435 - 50, HEALTH, HEALTHBAR_HEIGHT);
-
-  fontSize = 50;
-
-  c.font = fontSize + 'pt Arial';
-  c.textBaseline = 'middle';
-  c.textAlign = 'center';
-  c.fillStyle = 'white';
-  c.fillText('Ronaldo', WIDTH_QUOTER, HEIGHT - 435 - 100);
-
-
-  //Mosnter's Health
-  c.strokeStyle = 'white';
-  c.strokeRect(WIDTH_QUOTER * 3 - 150, HEIGHT - 435 - 50, HEALTH, HEALTHBAR_HEIGHT);
-
-  c.fillStyle = 'red';
-  c.fillRect(WIDTH_QUOTER * 3 - 150, HEIGHT - 435 - 50, HEALTH, HEALTHBAR_HEIGHT);
-
-
-  c.font = fontSize + 'pt Verdana';
-  c.fillStyle = 'azure';
-  c.fillText('Irina Shayk', WIDTH_QUOTER * 3, HEIGHT - 435 - 100);
-
-  const monster = document.createElement('img');
-  monster.setAttribute('src', pathToImgs('./monster-1.png', true));
-
-  const player = document.createElement('img');
-  player.setAttribute('src', pathToImgs(character, true));
-
-  const messageFight = document.createElement('img');
-  messageFight.setAttribute('src', pathToImgs('./fight.png', true));
-
-  const ANIMATION_SPEED = 3;
-  let x = 0;
-  let y = 0;
-
-  function animate() {
-
-    if (x < WIDTH / 8 + 300) {
-      requestAnimationFrame(animate);
-      c.clearRect(0, HEIGHT_HALF - 50, WIDTH, HEIGHT);
-      c.drawImage(player, -300 + x, HEIGHT - 415);
-
-      c.drawImage(monster, WIDTH - y, HEIGHT - 435);
-
-      x += ANIMATION_SPEED;
-      y += ANIMATION_SPEED;
-
-    } else {
-
-      const widthMessageFight = 250;
-      const timeToDisplayMessageFight = 1000;
-
-      c.drawImage(messageFight, WIDTH_HALF - widthMessageFight / 2, HEIGHT_HALF, widthMessageFight, widthMessageFight / 2);
-
-      setTimeout(() => {
-        c.clearRect(WIDTH_HALF - widthMessageFight / 2, HEIGHT_HALF, widthMessageFight, HEIGHT);
-      }, timeToDisplayMessageFight);
-    }
-  }
-
-  animate();
+  return monster;
 }
 
-onclickConfirmNewGame(document.body);
+function showHeroes(hero, monster) {
+  let heroContainer = document.querySelector('.hero');
+  heroContainer.appendChild(hero);
 
-function onclickConfirmNewGame(element) {
-  let modalChooseSpell = document.getElementById('modal-choose-spell');
+  let monsterContainer = document.querySelector('.monster');
+  monsterContainer.appendChild(monster);
 
-  element.addEventListener('click', () => {
-    modalChooseSpell.classList.add('show')
-    modalChooseSpell.classList.remove('hide');
-  });
+  heroContainer.classList.add('hero--appear');
+  monsterContainer.classList.add('monster--appear');
+}
 
-  document.body.addEventListener('click', (event) => {
-      if ( event.target === modalChooseSpell ) {
-        modalChooseSpell.classList.add('hide')
-        modalChooseSpell.classList.remove('show'); 
-      } 
-  });
+function startGame(char, level = 1) {
+  let character = document.createElement('img');
+  character.src = pathToImgs(characters[0][char], true);
+  let monster = generateMonster();
 
-  let canvas = document.getElementById('canvas-choose-spell');
+  showHeroes(character, monster);
 
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  // Level by default is 1
+  // If level === 1 showGuide() (guidance how to play, where to click and so on)
+  // When monster will be defeated, we can call startGame()
+  // again with incremented level
 
-  const c = canvas.getContext('2d');
-
-  let fontSize = 110;
-
-  c.font = fontSize + 'pt Impact';
-  c.textBaseline = 'middle';
-  c.textAlign = 'center';
-
-
-  c.fillStyle = '#fff';
-
-  c.fillText('Choose a Spell', window.innerWidth/2, 100);
-
-
-  //Spells
-  const spellImageWidth = 300;
-  const paddingBetweenSpells = 100;
-  const marginFirstSpell = 20;
-  
-  const spell_1 = document.createElement('img');
-  spell_1.setAttribute('src', pathToImgs('./spell-1.jpg', true));
-
-  spell_1.onload = function () {
-    c.drawImage(spell_1, marginFirstSpell,  window.innerHeight/2 - 50)
-  };
-
-  const spell_2 = document.createElement('img');
-  spell_2.setAttribute('src', pathToImgs('./spell-2.jpg', true));
-
-  spell_2.onload = function () {
-    c.drawImage(spell_2, marginFirstSpell + spellImageWidth + paddingBetweenSpells,  window.innerHeight/2 - 50)
-  };
-
-  const spell_3 = document.createElement('img');
-  spell_3.setAttribute('src', pathToImgs('./spell-3.jpg', true));
-
-  spell_3.onload = function () {
-    c.drawImage(spell_3, marginFirstSpell + (spellImageWidth + paddingBetweenSpells) * 2,  window.innerHeight/2 - 50)
-  };
-
-  const spell_4 = document.createElement('img');
-  spell_4.setAttribute('src', pathToImgs('./spell-4.jpg', true));
-
-  spell_4.onload = function () {
-    c.drawImage(spell_4, marginFirstSpell + (spellImageWidth + paddingBetweenSpells) * 3,  window.innerHeight/2 - 50)
-  };
 }
 
 function showGameField() {
@@ -213,8 +69,6 @@ function showRegisterField() {
   let form = document.querySelector('.register-form');
   form.classList.toggle('register-form--hidden');
 }
-
-
 
 function registerPlayer() {
   showRegisterField();
