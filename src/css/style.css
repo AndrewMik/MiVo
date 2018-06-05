@@ -40,11 +40,6 @@ button:active {
   user-select: none;
 }
 
-canvas {
-  background-image: url("../img/battlefield-3.jpg");
-  background-size: cover;
-}
-
 .register-form {
   background-color: #f3f4f5;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
@@ -59,12 +54,6 @@ canvas {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-.landing-container--hidden,
-.game-container--hidden,
-.register-form--hidden {
-  display: none;
 }
 
 input[type="text"] {
@@ -186,11 +175,10 @@ input[type="submit"]:hover {
 }
 
 .game-container {
-    background-image: url("../img/cosmo-bg1.png");
+    background-image: url("../img/cosmo-bg.png");
     background-size: cover;
     width: 100vw;
     height: 100vh;
-    font-family: sans-serif;
 }
 
 .role__prev-button,
@@ -257,36 +245,57 @@ input[type="submit"]:hover {
   width: 100%;
   height: 100%;
   position: fixed;
-  display: none;
-  padding-top: 10rem;
   left: 0;
   top: 0;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
   user-select: none;
   z-index: 1;
+  display: flex;
 }
 
 .modal__modal-content {
   width: 50%;
+  height: 50%;
   margin: auto;
   padding: 2rem;
-  border: 0.1rem solid #888;
-  background-color: #fefefe;
+  border: 2px solid #fecc00;
+  background-image: url("../img/background-modal-choose-spell.jpg");
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  min-height: 300px;
+  min-width: 700px;
+}
+
+.modal__text {
   text-align: center;
+  color: azure;
+  font-size: 30px;
+  font-weight: bold;
 }
 
-.modal__choose-spell {
-  width: 100%;
-  height: 100%;
+.modal__spells {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 0;
+  height: 50%;
+  align-items: center;
 }
 
-.hide {
-  display: none;
+.modal__spell {
+  max-width: 150px;
+  max-height: 150px;
+  opacity: 0.8;
+  border: 1px solid transparent;
+  box-shadow: 0 0 0px 7px black;
 }
 
-.show {
-  display: block;
+.modal__spell:hover {
+  opacity: 1;
+  border: 1px solid white;
+  transform: scale(1.2);
 }
 
 .hero, .monster {
@@ -305,9 +314,6 @@ input[type="submit"]:hover {
 .monster {
     position: absolute;
     right: -300px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
 }
 
 .hero--appear {
@@ -456,4 +462,11 @@ input[type="submit"]:hover {
     to {
         transform: translateX(-500px);
     }
+}
+
+.landing-container--hidden,
+.game-container--hidden,
+.register-form--hidden,
+.modal--hidden {
+  display: none;
 }
