@@ -30,11 +30,19 @@ function loadGame() {
 }
 
 function generateMonster() {
-  // Array for monster parts
-  // Now we use only one part for the whole body
-  let parts = [];
-  let monster = document.createElement("img");
-  monster.src = pathToImgs("./monster-1.png", true);
+
+  let headsNum = 28;
+  let bodiesNum = 23;
+  let weaponsNum;
+  let monsterHead = document.createElement("div");
+  monsterHead.classList.add('monster__head');
+  let monsterBody = document.createElement("div");
+  let monster = document.createDocumentFragment();
+  monsterBody.classList.add('monster__body');
+  monsterHead.style.backgroundPosition = (Math.round(Math.random() * (headsNum + 1)) * 184) + 'px 0';
+  monsterBody.style.backgroundPosition = (Math.round(Math.random() * (bodiesNum + 1)) * 234) + 'px 0';
+  monster.appendChild(monsterHead);
+  monster.appendChild(monsterBody);
 
   return monster;
 }

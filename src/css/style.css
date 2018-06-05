@@ -290,6 +290,9 @@ input[type="submit"]:hover {
 .monster {
     position: absolute;
     right: -300px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }
 
 .hero--appear {
@@ -298,6 +301,22 @@ input[type="submit"]:hover {
 
 .monster--appear {
     animation: monsterAppear 2s forwards;
+}
+
+.monster__head, .monster__body {
+    background-repeat-y: no-repeat;
+}
+
+.monster__head {
+    background-image: url('../img/heads-sprite.png');
+    height: 128px;
+    width: 184px;
+}
+
+.monster__body {
+    background-image: url('../img/bodies-sprite.png');
+    height: 152px;
+    width: 234px;
 }
 
 .game-info-panel {
