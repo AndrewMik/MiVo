@@ -5,11 +5,7 @@ const pathToImgs = require.context("../img", true);
 // you have to add in array below array of sources to images
 // that will be different variants of a body part
 // you also have to duplicate .part-select element in index.html
-const CHARACTERS = [
-  ['./char1.gif',
-    './char2.gif',
-    './char3.gif']
-];
+const CHARACTERS = [["./char1.gif", "./char2.gif", "./char3.gif"]];
 
 const playButton = document.querySelector(".button-play");
 playButton.addEventListener("click", loadGame);
@@ -25,22 +21,23 @@ function loadGame() {
 
   // Temporary loads game
   // TODO: Remove in last version
-  toggleRegisterFieldVisibility();
-  startGame('Herooooo', 0);
+  // toggleRegisterFieldVisibility();
+  // startGame('Herooooo', 0);
 }
 
 function generateMonster() {
-
   let headsNum = 28;
   let bodiesNum = 23;
   let weaponsNum;
   let monsterHead = document.createElement("div");
-  monsterHead.classList.add('monster__head');
+  monsterHead.classList.add("monster__head");
   let monsterBody = document.createElement("div");
   let monster = document.createDocumentFragment();
-  monsterBody.classList.add('monster__body');
-  monsterHead.style.backgroundPosition = (Math.round(Math.random() * (headsNum + 1)) * 184) + 'px 0';
-  monsterBody.style.backgroundPosition = (Math.round(Math.random() * (bodiesNum + 1)) * 234) + 'px 0';
+  monsterBody.classList.add("monster__body");
+  monsterHead.style.backgroundPosition =
+    Math.round(Math.random() * (headsNum + 1)) * 184 + "px 0";
+  monsterBody.style.backgroundPosition =
+    Math.round(Math.random() * (bodiesNum + 1)) * 234 + "px 0";
   monster.appendChild(monsterHead);
   monster.appendChild(monsterBody);
 
@@ -49,7 +46,7 @@ function generateMonster() {
 
 function showHeroes(hero, monster) {
   let heroContainer = document.querySelector(".hero");
-  heroContainer.appendChild(hero);
+  // heroContainer.appendChild(hero);
 
   let monsterContainer = document.querySelector(".monster");
   monsterContainer.appendChild(monster);
@@ -57,11 +54,10 @@ function showHeroes(hero, monster) {
   heroContainer.classList.add("hero--appear");
   monsterContainer.classList.add("monster--appear");
 }
-  
-function startGame(heroName, char, level = 1) {
 
-  let character = document.createElement("img");  
-  character.src = pathToImgs(CHARACTERS[0][char], true);
+function startGame(heroName, char, level = 1) {
+  let character = document.querySelector('.hero');
+  character.style.backgroundPosition = -(12 - char) * 267 + 'px 0';
   let monster = generateMonster();
 
   showHeroes(character, monster);
@@ -80,11 +76,11 @@ function startGame(heroName, char, level = 1) {
 }
 
 function hideFightBox() {
-  document.querySelector('.fight-box').classList.add('fight-box--collapse');
+  document.querySelector(".fight-box").classList.add("fight-box--collapse");
 }
 
 function showFightBox() {
-  document.querySelector('.fight-box').classList.remove('fight-box--hidden');
+  document.querySelector(".fight-box").classList.remove("fight-box--hidden");
 }
 
 function setHeroNames(heroName, monsterName) {
@@ -113,8 +109,8 @@ function hideLandingPage() {
 }
 
 function toggleRegisterFieldVisibility() {
-  let form = document.querySelector('.register-form');
-  form.classList.toggle('register-form--hidden');
+  let form = document.querySelector(".register-form");
+  form.classList.toggle("register-form--hidden");
 }
 
 function registerPlayer() {
@@ -127,9 +123,11 @@ function registerPlayer() {
   let form = document.querySelector(".register-form");
   form.addEventListener("submit", e => {
     e.preventDefault();
-    login = document.getElementById('login').value;
-    mail = document.getElementById('email').value;
-    char = document.querySelector('.role__slide--active').getAttribute('data-slide');
+    login = document.getElementById("login").value;
+    mail = document.getElementById("email").value;
+    char = document
+      .querySelector(".role__slide--active")
+      .getAttribute("data-slide");
     toggleRegisterFieldVisibility();
     startGame(login, char);
   });
@@ -141,7 +139,8 @@ function initCharacterSelectField() {
   let roleSliders = [...document.querySelectorAll(".role__slider")];
 
   roleSliders.forEach((slider, index) => {
-    setParts(slider, CHARACTERS[index], index);
+    // setParts(slider, CHARACTERS[index], index);
+    setParts(slider, 13, index);
   });
 
   partSelect.forEach(slider => {
@@ -150,14 +149,15 @@ function initCharacterSelectField() {
 }
 
 function setParts(slider, sources, index) {
-  for (let i = 0; i < sources.length; i++) {
+  for (let i = 0; i < sources; i++) {
     let partSlide = document.createElement("div");
     partSlide.classList.add("role__slide");
     partSlide.setAttribute("data-slide", i);
-    partSlide.style.left = i * 248 + "px";
+    partSlide.style.left = i * 267 + "px";
 
-    let character = document.createElement("img");
-    character.setAttribute("src", pathToImgs(sources[i], true));
+    let character = document.createElement("div");
+    character.classList.add("slide__img");
+    character.style.backgroundPosition = (i+1) * 267 + "px 0";
 
     if (i === 0) {
       partSlide.classList.add("role__slide--active");
@@ -194,7 +194,7 @@ function slide(e) {
       // switch to the last slide
       let lastSlideNumber = lastSlide.getAttribute("data-slide");
       slides.forEach(slide => {
-        slide.style.transform = "translateX(" + lastSlideNumber * -248 + "px)";
+        slide.style.transform = "translateX(" + lastSlideNumber * -267 + "px)";
       });
     } else {
       // make previous indicator active
@@ -204,7 +204,7 @@ function slide(e) {
       // switch to previous slide
       let prevSlideNumber = prevSlide.getAttribute("data-slide");
       slides.forEach(slide => {
-        slide.style.transform = "translateX(" + prevSlideNumber * -248 + "px)";
+        slide.style.transform = "translateX(" + prevSlideNumber * -267 + "px)";
       });
     }
 
@@ -223,7 +223,7 @@ function slide(e) {
       // switch to the first slide
       let firstSlideNumber = firstSlide.getAttribute("data-slide");
       slides.forEach(slide => {
-        slide.style.transform = "translateX(" + firstSlideNumber * -248 + "px)";
+        slide.style.transform = "translateX(" + firstSlideNumber * -267 + "px)";
       });
     } else {
       // make next indicator active
@@ -233,7 +233,7 @@ function slide(e) {
       // switch to the next slide
       let nextSlideNumber = nextSlide.getAttribute("data-slide");
       slides.forEach(slide => {
-        slide.style.transform = "translateX(" + nextSlideNumber * -248 + "px)";
+        slide.style.transform = "translateX(" + nextSlideNumber * -267 + "px)";
       });
     }
 

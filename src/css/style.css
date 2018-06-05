@@ -118,9 +118,21 @@ input[type="submit"]:hover {
  * Copied css 
  */
 
-.role__slide img {
+/* .role__slide img {
   height: inherit;
+} */
+
+.slide__img {
+  background-image: url('../img/heros-sprite.png');
+  background-size: cover;
+  width: 267px;
+  height: 411px;
 }
+
+/* .role__slide div {
+  background-image: url('../img/heros-sprite.png');
+  background-size: cover;
+} */
 
 .character-select {
   /* position: fixed; */
@@ -145,7 +157,7 @@ input[type="submit"]:hover {
   line-height: 20px;
   margin: 10px;
   width: 280px;
-  height: 150px;
+  height: 411px;
   /* border: 1px solid rgba(0,0,0,0.1); */
   overflow: hidden;
   position: relative;
@@ -157,7 +169,7 @@ input[type="submit"]:hover {
   text-align: center;
   padding: 0 10px;
   width: 280px;
-  height: 150px;
+  height: inherit;
   overflow: auto;
   box-sizing: border-box;
   position: absolute;
@@ -278,13 +290,16 @@ input[type="submit"]:hover {
 }
 
 .hero, .monster {
-    width: 300px;
     bottom: 40px;
+    width: 300px;
 }
 
 .hero {
     position: absolute;
     left: -300px;
+    background-image: url('../img/heros-sprite.png');
+    height: 411px;
+    width: 267px;
 }
 
 .monster {
@@ -332,14 +347,16 @@ input[type="submit"]:hover {
     padding: 20px;
     flex-wrap: wrap;
     display: flex;
+    
 }
 
 .state__name {
-    
+  width: 100%;
 }
 
 .state--monster {
     justify-content: flex-end;
+    text-align: right;
 }
 
 .state__health-box {
