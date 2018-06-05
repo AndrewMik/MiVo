@@ -311,16 +311,22 @@ input[type="submit"]:hover {
 .panel__hero-state {
     width: 300px;
     padding: 20px;
+    flex-wrap: wrap;
+    display: flex;
 }
 
 .state__name {
     
 }
 
+.state--monster {
+    justify-content: flex-end;
+}
+
 .state__health-box {
     width: 200px;
     height: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.2);
     border: 1px solid #fff;
 }
 
@@ -337,6 +343,63 @@ input[type="submit"]:hover {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.fight-box {
+    width: 100%;
+    height: 120px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-top: 4px solid rgba(0, 0, 0, 0.4);
+    border-bottom: 4px solid rgba(0, 0, 0, 0.4);
+    position: absolute;
+    top: calc(50% - 60px);
+    z-index: 2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #fff;
+}
+
+.fight-box--hidden {
+    display: none;
+}
+
+.fight-box--collapse {
+    animation: fightCollapse 1s forwards;
+}
+
+.fight-box__text {
+    font-size: 48px;
+    animation: fightSlide 4s forwards;
+    /* animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86); */
+}
+
+@keyframes fightCollapse {
+    from {
+
+    }
+
+    to {
+        transform: scaleY(0);
+    }
+}
+
+@keyframes fightSlide {
+    0% {
+        transform: translateX(50vw);
+    }
+
+    33% {
+        transform: translateX(0vw);
+    }
+
+    66% {
+        transform: translateX(0vw);
+    }
+
+    100% {
+        transform: translateX(-60vw);
+    }
 }
 
 @keyframes heroAppear {

@@ -66,6 +66,17 @@ function startGame(heroName, char, level = 1) {
   let monsterName = generateMonsterName();
   setLevel(level);
   setHeroNames(heroName, monsterName);
+
+  setTimeout(showFightBox, 2000);
+  setTimeout(hideFightBox, 6000);
+}
+
+function hideFightBox() {
+  document.querySelector('.fight-box').classList.add('fight-box--collapse');
+}
+
+function showFightBox() {
+  document.querySelector('.fight-box').classList.remove('fight-box--hidden');
 }
 
 function setHeroNames(heroName, monsterName) {
