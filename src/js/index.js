@@ -15,7 +15,7 @@ function loadGame() {
 
   // Temporary loads game
   // TODO: Remove in last version
-  showRegisterField();
+  toggleRegisterFieldVisibitity();
   startGame(0);
 }
 
@@ -42,7 +42,7 @@ function showHeroes(hero, monster) {
 
 function startGame(char, level = 1) {
   let character = document.createElement('img');
-  character.src = pathToImgs(characters[0][char], true);
+  character.src = pathToImgs(CHARACTERS[0][char], true);
   let monster = generateMonster();
 
   showHeroes(character, monster);
@@ -64,14 +64,13 @@ function hideLandingPage() {
   landing.classList.add('landing-container--hidden');
 }
 
-
-function showRegisterField() {
+function toggleRegisterFieldVisibitity() {
   let form = document.querySelector('.register-form');
   form.classList.toggle('register-form--hidden');
 }
 
 function registerPlayer() {
-  showRegisterField();
+  toggleRegisterFieldVisibitity();
   initCharacterSelectField();
   let login;
   let mail;
@@ -83,7 +82,7 @@ function registerPlayer() {
     login = document.getElementById('login').value;
     mail = document.getElementById('email').value;
     char = document.querySelector('.role__slide--active').getAttribute('data-slide');
-    showRegisterField();
+    toggleRegisterFieldVisibitity();
     startGame(char);
   });
 }
@@ -92,7 +91,7 @@ function registerPlayer() {
 // you have to add in array below array of sources to images
 // that will be different variants of a body part
 // you also have to duplicate .part-select element in index.html
-let characters = [
+const CHARACTERS = [
   ['./char1.gif',
     './char2.gif',
     './char3.gif']
@@ -106,7 +105,7 @@ function initCharacterSelectField() {
   let roleSliders = [...document.querySelectorAll('.role__slider')];
 
   roleSliders.forEach((slider, index) => {
-    setParts(slider, characters[index], index);
+    setParts(slider, CHARACTERS[index], index);
   });
 
   partSelect.forEach((slider) => {
