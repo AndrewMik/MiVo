@@ -40,11 +40,6 @@ button:active {
   user-select: none;
 }
 
-canvas {
-  background-image: url("../img/battlefield-3.jpg");
-  background-size: cover;
-}
-
 .register-form {
   background-color: #f3f4f5;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
@@ -59,12 +54,6 @@ canvas {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-.landing-container--hidden,
-.game-container--hidden,
-.register-form--hidden {
-  display: none;
 }
 
 input[type="text"] {
@@ -174,11 +163,10 @@ input[type="submit"]:hover {
 }
 
 .game-container {
-    background-image: url("../img/cosmo-bg1.png");
+    background-image: url("../img/cosmo-bg.png");
     background-size: cover;
     width: 100vw;
     height: 100vh;
-    font-family: sans-serif;
 }
 
 .role__prev-button,
@@ -245,41 +233,61 @@ input[type="submit"]:hover {
   width: 100%;
   height: 100%;
   position: fixed;
-  display: none;
-  padding-top: 10rem;
   left: 0;
   top: 0;
   overflow: auto;
   background-color: rgba(0, 0, 0, 0.4);
   user-select: none;
   z-index: 1;
+  display: flex;
 }
 
 .modal__modal-content {
   width: 50%;
+  height: 50%;
   margin: auto;
   padding: 2rem;
-  border: 0.1rem solid #888;
-  background-color: #fefefe;
+  border: 2px solid #fecc00;
+  background-image: url("../img/background-modal-choose-spell.jpg");
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  min-height: 300px;
+  min-width: 700px;
+}
+
+.modal__text {
   text-align: center;
+  color: azure;
+  font-size: 30px;
+  font-weight: bold;
 }
 
-.modal__choose-spell {
-  width: 100%;
-  height: 100%;
+.modal__spells {
+  display: flex;
+  justify-content: space-around;
+  padding: 20px 0;
+  height: 50%;
+  align-items: center;
 }
 
-.hide {
-  display: none;
+.modal__spell {
+  max-width: 150px;
+  max-height: 150px;
+  opacity: 0.8;
+  border: 1px solid transparent;
+  box-shadow: 0 0 0px 7px black;
 }
 
-.show {
-  display: block;
+.modal__spell:hover {
+  opacity: 1;
+  border: 1px solid white;
+  transform: scale(1.2);
 }
 
 .hero, .monster {
     width: 300px;
-    bottom: 40px;
 }
 
 .hero {
@@ -290,9 +298,6 @@ input[type="submit"]:hover {
 .monster {
     position: absolute;
     right: -300px;
-    display: flex;
-    justify-content: center;
-    flex-wrap: wrap;
 }
 
 .hero--appear {
@@ -301,124 +306,6 @@ input[type="submit"]:hover {
 
 .monster--appear {
     animation: monsterAppear 2s forwards;
-}
-
-.monster__head, .monster__body {
-    background-repeat-y: no-repeat;
-}
-
-.monster__head {
-    background-image: url('../img/heads-sprite.png');
-    height: 128px;
-    width: 184px;
-}
-
-.monster__body {
-    background-image: url('../img/bodies-sprite.png');
-    height: 152px;
-    width: 234px;
-}
-
-.game-info-panel {
-    width: 100%;
-    height: 150px;
-    color: #fff;
-    display: flex;
-    justify-content: space-between;
-}
-
-.panel__hero-state {
-    width: 300px;
-    padding: 20px;
-    flex-wrap: wrap;
-    display: flex;
-}
-
-.state__name {
-    
-}
-
-.state--monster {
-    justify-content: flex-end;
-}
-
-.state__health-box {
-    width: 200px;
-    height: 20px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border: 1px solid #fff;
-}
-
-.state__health {
-    height: inherit;
-    width: 50%;
-    background-color: rgb(255, 0, 0);
-}
-
-.panel__level {
-    background-color: #4054b2;
-    width: 300px;
-    height: 100px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.fight-box {
-    width: 100%;
-    height: 120px;
-    background-color: rgba(255, 255, 255, 0.2);
-    border-top: 4px solid rgba(0, 0, 0, 0.4);
-    border-bottom: 4px solid rgba(0, 0, 0, 0.4);
-    position: absolute;
-    top: calc(50% - 60px);
-    z-index: 2;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: #fff;
-}
-
-.fight-box--hidden {
-    display: none;
-}
-
-.fight-box--collapse {
-    animation: fightCollapse 1s forwards;
-}
-
-.fight-box__text {
-    font-size: 48px;
-    animation: fightSlide 4s forwards;
-    /* animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86); */
-}
-
-@keyframes fightCollapse {
-    from {
-
-    }
-
-    to {
-        transform: scaleY(0);
-    }
-}
-
-@keyframes fightSlide {
-    0% {
-        transform: translateX(50vw);
-    }
-
-    33% {
-        transform: translateX(0vw);
-    }
-
-    66% {
-        transform: translateX(0vw);
-    }
-
-    100% {
-        transform: translateX(-60vw);
-    }
 }
 
 @keyframes heroAppear {
@@ -439,4 +326,11 @@ input[type="submit"]:hover {
     to {
         transform: translateX(-500px);
     }
+}
+
+.landing-container--hidden,
+.game-container--hidden,
+.register-form--hidden,
+.modal--hidden {
+  display: none;
 }
