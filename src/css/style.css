@@ -40,6 +40,11 @@ button:active {
   user-select: none;
 }
 
+/* canvas {
+  background-image: url("../img/battlefield-3.jpg");
+  background-size: cover;
+} */
+
 .register-form {
   background-color: #f3f4f5;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
@@ -179,6 +184,7 @@ input[type="submit"]:hover {
     background-size: cover;
     width: 100vw;
     height: 100vh;
+    font-family: sans-serif;
 }
 
 .role__prev-button,
@@ -326,6 +332,7 @@ input.task:placeholder-shown {
   opacity: 0.8;
   border: 1px solid white;
   box-shadow: 0 0 0px 7px black;
+  background-color: rgba(255,255,255);
 }
 
 .modal__spell:hover {
@@ -475,7 +482,7 @@ input.task:placeholder-shown {
     }
 
     100% {
-        transform: translateX(-60vw);
+        transform: translateX(-100vw);
     }
 }
 

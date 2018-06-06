@@ -18,10 +18,10 @@
     <div class="game-container game-container--hidden">
         <form class="register-form register-form--hidden form">
             <h2 class="form__title">MiVo Game</h2>
-            <input type="text" id="login" placeholder="Login" autofocus>
+            <input type="text" id="login" placeholder="Имя" autofocus>
             <br>
             <input type="text" id="email" placeholder="Email">
-            <h3 class="form__choose-char-label">Choose your character:</h3>
+            <h3 class="form__choose-char-label">Выберите персонажа:</h3>
 
             <!-- Copied from another document -->
             <div class="character-select role">
@@ -40,7 +40,7 @@
             </div>
 
 
-            <input type="submit" value="Start Game">
+            <input type="submit" value="Играть">
         </form>
 
         <div class="game-info-panel panel">
@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="panel__level level">
-                <h2 class="level__text">Level
+                <h2 class="level__text">Уровень
                     <span class="level__num"></span>
                 </h2>
             </div>
@@ -64,7 +64,7 @@
         </div>
 
         <div class="fight-box fight-box--hidden">
-            <h2 class="fight-box__text">Fight</h2>
+            <h2 class="fight-box__text">Битва началась</h2>
         </div>
 
         <div class="hero">
@@ -78,20 +78,20 @@
 
     <section class="modal modal--hidden" id="modal-choose-spell">
         <div class="modal__modal-content" id="modal-content-choose-spell">
-               <p class="modal__text">Choose a Spell</p>
-               <div class="modal__spells">
-               <img class="modal__spell" src="../src/img/spell-1.jpg">
-               <img class="modal__spell" src="../src/img/spell-2.jpg">
-               <img class="modal__spell" src="../src/img/spell-3.jpg">
-               <img class="modal__spell" src="../src/img/spell-4.jpg">
-               </div>
-           </div>
+            <p class="modal__text">Выберите заклинание</p>
+            <div class="modal__spells">
+                <img class="modal__spell" src="${require(`./img/math.png`)}">
+                <img class="modal__spell" src="${require(`./img/listening.png`)}">
+                <img class="modal__spell" src="${require(`./img/mix.png`)}">
+                <img class="modal__spell" src="${require(`./img/translate.png`)}">
+            </div>
+        </div>
         </div>
     </section>
 
     <section class="modal-screen-task modal--hidden" id="modal-screen-task">
         <div class="modal-screen-task__modal-content" id="modal-content-screen-task">
-            <p class="modal-screen-task__text">Resolve a Task</p>
+            <p class="modal-screen-task__text">Решите пример</p>
             <div class="modal-screen-task__task">
                 <p>2 + 2 =</p>
                 <input type="text" class="task" placeholder="4" maxlength="1" autofocus>
