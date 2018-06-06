@@ -36,6 +36,10 @@ let conf = {
         //   'css-loader'
         // ]
 
+      },
+      {
+        test: /\.html$/,
+        loader: 'html-loader'
       }
     ]
   },
@@ -55,4 +59,4 @@ module.exports = (env, options) => {
   conf.devtool = production ? 'source-map' : 'eval-sourcemap';
 
   return conf;
-}
+};
