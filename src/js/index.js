@@ -80,6 +80,13 @@ function startGame(heroName, char, level = 1) {
   setTimeout( () => {
     hideFightBox();
     setTimeout(chooseSpell, 1000);
+    //Temporary shows and hides the modal dialogue to choose a spell
+    // TODO: Remove in last version
+    setTimeout(hideModalChooseSpell, 2000);
+    //Temporary shows and hides the screen with a task
+    // TODO: Remove in last version
+    setTimeout(showTaskScreen, 3000);
+    // setTimeout(hideTaskScreen, 4000);
   }, 6000);
 }
 
@@ -273,26 +280,52 @@ function slide(e) {
 //Modal dialogue - Choose a Spell
 function chooseSpell() {
   let modalChooseSpell = document.getElementById('modal-choose-spell');
-  let modalContentChooseSpell = document.getElementById('modal-content-choose-spell');
 
   toggleElementVisibitity(modalChooseSpell);
 
-  document.body.addEventListener('click', (e) => {
-    //event.target is read only
-    let eventTarget = e.target;
-    let isModalContantClicked = false;
+  document.body.addEventListener('click', checkModalChooseSpellClicked);
+}
 
-    while (eventTarget !== document.body) {
-      if ( eventTarget === modalContentChooseSpell ) {
-        isModalContantClicked = true;
-      }
-      eventTarget = eventTarget.parentElement;
-    }
+function checkModalChooseSpellClicked() {
+  let modalChooseSpell = document.getElementById('modal-choose-spell');
+  let modalContentChooseSpell = document.getElementById('modal-content-choose-spell');
 
-    if (!isModalContantClicked) {
-      toggleElementVisibitity(modalChooseSpell);
+  //event.target is read only
+  let eventTarget = event.target;
+  let isModalContantClicked = false;
+
+  while (eventTarget !== document.body) {
+    if ( eventTarget === modalContentChooseSpell ) {
+      isModalContantClicked = true;
     }
-  });
+    eventTarget = eventTarget.parentElement;
+  }
+
+  if (!isModalContantClicked) {
+    toggleElementVisibitity(modalChooseSpell);
+  }
+}
+
+function hideModalChooseSpell() {
+  let modalChooseSpell = document.getElementById('modal-choose-spell');
+  let modalContentChooseSpell = document.getElementById('modal-content-choose-spell');
+
+  modalChooseSpell.classList.add('modal--hidden');
+
+  document.body.removeEventListener('click', checkModalChooseSpellClicked);
+}
+
+//Screen task
+function showTaskScreen() {
+  let taskScreen = document.getElementById('modal-screen-task');
+
+  toggleElementVisibitity(taskScreen);
+}
+
+function hideTaskScreen() {
+  let taskScreen = document.getElementById('modal-screen-task');
+
+  taskScreen.classList.add('modal--hidden');
 }
 
 function toggleElementVisibitity(element) {
