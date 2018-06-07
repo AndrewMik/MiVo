@@ -6,7 +6,7 @@ playButton.addEventListener("click", loadGame);
 
 // Temporary loads the game
 // TODO: Remove in last version
-document.addEventListener("DOMContentLoaded", loadGame);
+// document.addEventListener("DOMContentLoaded", loadGame);
 
 function loadGame() {
   hideLandingPage();
