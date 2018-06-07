@@ -31,6 +31,19 @@ button:active {
   color: white;
   user-select: none;
   font-size: 30px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-play:hover {
+  background-color: transparent;
+  background-image: url('../img/planet-earth.png');
+  background-size: cover;
+  font-weight: bold;
+  font-size: 32px;
+  box-shadow: inset 0px 0px 20px 2px black;
 }
 
 h1 {
@@ -48,11 +61,27 @@ h1 {
   color: #888;
 }
 
+.header__container {
+  height: 1200px;
+  overflow: hidden;
+}
+
 .header__screen {
+  min-height: 1200px;
   background-image: url('../img/background-landing-page.jpg');
   background-size: cover;
-  min-height: 1200px;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  -moz-transition: all 50s ease-out;
+  -o-transition: all 50s ease-out;
+  -webkit-transition: all 50s ease-out;
+}
+
+.header__screen:hover {
+  -webkit-transform: scale(1.2);
+  -moz-transform: scale(1.2);
+  -o-transform: scale(1.2);
 }
 
 ::-webkit-scrollbar {
@@ -112,6 +141,7 @@ h1 {
 
 .authors h2 {
   color: black;
+  margin-top: 30px;
 }
 
 .img-circle {
@@ -125,4 +155,11 @@ h1 {
 .authors p {
   padding-top: 10px;
   font-size: 14px;
+}
+
+footer {
+  height: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
