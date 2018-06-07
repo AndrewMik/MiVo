@@ -267,10 +267,11 @@ input[type="submit"]:hover {
 }
 
 input.task {
-  width: 50px;
+  width: 100px;
   margin-left: 10px;
   font-size: 40px;
   text-align: center;
+  color: green;
 }
 
 input.task:placeholder-shown {
@@ -373,9 +374,10 @@ input.task:placeholder-shown {
     border: 1px solid #fff;
 }
 
-.state__health {
+.state__health-hero,
+.state__health-monster {
     height: inherit;
-    width: 50%;
+    width: 100%;
     background-color: rgb(255, 0, 0);
 }
 
@@ -474,4 +476,14 @@ input.task:placeholder-shown {
 
 ::-webkit-scrollbar {
   display: none;
+}
+
+.math__numbers {
+  font-size: 30px;
+  font-weight: bold;
+  color: blue;
+}
+
+.math__numbers p {
+  margin: 10px;
 }

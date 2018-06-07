@@ -62,17 +62,22 @@ function startGame(heroName, char, level = 1) {
   setLevel(level);
   setHeroNames(heroName, monsterName);
 
+  //   //Temporary loads math task
+  //   // TODO: Remove in last version
+  // toggleTaskScreen();
+  // hideModalChooseSpell();
+  // generateMathTask();
   setTimeout(showFightBox, 2000);
   setTimeout(() => {
     hideFightBox();
     setTimeout(chooseSpell, 1000);
     //Temporary shows and hides the modal dialogue to choose a spell
     // TODO: Remove in last version
-    setTimeout(hideModalChooseSpell, 2000);
+    // setTimeout(hideModalChooseSpell, 2000);
     //Temporary shows and hides the screen with a task
     // TODO: Remove in last version
-    setTimeout(showTaskScreen, 3000);
-    // setTimeout(hideTaskScreen, 4000);
+    // setTimeout(toggleTaskScreen, 3000);
+    // setTimeout(toggleTaskScreen, 4000);
   }, 6000);
 }
 
@@ -292,6 +297,8 @@ function chooseSpell() {
 
   toggleElementVisibility(modalChooseSpell);
 
+  setSpellMathEvent();
+
   document.body.addEventListener('click', checkModalChooseSpellClicked);
 }
 
@@ -305,25 +312,10 @@ function hideModalChooseSpell() {
 }
 
 //Screen task
-function showTaskScreen() {
+function toggleTaskScreen() {
   let taskScreen = document.getElementById('modal-screen-task');
 
   toggleElementVisibility(taskScreen);
-}
-
-
-//Screen task
-function showTaskScreen() {
-  let taskScreen = document.getElementById('modal-screen-task');
-
-  toggleElementVisibility(taskScreen);
-}
-
-
-function hideTaskScreen() {
-  let taskScreen = document.getElementById('modal-screen-task');
-
-  taskScreen.classList.add('modal--hidden');
 }
 
 function toggleElementVisibility(element) {
@@ -348,4 +340,110 @@ function checkModalChooseSpellClicked() {
   if (!isModalContantClicked) {
     toggleElementVisibility(modalChooseSpell);
   }
+}
+
+function setSpellMathEvent() {
+  let spellMath = document.getElementById('spell-math');
+
+  spellMath.addEventListener('click', hideModalChooseSpell);
+  spellMath.addEventListener('click', toggleTaskScreen);
+  spellMath.addEventListener('click', generateMathTask);
+}
+
+function generateMathTask() {
+  let mathTask = document.getElementById('task-to-solve');
+  const min = 1;
+  const max = 100;
+
+  mathTask.classList.add('math__numbers');
+
+  let firstNumberElement = document.createElement('p');
+  let firstNumber = getRandomInt(min, max);
+  firstNumberElement.textContent = firstNumber;
+
+  let mathOperator = document.createElement('p');
+  mathOperator.textContent = '+';
+
+  let secondNumberElement = document.createElement('p');
+  let secondNumber = getRandomInt(min, max);
+  secondNumberElement.textContent = secondNumber;
+
+  let equals = document.createElement('p');
+  equals.textContent = '=';
+
+  let userInput = document.createElement('input');
+  userInput.type = "text";
+  userInput.classList.add('task');
+  userInput.placeholder = "Ответ";
+  userInput.autofocus = true;
+  userInput.maxLength = 4;
+  userInput.id = "math-task-answer";
+  userInput.autocomplete = "off";
+
+  let correctAnswer = firstNumber + secondNumber;
+
+  console.log(correctAnswer);
+
+  while(mathTask.firstElementChild) {
+    mathTask.removeChild(mathTask.firstElementChild);
+  }
+
+  mathTask.appendChild(firstNumberElement);
+  mathTask.appendChild(mathOperator);
+  mathTask.appendChild(secondNumberElement);
+  mathTask.appendChild(equals);
+  mathTask.appendChild(userInput);
+
+
+  mathTask.addEventListener('submit', solveTask);
+  
+  function solveTask() {
+    event.preventDefault();
+    if( +userInput.value === correctAnswer) {
+      let monsterHealth = document.querySelector('.state__health-monster');
+      let maxDamage = 40;
+
+      let currentDamage = Math.floor((Math.random() * maxDamage));
+      alert('Вау!!! Ты ответил правильно!!! Гениально!!! Нанесено урона: ' + currentDamage);
+
+      if(currentDamage > maxDamage*0.8) {
+        alert('Опачки! Крит damage с вертушки!');
+      } else if (currentDamage > maxDamage*0.1) {
+        alert('Пффф... Слабак! Каши мало ел?!');
+      }
+      //I can't get initial health - it should be equal to 100% in css class state__health-monster
+      if(monsterHealth.style.width <= 0) {
+        monsterHealth.style.width = 100 - currentDamage + "%";
+      } else {
+        if(Number.parseInt(monsterHealth.style.width) - currentDamage <= 0) {
+          monsterHealth.style.width = '0%';
+          alert('Победа!');
+          mathTask.removeEventListener('submit', solveTask);
+          toggleTaskScreen();
+
+          //some cool animation - monster is down
+          document.querySelector('.level__num').textContent = +document.querySelector('.level__num').textContent + 1;
+          // TODO: make maxDamage lower, e.g. MAX_DAMAGE -= 1;
+          // split user/monster damage?
+
+          //generate new monster
+          return;
+        }
+        monsterHealth.style.width = Number.parseInt(monsterHealth.style.width) - currentDamage + "%";
+      }
+    } else {
+      alert('Друг мой, в этот раз ты дико ошибся, а мог нанести' + currentDamage + 'урона'); 
+    }
+    mathTask.removeEventListener('submit', solveTask);
+    toggleTaskScreen();
+    setTimeout(chooseSpell, 1000);
+  }
+}
+
+/**
+ * Returns a random integer between min (inclusive) and max (inclusive)
+ * Using Math.round() will give you a non-uniform distribution!
+ */
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

@@ -42,7 +42,7 @@
             <div class="panel__hero-state state">
                 <h2 class="state__name state__name--hero"></h2>
                 <div class="state__health-box">
-                    <div class="state__health"></div>
+                    <div class="state__health-hero"></div>
                 </div>
             </div>
             <div class="panel__level level">
@@ -53,7 +53,7 @@
             <div class="panel__hero-state state state--monster">
                 <h2 class="state__name state__name--monster"></h2>
                 <div class="state__health-box">
-                    <div class="state__health"></div>
+                    <div class="state__health-monster"></div>
                 </div>
             </div>
         </div>
@@ -73,9 +73,9 @@
 
     <section class="modal modal--hidden" id="modal-choose-spell">
         <div class="modal__modal-content" id="modal-content-choose-spell">
-            <p class="modal__text">Выберите заклинание</p>
+            <p class="modal__text">Произнести заклинание</p>
             <div class="modal__spells">
-                <img class="modal__spell" src="./img/math.png">
+                <img class="modal__spell" id="spell-math" src="./img/math.png">
                 <img class="modal__spell" src="./img/listening.png">
                 <img class="modal__spell" src="./img/mix.png">
                 <img class="modal__spell" src="./img/translate.png">
@@ -87,10 +87,8 @@
     <section class="modal-screen-task modal--hidden" id="modal-screen-task">
         <div class="modal-screen-task__modal-content" id="modal-content-screen-task">
             <p class="modal-screen-task__text">Решите пример</p>
-            <div class="modal-screen-task__task">
-                <p>2 + 2 =</p>
-                <input type="text" class="task" placeholder="4" maxlength="1" autofocus>
-            </div>
+            <form class="modal-screen-task__task" id="task-to-solve">
+            </form>
         </div>
     </section>
     <!-- <script src="./dist/main.js"></script> -->
