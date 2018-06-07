@@ -3,10 +3,13 @@ const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 let conf = {
-  entry: './src/js/index.js',
+  entry: {
+    landing: './src/landing/js/index.js',
+    game: './src/game/js/index.js' 
+  },
   output: {
     path: path.resolve(__dirname, './dist'),
-    filename: 'main.js',
+    filename: '[name].main.js',
     // publicPath: '/dist/'
   },
   devServer: {
@@ -44,11 +47,18 @@ let conf = {
     ]
   },
   plugins: [
-    new ExtractTextPlugin("style.css"),
+    new ExtractTextPlugin("[name].style.css"),
     new HtmlWebpackPlugin({
       title: 'MiVo',
       filename: 'index.html',
-      template: 'src/index.html'
+      template: 'src/landing/index.html',
+      chunks: ['landing']
+    }),
+    new HtmlWebpackPlugin({
+      title: 'MiVo',
+      filename: 'game.html',
+      template: 'src/game/index.html',
+      chunks: ['game']
     })
   ]
 };

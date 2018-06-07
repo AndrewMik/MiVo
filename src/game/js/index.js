@@ -1,16 +1,13 @@
 import "../css/style.css";
 const pathToImgs = require.context("../img", true);
 
-const playButton = document.querySelector(".button-play");
-playButton.addEventListener("click", loadGame);
-
 // Temporary loads the game
 // TODO: Remove in last version
-// document.addEventListener("DOMContentLoaded", loadGame);
+document.addEventListener("DOMContentLoaded", loadGame);
 
 function loadGame() {
-  hideLandingPage();
-  showGameField();
+  // hideLandingPage();
+  // showGameField();
   registerPlayer();
 
   // Temporary loads game
@@ -349,6 +346,6 @@ function checkModalChooseSpellClicked() {
   }
 
   if (!isModalContantClicked) {
-    toggleElementVisibitity(modalChooseSpell);
+    toggleElementVisibility(modalChooseSpell);
   }
 }
