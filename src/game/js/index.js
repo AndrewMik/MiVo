@@ -374,23 +374,54 @@ function setSpellMathEvent() {
 function generateMathTask() {
   let mathTask = document.getElementById('task-to-solve');
   const min = 1;
-  const max = 100;
+  const max = 10;
 
+  const operations = ['add', 'sub', 'mult', 'div'];
+
+  const math = {
+    'add': function(first, second) {
+      mathOperator = '+';
+      correctAnswer = first + second;
+    },
+    'sub': function(first, second) {
+      mathOperator = '-';
+      if (first < second) {
+        [first, second] = [second, first];
+        [firstNumber, secondNumber] = [secondNumber, firstNumber];
+      }
+      correctAnswer = first - second;
+    },
+    'mult': function(first, second) {
+      mathOperator = '*';
+      correctAnswer = first * second;
+    },
+    'div': function(first, second) {
+      mathOperator = '÷';
+      correctAnswer = first;
+      firstNumber = first * second;
+    }
+  };
+  
   mathTask.classList.add('math__numbers');
-
+  
   let firstNumberElement = document.createElement('p');
-  let firstNumber = getRandomInt(min, max);
-  firstNumberElement.textContent = firstNumber;
-
-  let mathOperator = document.createElement('p');
-  mathOperator.textContent = '+';
-
+  let mathOperatorElement = document.createElement('p');
   let secondNumberElement = document.createElement('p');
+  let equalsElement = document.createElement('p');
+  
+  
+  let correctAnswer;
+  let firstNumber = getRandomInt(min, max);
   let secondNumber = getRandomInt(min, max);
+  let mathOperator;
+  let mathOperation = operations[getRandomInt(0, 3)];
+  math[mathOperation](firstNumber, secondNumber);
+
+  firstNumberElement.textContent = firstNumber;
+  mathOperatorElement.textContent = mathOperator;
   secondNumberElement.textContent = secondNumber;
 
-  let equals = document.createElement('p');
-  equals.textContent = '=';
+  equalsElement.textContent = '=';
 
   let userInput = document.createElement('input');
   userInput.type = "text";
@@ -401,8 +432,6 @@ function generateMathTask() {
   userInput.id = "math-task-answer";
   userInput.autocomplete = "off";
 
-  let correctAnswer = firstNumber + secondNumber;
-
   console.log(correctAnswer);
 
   while(mathTask.firstElementChild) {
@@ -410,9 +439,9 @@ function generateMathTask() {
   }
 
   mathTask.appendChild(firstNumberElement);
-  mathTask.appendChild(mathOperator);
+  mathTask.appendChild(mathOperatorElement);
   mathTask.appendChild(secondNumberElement);
-  mathTask.appendChild(equals);
+  mathTask.appendChild(equalsElement);
   mathTask.appendChild(userInput);
 
 
