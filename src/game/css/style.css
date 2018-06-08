@@ -10,7 +10,7 @@
   /* justify-content: flex-end; */
   /* position: fixed; */
   margin: 0 auto;
-  width: 300px;
+  width: 320px;
   height: 92vh;
   color: #494949;
   padding: 30px;
@@ -76,9 +76,8 @@ input[type="submit"]:hover {
 
 .slide__img {
   background-image: url('../img/heros-sprite.png');
-  background-size: cover;
   width: 267px;
-  height: 411px;
+  height: 391px;
 }
 
 /* .role__slide div {
@@ -109,7 +108,7 @@ input[type="submit"]:hover {
   line-height: 20px;
   margin: 10px;
   width: 280px;
-  height: 411px;
+  height: 391px;
   /* border: 1px solid rgba(0,0,0,0.1); */
   overflow: hidden;
   position: relative;
@@ -146,6 +145,36 @@ input[type="submit"]:hover {
     overflow: hidden;
 }
 
+.role__prev,
+.role__next {
+  height: 390px;
+  width: 40px;
+  position: absolute;
+  background: inherit;
+  cursor: pointer;
+  z-index: 1;
+  transition: background 0.5s, border 0s;
+}
+
+.role__prev {
+  left: -15px;
+}
+
+.role__next {
+  right: -15px;
+  top: 0;
+}
+
+.role__prev:hover {
+  border-right: 1px solid rgba(0, 0, 0, 0.1);
+  background: linear-gradient(to right, rgb(243, 244, 245) 0%, rgb(239, 236, 236) 88%, rgb(232, 230, 230) 100%);
+}
+
+.role__next:hover {
+  border-left: 1px solid rgba(0, 0, 0, 0.1);
+  background: linear-gradient(to left, rgb(243, 244, 245) 0%, rgb(239, 236, 236) 88%, rgb(232, 230, 230) 100%); 
+}
+
 .role__prev-button,
 .role__next-button {
   width: 15px;
@@ -159,21 +188,17 @@ input[type="submit"]:hover {
   vertical-align: middle;
   transition: 0.5s;
   position: absolute;
-  top: 40%;
-}
-
-.role__prev-button:hover,
-.role__next-button:hover {
-  border-color: #4054b2;
+  top: 45%;
 }
 
 .role__prev-button {
   transform: rotate(-45deg);
+  left: 15px;
 }
 
 .role__next-button {
   transform: rotate(135deg);
-  right: 0;
+  right: 15px;
 }
 
 .role__indicators {

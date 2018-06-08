@@ -256,7 +256,7 @@ function slide(e) {
 
   // PREVIOUS BUTTON
   // check if clicked button is 'previous button'
-  if (clickedButton.classList.contains("role__prev-button")) {
+  if (clickedButton.classList.contains("role__prev") || clickedButton.classList.contains("role__prev-button")) {
     // check if active indicator is the first one
     if (activeSlide === slidesList.firstElementChild) {
       // make the last slide active
@@ -285,7 +285,7 @@ function slide(e) {
 
   // NEXT BUTTON
   // check if clicked button is 'next button'
-  if (clickedButton.classList.contains("role__next-button")) {
+  if (clickedButton.classList.contains("role__next") || clickedButton.classList.contains("role__next-button")) {
     //check if active indicator is the last one
     if (activeSlide === slidesList.lastElementChild) {
       // make the first indicator active
