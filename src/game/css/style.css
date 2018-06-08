@@ -316,6 +316,18 @@ input.task:placeholder-shown {
 .monster {
     position: absolute;
     right: -300px;
+    display: flex;
+    width: 326px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.monster__figure {
+  width: 234px;
+  height: 280px;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .hero--appear {
@@ -340,6 +352,12 @@ input.task:placeholder-shown {
     background-image: url('../img/bodies-sprite.png');
     height: 152px;
     width: 234px;
+}
+
+.monster__satellite {
+  background-image: url('../img/satellites-sprite.png');
+    height: 136px;
+    width: 92px;
 }
 
 .game-info-panel {

@@ -19,28 +19,42 @@ function loadGame() {
 function generateMonster() {
   let headsNum = 28;
   let bodiesNum = 23;
-  let weaponsNum;
+  let satellitesNum = 5;
+
   let monsterHead = document.createElement("div");
   monsterHead.classList.add("monster__head");
+
   let monsterBody = document.createElement("div");
-  let monster = document.createDocumentFragment();
   monsterBody.classList.add("monster__body");
+
+  let monsterSatellite = document.createElement("div");
+  monsterSatellite.classList.add("monster__satellite");
+
+  let monster = document.querySelector('.monster');
+  let monsterFigure = document.querySelector('.monster__figure');
+
   monsterHead.style.backgroundPosition =
-    Math.round(Math.random() * (headsNum + 1)) * 184 + "px 0";
+  Math.round(Math.random() * (headsNum + 1)) * 184 + "px 0";
+
   monsterBody.style.backgroundPosition =
-    Math.round(Math.random() * (bodiesNum + 1)) * 234 + "px 0";
-  monster.appendChild(monsterHead);
-  monster.appendChild(monsterBody);
+  Math.round(Math.random() * (bodiesNum + 1)) * 234 + "px 0";
+
+  monsterSatellite.style.backgroundPosition =
+  Math.round(Math.random() * (satellitesNum + 1)) * 92 + "px 0";
+
+  monsterFigure.appendChild(monsterHead);
+  monsterFigure.appendChild(monsterBody);
+  monster.appendChild(monsterSatellite);
 
   return monster;
 }
 
-function showHeroes(hero, monster) {
+function showHeroes() {
   let heroContainer = document.querySelector(".hero");
   // heroContainer.appendChild(hero);
 
   let monsterContainer = document.querySelector(".monster");
-  monsterContainer.appendChild(monster);
+  // monsterContainer.appendChild(monster);
 
   heroContainer.classList.add("hero--appear");
   monsterContainer.classList.add("monster--appear");
@@ -51,7 +65,7 @@ function startGame(heroName, char, level = 1) {
   character.style.backgroundPosition = -(12 - char) * 267 + "px 0";
   let monster = generateMonster();
 
-  showHeroes(character, monster);
+  showHeroes();
 
   // Level by default is 1
   // If level === 1 showGuide() (guidance how to play, where to click and so on)
