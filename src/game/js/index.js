@@ -3,17 +3,14 @@ const pathToImgs = require.context("../img", true);
 
 // Temporary loads the game
 // TODO: Remove in last version
-document.addEventListener("DOMContentLoaded", loadGame);
+document.addEventListener("DOMContentLoaded", registerPlayer);
 
-function loadGame() {
-  // hideLandingPage();
-  // showGameField();
-  registerPlayer();
+function initHero(heroName, char) {
 
-  // Temporary loads game
-  // TODO: Remove in last version
-  // toggleRegisterFieldVisibility();
-  // startGame('Herooooo', 0);
+  let character = document.querySelector(".hero");
+  character.style.backgroundPosition = -(12 - char) * 267 + "px 0";
+  
+  setHeroName(heroName);
 }
 
 function generateMonster() {
@@ -45,8 +42,6 @@ function generateMonster() {
   monsterFigure.appendChild(monsterHead);
   monsterFigure.appendChild(monsterBody);
   monster.appendChild(monsterSatellite);
-
-  return monster;
 }
 
 function showHeroes() {
@@ -60,13 +55,16 @@ function showHeroes() {
   monsterContainer.classList.add("monster--appear");
 }
 
-function startGame(heroName, char, level = 1) {
-  let character = document.querySelector(".hero");
-  character.style.backgroundPosition = -(12 - char) * 267 + "px 0";
-  let monster = generateMonster();
+function startGame(level = 1) {
 
-  showHeroes();
-
+  if (level !== 1) {
+    changeMonster();
+    setFullHealth();
+  } else {
+    generateMonster();
+    showHeroes();
+  }
+  
   // Level by default is 1
   // If level === 1 showGuide() (guidance how to play, where to click and so on)
   // When monster will be defeated, we can call startGame()
@@ -74,7 +72,7 @@ function startGame(heroName, char, level = 1) {
 
   let monsterName = generateMonsterName();
   setLevel(level);
-  setHeroNames(heroName, monsterName);
+  setMonsterName(monsterName);
 
   //   //Temporary loads math task
   //   // TODO: Remove in last version
@@ -97,16 +95,24 @@ function startGame(heroName, char, level = 1) {
 
 function hideFightBox() {
   document.querySelector(".fight-box").classList.add("fight-box--collapse");
+  setTimeout(() => {
+    document.querySelector(".fight-box").classList.add("fight-box--hidden");
+    document.querySelector(".fight-box").classList.remove("fight-box--collapse");
+  }, 1000);
 }
 
 function showFightBox() {
   document.querySelector(".fight-box").classList.remove("fight-box--hidden");
+  document.querySelector('.fight-box__text').classList.add('fight-box__text--slide');
 }
 
-function setHeroNames(heroName, monsterName) {
+function setHeroName(heroName) {
   let hero = document.querySelector(".state__name--hero");
-  let monster = document.querySelector(".state__name--monster");
   hero.innerText = heroName;
+}
+
+function setMonsterName(monsterName) {
+  let monster = document.querySelector(".state__name--monster");
   monster.innerText = monsterName;
 }
 
@@ -134,7 +140,7 @@ function generateMonsterName() {
     ],
     'name': 
     [
-      'Том', 'Илон', 'Макс', 'Юрий', 'Петя', 'Фдам', 'Ефим', 'Алекс', 'Федя', 'Нил', 'Дэн', 'Ник', 'Роб', 'Миша', 
+      'Том', 'Илон', 'Макс', 'Юрий', 'Петя', 'Адам', 'Ефим', 'Алекс', 'Федя', 'Нил', 'Дэн', 'Ник', 'Роб', 'Миша', 
       'Аарон', 'Арсений', 'Дэвид', 'Руслан', 'Артур', 'Марк', 'Глеб', 'Егор', 'Илья', 'Клим', 'Ваня', 'Тим', 'Боб', 
       'Ян', 'Захар', 'Вадим', 'Коля', 'Георг', 'Макар', 'Игорь', 'Боря', 'Доминик', 'Ашот', 'Гавр', 'Гена'
     ],
@@ -164,15 +170,15 @@ function setLevel(level) {
   document.querySelector(".level__num").innerText = level;
 }
 
-function showGameField() {
-  let gameField = document.querySelector(".game-container");
-  gameField.classList.remove("game-container--hidden");
-}
+// function showGameField() {
+//   let gameField = document.querySelector(".game-container");
+//   gameField.classList.remove("game-container--hidden");
+// }
 
-function hideLandingPage() {
-  let landing = document.querySelector(".landing-container");
-  landing.classList.add("landing-container--hidden");
-}
+// function hideLandingPage() {
+//   let landing = document.querySelector(".landing-container");
+//   landing.classList.add("landing-container--hidden");
+// }
 
 function toggleRegisterFieldVisibility() {
   let form = document.querySelector(".register-form");
@@ -195,7 +201,8 @@ function registerPlayer() {
       .querySelector(".role__slide--active")
       .getAttribute("data-slide");
     toggleRegisterFieldVisibility();
-    startGame(login, char);
+    initHero(login, char);
+    startGame();
   });
 }
 
@@ -425,6 +432,7 @@ function generateMathTask() {
       } else if (currentDamage > maxDamage*0.1) {
         alert('Пффф... Слабак! Каши мало ел?!');
       }
+      
       //I can't get initial health - it should be equal to 100% in css class state__health-monster
       if(monsterHealth.style.width <= 0) {
         monsterHealth.style.width = 100 - currentDamage + "%";
@@ -436,7 +444,8 @@ function generateMathTask() {
           toggleTaskScreen();
 
           //some cool animation - monster is down
-          document.querySelector('.level__num').textContent = +document.querySelector('.level__num').textContent + 1;
+          startGame(+document.querySelector('.level__num').textContent + 1);
+          // document.querySelector('.level__num').textContent = +document.querySelector('.level__num').textContent + 1;
           // TODO: make maxDamage lower, e.g. MAX_DAMAGE -= 1;
           // split user/monster damage?
 

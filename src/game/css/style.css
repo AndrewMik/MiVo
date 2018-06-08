@@ -138,7 +138,7 @@ input[type="submit"]:hover {
 }
 
 .game-container {
-    background-image: url("../img/cosmo-bg.png");
+    background-image: url("../img/bg.jpg");
     background-size: cover;
     width: 100vw;
     height: 100vh;
@@ -433,8 +433,11 @@ input.task:placeholder-shown {
 
 .fight-box__text {
     font-size: 48px;
-    animation: fightSlide 4s forwards;
     /* animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86); */
+}
+
+.fight-box__text--slide {
+  animation: fightSlide 4s forwards;
 }
 
 @keyframes fightCollapse {
