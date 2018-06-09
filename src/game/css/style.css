@@ -577,3 +577,31 @@ input.task__translation {
   overflow: hidden;
   text-align: center;
 }
+
+.meteorit {
+  position: absolute;
+  top: 50%;
+  left: -300px;
+  background-image: url('../img/meteorite.png');
+  background-size: cover;
+  width: 300px;
+  height: 150px;
+}
+
+.meteorit {
+  animation: flightMeteorit 2s;
+}
+
+@keyframes flightMeteorit {
+  0% {
+      transform: translate(500px, -500px) scale(-1, 1) rotate(-45deg);
+  }
+
+  99% {
+    transform: translate(77vw, 0px) scale(-3, 3) rotate(-45deg);
+  }
+
+  100% {
+    transform: scale(0, 0);
+  }
+}
