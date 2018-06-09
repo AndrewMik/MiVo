@@ -49,6 +49,10 @@ function generateMonster() {
   monster.appendChild(monsterSatellite);
 }
 
+function showGameInfoPanel() {
+  document.querySelector('.panel').classList.remove('panel--hidden');
+}
+
 function showHeroes() {
   let heroContainer = document.querySelector(".hero");
   // heroContainer.appendChild(hero);
@@ -197,6 +201,7 @@ function registerPlayer() {
       .querySelector(".role__slide--active")
       .getAttribute("data-slide");
     toggleRegisterFieldVisibility();
+    showGameInfoPanel();
     initHero(login, char);
     startGame();
   });

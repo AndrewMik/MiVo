@@ -11,7 +11,7 @@
   /* position: fixed; */
   margin: 0 auto;
   width: 320px;
-  height: 92vh;
+  height: 94vh;
   color: #494949;
   padding: 30px;
   display: flex;
@@ -505,7 +505,8 @@ input.task:placeholder-shown {
 .landing-container--hidden,
 .game-container--hidden,
 .register-form--hidden,
-.modal--hidden {
+.modal--hidden,
+.panel--hidden {
   display: none;
 }
 
