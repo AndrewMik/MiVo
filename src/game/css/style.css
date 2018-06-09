@@ -545,3 +545,35 @@ input.task__translation {
   border-radius: 2px;
   background-color: #efefef;
 }
+
+.dialogue__hero,
+.dialogue__monster {
+  background-image: url('../img/dialogue.png');
+  background-size: cover;
+  position: absolute;
+  top: -150px;
+  left: 110px;
+  height: 220px;
+  width: 300px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+.dialogue__monster,
+.dialogue__monster-message {
+  left: -150px;
+  transform: scale(-1, 1);
+}
+
+.dialogue--hidden {
+  display: none;
+}
+
+.dialogue__hero-message,
+.dialogue__monster-message {
+  margin: 0px 50px 20px 50px;
+  overflow: hidden;
+  text-align: center;
+}

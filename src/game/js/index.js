@@ -8,6 +8,16 @@ import 'jquery-ui';
 import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/disable-selection';
 
+
+// Should run only once
+$( function() {
+  $( ".task__condition" ).sortable({
+    axis: "x",
+    cursor: "move"
+  });
+  $( ".task__condition" ).disableSelection();
+} );
+
 // Temporary loads the game
 // TODO: Remove in last version
 document.addEventListener("DOMContentLoaded", registerPlayer);
@@ -52,6 +62,20 @@ function generateMonster() {
   monsterFigure.appendChild(monsterBody);
   monster.appendChild(monsterFigure);
   monster.appendChild(monsterSatellite);
+
+  createMonsterDialogue(monsterFigure);
+}
+
+function createMonsterDialogue(monsterDiv) {
+  let monsterDialogue= document.createElement("div");
+  monsterDialogue.classList.add("dialogue__monster");
+  monsterDialogue.classList.add("dialogue--hidden");
+
+  monsterDiv.appendChild(monsterDialogue);
+
+  let monsterMessage = document.createElement("p");
+  monsterMessage.classList.add("dialogue__monster-message");
+  monsterDialogue.appendChild(monsterMessage);
 }
 
 function showGameInfoPanel() {
@@ -89,9 +113,10 @@ function setFullHealth() {
 
 function startGame(level = 1) {
 
+  setFullHealth();
+
   if (level !== 1) {
     changeMonster();
-    setFullHealth();
   } else {
     generateMonster();
     showHeroes();
@@ -114,7 +139,9 @@ function startGame(level = 1) {
   setTimeout(showFightBox, 2000);
   setTimeout(() => {
     hideFightBox();
-    setTimeout(chooseSpell, 1000);
+    showHeroMessage();
+    showMonsterMessage();
+    setTimeout(chooseSpell, 3000);
     //Temporary shows and hides the modal dialogue to choose a spell
     // TODO: Remove in last version
     // setTimeout(hideModalChooseSpell, 2000);
@@ -380,6 +407,7 @@ function setSpellTask(spell, generateSpellTask) {
 }
 
 function generateTaskMath() {
+  $(".task__condition").sortable("disable");
   const taskForm = getTaskForm();
   const taskCondContainer = getCondContainer();
   const min = 1;
@@ -419,6 +447,9 @@ function generateTaskMath() {
   math[mathOperation](firstNumber, secondNumber);
   const EQUALS = '=';
 
+  const taskTranslationMessage = "Реши пример";
+  showTaskMessage(taskTranslationMessage);
+
   const userInput = createInputForAnswer();
 
   clearContainer(taskCondContainer);
@@ -442,55 +473,101 @@ function solveTask(taskElement, userInput, correctAnswer, eventHandlerFunction, 
     userAnswer = userInput;
   }
 
+  let monsterHealth = document.querySelector('.state__health-monster');
+  let heroHealth = document.querySelector('.state__health-hero');
+  let isOpponentDead = false;
+  let isHeroDead = false;
+
   if( +userAnswer === correctAnswer || userAnswer === correctAnswer) {
-    let monsterHealth = document.querySelector('.state__health-monster');
-    let maxDamage = 40;
+    isOpponentDead = damageOpponent(monsterHealth, maxDamageFromUser);
 
-    let currentDamage = Math.floor((Math.random() * maxDamage));
-    alert('Вау!!! Ты ответил правильно!!! Гениально!!! Нанесено урона: ' + currentDamage);
+    if (isOpponentDead) {
+      victory();
+      taskElement.removeEventListener('submit', eventHandlerFunction);
+      toggleTaskScreen();
 
-    if(currentDamage > maxDamage*0.8) {
-      alert('Опачки! Крит damage с вертушки!');
-    } else if (currentDamage < maxDamage*0.1) {
-      alert('Пффф... Слабак! Каши мало ел?!');
-    }
+      startGame(+document.querySelector('.level__num').textContent + 1);
+      return;
+    } 
     
-    //I can't get initial health - it should be equal to 100% in css class state__health-monster
-    if(monsterHealth.style.width <= 0) {
-      monsterHealth.style.width = 100 - currentDamage + "%";
-    } else {
-      if(Number.parseInt(monsterHealth.style.width) - currentDamage <= 0) {
-        monsterHealth.style.width = '0%';
-        alert('Победа!');
+      isHeroDead = damageOpponent(heroHealth, maxDamageFromMonster);
+      if (isHeroDead) {
         taskElement.removeEventListener('submit', eventHandlerFunction);
         toggleTaskScreen();
 
-        //some cool animation - monster is down
-        startGame(+document.querySelector('.level__num').textContent + 1);
-        // document.querySelector('.level__num').textContent = +document.querySelector('.level__num').textContent + 1;
-        // TODO: make maxDamage lower, e.g. MAX_DAMAGE -= 1;
-        // split user/monster damage?
-
-        //generate new monster
+        gameOver();
         return;
-      }
-      monsterHealth.style.width = Number.parseInt(monsterHealth.style.width) - currentDamage + "%";
     }
+
   } else if (Array.isArray(correctAnswer)) {
     correctAnswer.forEach(answer => {
       if(answer === userAnswer) {
-        alert('Во даешь! Правильно! Ответ: ' + answer);
-        }
+        showMonsterMessage('Как ты догадался?!');
+      }
     });
   } else {
-    alert('Друг мой, в этот раз ты дико ошибся'); 
+    showMonsterMessage(`Уха-ХA-ха!`);
+    isHeroDead = damageOpponent(heroHealth, maxDamageFromMonster);
+    if (isHeroDead) {
+      taskElement.removeEventListener('submit', eventHandlerFunction);
+      toggleTaskScreen();
+
+      gameOver();
+      return;
+  }
   }
   taskElement.removeEventListener('submit', eventHandlerFunction);
   toggleTaskScreen();
-  setTimeout(chooseSpell, 1000);
+  setTimeout(chooseSpell, 3000);
+}
+
+function victory(){
+  showHeroMessage(`Я ЕСТЬ ГРУУУУУУУТ!!!`);
+  maxDamageFromUser -= 1;
+  maxDamageFromMonster += 2;
+}
+
+function gameOver(){
+  showMonsterMessage(`Лузер!`);
+}
+
+let maxDamageFromUser = 40;
+let maxDamageFromMonster = 10;
+
+function damageOpponent(opponentHealth, maxDamage) {
+  let isDead = false;
+
+  let heroHealth = document.querySelector('.state__health-hero');
+
+  let currentDamage = Math.floor((Math.random() * maxDamage));
+
+  if (Number.parseInt(opponentHealth.style.width) - currentDamage <= 0) {
+    opponentHealth.style.width = '0%';
+    
+    isDead = true;
+    return isDead;
+  }
+
+  if (opponentHealth !== heroHealth) {
+    showHeroMessage();
+
+    if (currentDamage > maxDamage * 0.8) {
+      showHeroMessage(`Я есть Грут!<br><br>***Чертовски крут!***`);
+    } else if (currentDamage < maxDamage * 0.5) {
+      showMonsterMessage(`Пффф... Слабак!<br><br> Каши мало ел?!`);
+    }
+  } else {
+    setTimeout(() => {   
+      showMonsterMessage(`Получай!`);   
+    }, 500);
+  }
+
+  opponentHealth.style.width = Number.parseInt(opponentHealth.style.width) - currentDamage + "%";
+  return isDead;
 }
 
 function generateTaskTranslation() {
+  $(".task__condition").sortable("disable");
   const TASK_TRANSLATION = "translation";
 
   const taskForm = getTaskForm();
@@ -520,7 +597,8 @@ function generateTaskTranslation() {
 }
 
 function generateTaskSortLetters() {
-  const TASK_SORTLETTERS = "sort-letters";
+
+  $(".task__condition").sortable("enable");
 
   const taskForm = getTaskForm();
   let taskCondContainer = getCondContainer();
@@ -564,19 +642,11 @@ function generateTaskSortLetters() {
 
   appendCondition(taskCondContainer, lettersFragment);
 
-  $( function() {
-    $( ".task__condition" ).sortable({
-      axis: "x",
-      cursor: "move",
-      cancel: ".task__submit"
-    });
-    $( ".task__condition" ).disableSelection();
-  } );
-
   taskForm.addEventListener('submit', solveSortLettersTask);
   
   function solveSortLettersTask() {
     let userInput = getSortLettersSolution(taskCondContainer);
+    $(".task__condition").sortable("disable");
     solveTask(taskForm, userInput, correctAnswer, solveSortLettersTask, event);
   }
 
@@ -642,4 +712,26 @@ function createInputForAnswer(answerLength = 5, taskName) {
  */
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function showHeroMessage(message, seconds) {
+  message = message || "Я есть Грут!";
+  seconds = seconds * 1000 || 2000;
+
+  document.querySelector(".dialogue__hero").classList.remove("dialogue--hidden");
+  document.querySelector(".dialogue__hero-message").innerHTML = message;
+  setTimeout(() => {
+     document.querySelector(".dialogue__hero").classList.add("dialogue--hidden");
+  }, seconds);
+}
+
+function showMonsterMessage(message, seconds) {
+  message = message || "Ты есть грунт!!!";
+  seconds = seconds * 1000 || 2000;
+
+  document.querySelector(".dialogue__monster").classList.remove("dialogue--hidden");
+  document.querySelector(".dialogue__monster-message").innerHTML = message;
+  setTimeout(() => {
+     document.querySelector(".dialogue__monster").classList.add("dialogue--hidden");
+  }, seconds);
 }
