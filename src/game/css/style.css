@@ -332,7 +332,8 @@ input.task:placeholder-shown {
 
 .hero {
     position: absolute;
-    left: -300px;
+    left: 0;
+    transform: translate(-330px);
     background-image: url('../img/heros-sprite.png');
     height: 390px;
     width: 267px;
@@ -340,9 +341,10 @@ input.task:placeholder-shown {
 
 .monster {
     position: absolute;
-    right: -300px;
     display: flex;
     width: 326px;
+    right: 0;
+    transform: translate(330px);
     flex-wrap: wrap;
     align-items: flex-end;
 }
@@ -356,11 +358,18 @@ input.task:placeholder-shown {
 }
 
 .hero--appear {
-    animation: heroAppear 2s forwards;
+  transform: translate(200px);
+  transition: transform 2s;
 }
 
 .monster--appear {
-    animation: monsterAppear 2s forwards;
+    transform: translate(-200px);
+    transition: transform 2s;
+}
+
+.monster--hide {
+  transform: translate(500px);
+  transition: transform 2s;
 }
 
 .monster__head, .monster__body {
@@ -490,26 +499,6 @@ input.task:placeholder-shown {
 
     100% {
         transform: translateX(-100vw);
-    }
-}
-
-@keyframes heroAppear {
-    from {
-        transform: translateX(-300px);
-    }
-
-    to {
-        transform: translateX(500px);
-    }
-}
-
-@keyframes monsterAppear {
-    from {
-        transform: translateX(300px);
-    }
-
-    to {
-        transform: translateX(-500px);
     }
 }
 

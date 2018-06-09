@@ -2,7 +2,6 @@ import "../css/style.css";
 import monsterNames from './monsterNames.json';
 const pathToImgs = require.context("../img", true);
 
-
 // Temporary loads the game
 // TODO: Remove in last version
 document.addEventListener("DOMContentLoaded", registerPlayer);
@@ -29,8 +28,10 @@ function generateMonster() {
   let monsterSatellite = document.createElement("div");
   monsterSatellite.classList.add("monster__satellite");
 
+  let monsterFigure = document.createElement('div');
+  monsterFigure.classList.add('monster__figure');
+
   let monster = document.querySelector('.monster');
-  let monsterFigure = document.querySelector('.monster__figure');
 
   monsterHead.style.backgroundPosition =
   Math.round(Math.random() * (headsNum + 1)) * 184 + "px 0";
@@ -43,6 +44,7 @@ function generateMonster() {
 
   monsterFigure.appendChild(monsterHead);
   monsterFigure.appendChild(monsterBody);
+  monster.appendChild(monsterFigure);
   monster.appendChild(monsterSatellite);
 }
 
@@ -55,6 +57,23 @@ function showHeroes() {
 
   heroContainer.classList.add("hero--appear");
   monsterContainer.classList.add("monster--appear");
+}
+
+function changeMonster() {
+  let monster = document.querySelector('.monster');
+  monster.classList.add('monster--hide');
+  setTimeout(() => {
+    while (monster.firstChild) {
+      monster.removeChild(monster.firstChild);
+    }
+    generateMonster();
+    monster.classList.remove('monster--hide');
+  }, 2000);  
+}
+
+function setFullHealth() {
+  document.querySelector('.state__health-monster').style.width = 100 + '%';
+  document.querySelector('.state__health-hero').style.width = 100 + '%';
 }
 
 function startGame(level = 1) {
