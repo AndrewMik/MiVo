@@ -80,7 +80,7 @@ function startGame(level = 1) {
   //   // TODO: Remove in last version
   // toggleTaskScreen();
   // hideModalChooseSpell();
-  // generateMathTask();
+  // generateTaskMath();
   setTimeout(showFightBox, 2000);
   setTimeout(() => {
     hideFightBox();
@@ -294,7 +294,11 @@ function chooseSpell() {
 
   toggleElementVisibility(modalChooseSpell);
 
-  setSpellMathEvent();
+  let spellMath = document.getElementById('spell-math');
+  setSpellTask(spellMath, generateTaskMath);
+
+  let spellTranslation = document.getElementById('spell-translation');
+  setSpellTask(spellTranslation, generateTaskTranslation);
 
   document.body.addEventListener('click', checkModalChooseSpellClicked);
 }
@@ -325,30 +329,28 @@ function checkModalChooseSpellClicked() {
 
   //event.target is read only
   let eventTarget = event.target;
-  let isModalContantClicked = false;
+  let isModalContentClicked = false;
 
   while (eventTarget !== document.body) {
     if ( eventTarget === modalContentChooseSpell ) {
-      isModalContantClicked = true;
+      isModalContentClicked = true;
     }
     eventTarget = eventTarget.parentElement;
   }
 
-  if (!isModalContantClicked) {
+  if (!isModalContentClicked) {
     toggleElementVisibility(modalChooseSpell);
   }
 }
 
-function setSpellMathEvent() {
-  let spellMath = document.getElementById('spell-math');
-
-  spellMath.addEventListener('click', hideModalChooseSpell);
-  spellMath.addEventListener('click', toggleTaskScreen);
-  spellMath.addEventListener('click', generateMathTask);
+function setSpellTask(spell, generateSpellTask) {
+  spell.addEventListener('click', hideModalChooseSpell);
+  spell.addEventListener('click', toggleTaskScreen);
+  spell.addEventListener('click', generateSpellTask);
 }
 
-function generateMathTask() {
-  let mathTask = document.getElementById('task-to-solve');
+function generateTaskMath() {
+  const taskForm = getTaskForm();
   const min = 1;
   const max = 10;
 
@@ -378,96 +380,142 @@ function generateMathTask() {
     }
   };
   
-  mathTask.classList.add('math__numbers');
-  
-  let firstNumberElement = document.createElement('p');
-  let mathOperatorElement = document.createElement('p');
-  let secondNumberElement = document.createElement('p');
-  let equalsElement = document.createElement('p');
-  
-  
   let correctAnswer;
-  let firstNumber = getRandomInt(min, max);
-  let secondNumber = getRandomInt(min, max);
+  const firstNumber = getRandomInt(min, max);
+  const secondNumber = getRandomInt(min, max);
   let mathOperator;
-  let mathOperation = operations[getRandomInt(0, 3)];
+  const mathOperation = operations[getRandomInt(0, 3)];
   math[mathOperation](firstNumber, secondNumber);
+  const EQUALS = '=';
 
-  firstNumberElement.textContent = firstNumber;
-  mathOperatorElement.textContent = mathOperator;
-  secondNumberElement.textContent = secondNumber;
+  const userInput = createInputForAnswer();
 
-  equalsElement.textContent = '=';
+  clearForm(taskForm);
+  
+  appendCondition(taskForm, firstNumber, mathOperator, secondNumber, EQUALS);
+  taskForm.appendChild(userInput);
 
+  taskForm.addEventListener('submit', solveMathTask);
+  
+  function solveMathTask() {
+    solveTask(taskForm, userInput, correctAnswer, solveMathTask, event);
+  }
+}
+
+function solveTask(taskElement, userInput, correctAnswer, eventHandlerFunction, currentEvent) {
+  currentEvent.preventDefault();
+  if( +userInput.value === correctAnswer || userInput.value === correctAnswer) {
+    let monsterHealth = document.querySelector('.state__health-monster');
+    let maxDamage = 40;
+
+    let currentDamage = Math.floor((Math.random() * maxDamage));
+    alert('Вау!!! Ты ответил правильно!!! Гениально!!! Нанесено урона: ' + currentDamage);
+
+    if(currentDamage > maxDamage*0.8) {
+      alert('Опачки! Крит damage с вертушки!');
+    } else if (currentDamage < maxDamage*0.1) {
+      alert('Пффф... Слабак! Каши мало ел?!');
+    }
+    
+    //I can't get initial health - it should be equal to 100% in css class state__health-monster
+    if(monsterHealth.style.width <= 0) {
+      monsterHealth.style.width = 100 - currentDamage + "%";
+    } else {
+      if(Number.parseInt(monsterHealth.style.width) - currentDamage <= 0) {
+        monsterHealth.style.width = '0%';
+        alert('Победа!');
+        taskElement.removeEventListener('submit', eventHandlerFunction);
+        toggleTaskScreen();
+
+        //some cool animation - monster is down
+        startGame(+document.querySelector('.level__num').textContent + 1);
+        // document.querySelector('.level__num').textContent = +document.querySelector('.level__num').textContent + 1;
+        // TODO: make maxDamage lower, e.g. MAX_DAMAGE -= 1;
+        // split user/monster damage?
+
+        //generate new monster
+        return;
+      }
+      monsterHealth.style.width = Number.parseInt(monsterHealth.style.width) - currentDamage + "%";
+    }
+  } else {
+    alert('Друг мой, в этот раз ты дико ошибся'); 
+  }
+  taskElement.removeEventListener('submit', eventHandlerFunction);
+  toggleTaskScreen();
+  setTimeout(chooseSpell, 1000);
+}
+
+function generateTaskTranslation() {
+  const TASK_TRANSLATION = "translation";
+
+  const taskForm = getTaskForm();
+
+  clearForm(taskForm);
+
+  //TODO: JSON file and get a random word with relevant translations (array)
+  // const dictionary = parseJSON();
+  const word = "cat";
+  const correctAnswer = "кот";
+
+  const taskTranslationMessage = "Переведи слово";
+  showTaskMessage(taskTranslationMessage);
+
+  const maxInputLength = 10;
+  const userInput = createInputForAnswer(maxInputLength, TASK_TRANSLATION);
+
+  appendCondition(taskForm, word);
+  taskForm.appendChild(userInput);
+
+  taskForm.addEventListener('submit', solveTranslationTask);
+  
+  function solveTranslationTask() {
+    solveTask(taskForm, userInput, correctAnswer, solveTranslationTask, event);
+  }
+}
+
+function getTaskForm() {
+  return document.getElementById('task-to-solve');
+}
+
+function clearForm(formToClear) {
+  while(formToClear.firstElementChild) {
+    formToClear.removeChild(formToClear.firstElementChild);
+  }
+}
+
+function appendCondition(taskForm, ...conditions) {
+  conditions.forEach( condition => {
+    let conditionElement = document.createElement('p');
+    conditionElement.textContent = condition;
+    taskForm.appendChild(conditionElement);
+  });
+}
+
+function showTaskMessage(textToDisplay) {
+  let taskMessage = document.getElementById('task-todo-message');
+  taskMessage.innerText = textToDisplay;
+}
+
+function createInputForAnswer(answerLength, taskName) {
   let userInput = document.createElement('input');
+
+  let defaultAnswerLength = 5;
+  answerLength = answerLength || defaultAnswerLength;
+
   userInput.type = "text";
   userInput.classList.add('task');
   userInput.placeholder = "Ответ";
   userInput.autofocus = true;
-  userInput.maxLength = 4;
-  userInput.id = "math-task-answer";
+  userInput.maxLength = answerLength;
   userInput.autocomplete = "off";
 
-  console.log(correctAnswer);
-
-  while(mathTask.firstElementChild) {
-    mathTask.removeChild(mathTask.firstElementChild);
+  if(taskName) {
+    userInput.classList.add('task__' + taskName);
   }
 
-  mathTask.appendChild(firstNumberElement);
-  mathTask.appendChild(mathOperatorElement);
-  mathTask.appendChild(secondNumberElement);
-  mathTask.appendChild(equalsElement);
-  mathTask.appendChild(userInput);
-
-
-  mathTask.addEventListener('submit', solveTask);
-  
-  function solveTask() {
-    event.preventDefault();
-    if( +userInput.value === correctAnswer) {
-      let monsterHealth = document.querySelector('.state__health-monster');
-      let maxDamage = 40;
-
-      let currentDamage = Math.floor((Math.random() * maxDamage));
-      alert('Вау!!! Ты ответил правильно!!! Гениально!!! Нанесено урона: ' + currentDamage);
-
-      if(currentDamage > maxDamage*0.8) {
-        alert('Опачки! Крит damage с вертушки!');
-      } else if (currentDamage < maxDamage*0.1) {
-        alert('Пффф... Слабак! Каши мало ел?!');
-      }
-      
-      //I can't get initial health - it should be equal to 100% in css class state__health-monster
-      if(monsterHealth.style.width <= 0) {
-        monsterHealth.style.width = 100 - currentDamage + "%";
-      } else {
-        if(Number.parseInt(monsterHealth.style.width) - currentDamage <= 0) {
-          monsterHealth.style.width = '0%';
-          alert('Победа!');
-          mathTask.removeEventListener('submit', solveTask);
-          toggleTaskScreen();
-
-          //some cool animation - monster is down
-          startGame(+document.querySelector('.level__num').textContent + 1);
-          // document.querySelector('.level__num').textContent = +document.querySelector('.level__num').textContent + 1;
-          // TODO: make maxDamage lower, e.g. MAX_DAMAGE -= 1;
-          // split user/monster damage?
-
-          //generate new monster
-          return;
-        }
-        monsterHealth.style.width = Number.parseInt(monsterHealth.style.width) - currentDamage + "%";
-      }
-    } else {
-      alert('Друг мой, в этот раз ты дико ошибся, а мог нанести' + currentDamage + 'урона'); 
-    }
-    mathTask.removeEventListener('submit', solveTask);
-    toggleTaskScreen();
-    setTimeout(chooseSpell, 1000);
-  }
+  return userInput;
 }
-
 /**
  * Returns a random integer between min (inclusive) and max (inclusive)
  * Using Math.round() will give you a non-uniform distribution!

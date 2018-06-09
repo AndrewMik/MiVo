@@ -524,12 +524,16 @@ input.task:placeholder-shown {
   display: none;
 }
 
-.math__numbers {
+.task__condition {
   font-size: 30px;
   font-weight: bold;
   color: blue;
 }
 
-.math__numbers p {
+.task__condition p {
   margin: 10px;
+}
+
+input.task__translation {
+  width: 230px;
 }
