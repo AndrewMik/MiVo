@@ -401,10 +401,10 @@ function generateTaskMath() {
   };
   
   let correctAnswer;
-  const firstNumber = getRandomInt(min, max);
-  const secondNumber = getRandomInt(min, max);
+  let firstNumber = getRandomInt(min, max);
+  let secondNumber = getRandomInt(min, max);
   let mathOperator;
-  const mathOperation = operations[getRandomInt(0, 3)];
+  let mathOperation = operations[getRandomInt(0, 3)];
   math[mathOperation](firstNumber, secondNumber);
   const EQUALS = '=';
 
@@ -424,7 +424,7 @@ function generateTaskMath() {
 
 function solveTask(taskElement, userInput, correctAnswer, eventHandlerFunction, currentEvent) {
   currentEvent.preventDefault();
-  
+
   const userAnswer = userInput.value.toLowerCase();
 
   if( +userAnswer === correctAnswer || userAnswer === correctAnswer) {
