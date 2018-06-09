@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: sans-serif;
 }
 
 .register-form {
@@ -52,12 +53,15 @@ input[type="submit"] {
   border: 2px solid #fecc00;
   color: #494949;
   font-weight: 600;
-  font-size: 1.375em;
   height: 3rem;
   display: inline-block;
   transition: opacity 0.3s, color 0.3s, background-color 0.3s, border-color 0.3s;
   cursor: pointer;
   vertical-align: middle;
+}
+
+.form__button {
+  font-size: 1.375em;
   width: 200px;
 }
 
@@ -231,8 +235,7 @@ input[type="submit"]:hover {
   transform: scale(1.5);
 }
 
-.modal,
-.modal-screen-task {
+.modal {
   width: 100%;
   height: 100%;
   position: fixed;
@@ -245,12 +248,11 @@ input[type="submit"]:hover {
   display: flex;
 }
 
-.modal-screen-task {
+.modal--task {
   background-color: rgba(255, 255, 255, 0.9);
 }
 
-.modal__modal-content,
-.modal-screen-task__modal-content {
+.modal__content {
   width: 50%;
   height: 50%;
   margin: auto;
@@ -265,30 +267,43 @@ input[type="submit"]:hover {
   min-width: 700px;
 }
 
-.modal-screen-task__modal-content {
-  width: 30%;
+.modal__content--task {
   height: 30%;
   background-image: none;
   min-height: 150px;
   min-width: 400px;
 }
 
-.modal__text,
-.modal-screen-task__text {
+.modal__text {
   text-align: center;
   color: azure;
   font-size: 30px;
   font-weight: bold;
 }
 
-.modal-screen-task__text {
+.modal__text--task {
   color: #494949;
 }
 
-.modal-screen-task__task {
+.modal__task {
   display: flex;
   justify-content: center;
   align-items: center;
+  font-size: 30px;
+  font-weight: bold;
+  color: blue;
+  flex-wrap: wrap;
+}
+
+.task__condition {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.task__button {
+  width: 100%;
+  font-size: 24px;
 }
 
 input.task {
@@ -311,7 +326,7 @@ input.task:placeholder-shown {
   align-items: center;
 }
 
-.modal__spell {
+.spells__item {
   max-width: 150px;
   max-height: 150px;
   opacity: 0.8;
@@ -320,7 +335,7 @@ input.task:placeholder-shown {
   background-color: rgba(255,255,255);
 }
 
-.modal__spell:hover {
+.spells__item:hover {
   opacity: 1;
   transform: scale(1.2);
 }
@@ -514,16 +529,19 @@ input.task:placeholder-shown {
   display: none;
 }
 
-.task__condition {
-  font-size: 30px;
-  font-weight: bold;
-  color: blue;
-}
-
-.task__condition p {
+.modal__task p {
   margin: 10px;
 }
 
 input.task__translation {
   width: 230px;
+}
+
+.task__letter {
+  padding: 10px;
+  width: 40px;
+  box-sizing: border-box;
+  border: 1px solid black;
+  border-radius: 2px;
+  background-color: #efefef;
 }

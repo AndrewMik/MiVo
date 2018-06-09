@@ -33,7 +33,7 @@
                 </div>
             </div>
 
-            <input type="submit" value="Играть">
+            <input class="form__button" type="submit" value="Играть">
         </form>
 
         <div class="game-info-panel panel panel--hidden">
@@ -70,23 +70,27 @@
         </div>
     </div>
 
-    <section class="modal modal--hidden" id="modal-choose-spell">
-        <div class="modal__modal-content" id="modal-content-choose-spell">
+    <section class="modal modal--hidden" id="choose-spell">
+        <div class="modal__content" id="choose-spell-content">
             <p class="modal__text">Произнести заклинание</p>
-            <div class="modal__spells">
-                <img class="modal__spell" id="spell-math" src="./img/math.png">
-                <img class="modal__spell" src="./img/listening.png">
-                <img class="modal__spell" src="./img/mix.png">
-                <img class="modal__spell" id="spell-translation" src="./img/translate.png">
+            <div class="modal__spells spells">
+                <img class="spells__item" id="spell-math" src="./img/math.png">
+                <img class="spells__item" src="./img/listening.png">
+                <img class="spells__item" id="spell-sort-letters" src="./img/mix.png">
+                <img class="spells__item" id="spell-translation" src="./img/translate.png">
             </div>
         </div>
         </div>
     </section>
 
-    <section class="modal-screen-task modal--hidden" id="modal-screen-task">
-        <div class="modal-screen-task__modal-content" id="modal-content-screen-task">
-            <p class="modal-screen-task__text" id="task-todo-message">Решите пример</p>
-            <form class="modal-screen-task__task task__condition" id="task-to-solve">
+    <section class="modal modal--task modal--hidden" id="task">
+        <div class="modal__content modal__content--task" id="task-content">
+            <p class="modal__text modal__text--task" id="task-todo-message">Решите пример</p>
+            <form class="modal__task task" id="task-to-solve">
+                <div class="task__condition">
+
+                </div>
+                <input class="task__button" type="submit" value="Применить заклинание">
             </form>
         </div>
     </section>

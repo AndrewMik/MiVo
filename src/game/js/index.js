@@ -1,7 +1,12 @@
 import "../css/style.css";
 import monsterNames from './monsterNames.json';
 import dictionary from './dictionary.json';
+import words from './words.json';
 const pathToImgs = require.context("../img", true);
+import $ from 'jquery';
+import 'jquery-ui';
+import 'jquery-ui/ui/widgets/sortable';
+import 'jquery-ui/ui/disable-selection';
 
 // Temporary loads the game
 // TODO: Remove in last version
@@ -68,9 +73,10 @@ function changeMonster() {
   let monster = document.querySelector('.monster');
   monster.classList.add('monster--hide');
   setTimeout(() => {
-    while (monster.firstChild) {
-      monster.removeChild(monster.firstChild);
-    }
+    clearContainer(monster);
+    // while (monster.firstChild) {
+    //   monster.removeChild(monster.firstChild);
+    // }
     generateMonster();
     monster.classList.remove('monster--hide');
   }, 2000);  
@@ -252,7 +258,6 @@ function slide(e) {
 
   let slidesList = slider.querySelector(".role__slider");
   let activeSlide = slider.querySelector(".role__slide--active");
-
   let clickedButton = e.target;
 
   // PREVIOUS BUTTON
@@ -315,7 +320,7 @@ function slide(e) {
 }
 
 function chooseSpell() {
-  let modalChooseSpell = document.getElementById('modal-choose-spell');
+  let modalChooseSpell = document.getElementById('choose-spell');
 
   toggleElementVisibility(modalChooseSpell);
 
@@ -325,21 +330,21 @@ function chooseSpell() {
   let spellTranslation = document.getElementById('spell-translation');
   setSpellTask(spellTranslation, generateTaskTranslation);
 
+  let spellSortLetters = document.getElementById('spell-sort-letters');
+  setSpellTask(spellSortLetters, generateTaskSortLetters);
+
   document.body.addEventListener('click', checkModalChooseSpellClicked);
 }
 
 function hideModalChooseSpell() {
-  let modalChooseSpell = document.getElementById('modal-choose-spell');
-  let modalContentChooseSpell = document.getElementById('modal-content-choose-spell');
-
+  let modalChooseSpell = document.getElementById('choose-spell');
   modalChooseSpell.classList.add('modal--hidden');
-
   document.body.removeEventListener('click', checkModalChooseSpellClicked);
 }
 
 //Screen task
 function toggleTaskScreen() {
-  let taskScreen = document.getElementById('modal-screen-task');
+  let taskScreen = document.getElementById('task');
 
   toggleElementVisibility(taskScreen);
 }
@@ -349,8 +354,8 @@ function toggleElementVisibility(element) {
 }
 
 function checkModalChooseSpellClicked() {
-  let modalChooseSpell = document.getElementById('modal-choose-spell');
-  let modalContentChooseSpell = document.getElementById('modal-content-choose-spell');
+  let modalChooseSpell = document.getElementById('choose-spell');
+  let modalContentChooseSpell = document.getElementById('choose-spell-content');
 
   //event.target is read only
   let eventTarget = event.target;
@@ -376,6 +381,7 @@ function setSpellTask(spell, generateSpellTask) {
 
 function generateTaskMath() {
   const taskForm = getTaskForm();
+  const taskCondContainer = getCondContainer();
   const min = 1;
   const max = 10;
 
@@ -415,22 +421,26 @@ function generateTaskMath() {
 
   const userInput = createInputForAnswer();
 
-  clearForm(taskForm);
+  clearContainer(taskCondContainer);
   
-  appendCondition(taskForm, firstNumber, mathOperator, secondNumber, EQUALS);
-  taskForm.appendChild(userInput);
+  appendCondition(taskCondContainer, firstNumber, mathOperator, secondNumber, EQUALS, userInput);
+  // taskCondContainer.appendChild(userInput);
 
   taskForm.addEventListener('submit', solveMathTask);
   
-  function solveMathTask() {
+  function solveMathTask() {    
     solveTask(taskForm, userInput, correctAnswer, solveMathTask, event);
   }
 }
 
 function solveTask(taskElement, userInput, correctAnswer, eventHandlerFunction, currentEvent) {
   currentEvent.preventDefault();
-
-  const userAnswer = userInput.value.toLowerCase();
+  let userAnswer;
+  if (typeof userInput === 'object' ) {
+    userAnswer = userInput.value.toLowerCase();   
+  } else {
+    userAnswer = userInput;
+  }
 
   if( +userAnswer === correctAnswer || userAnswer === correctAnswer) {
     let monsterHealth = document.querySelector('.state__health-monster');
@@ -484,8 +494,9 @@ function generateTaskTranslation() {
   const TASK_TRANSLATION = "translation";
 
   const taskForm = getTaskForm();
+  let taskCondContainer = getCondContainer();
 
-  clearForm(taskForm);
+  clearContainer(taskCondContainer);
  
   const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
   
@@ -498,8 +509,8 @@ function generateTaskTranslation() {
   const maxInputLength = 10;
   const userInput = createInputForAnswer(maxInputLength, TASK_TRANSLATION);
 
-  appendCondition(taskForm, word);
-  taskForm.appendChild(userInput);
+  appendCondition(taskCondContainer, word, userInput);
+  // taskForm.appendChild(userInput);
 
   taskForm.addEventListener('submit', solveTranslationTask);
   
@@ -508,21 +519,99 @@ function generateTaskTranslation() {
   }
 }
 
-function getTaskForm() {
-  return document.getElementById('task-to-solve');
+function generateTaskSortLetters() {
+  const TASK_SORTLETTERS = "sort-letters";
+
+  const taskForm = getTaskForm();
+  let taskCondContainer = getCondContainer();
+
+  clearContainer(taskCondContainer);
+ 
+  const randomWord = getRandomInt(0, words.length-1);
+  
+  const correctAnswer = words[randomWord];
+  
+  const letters = shuffleLetters(correctAnswer.split(''));  
+
+  function shuffleLetters(array) {
+    let currentIndex = array.length;
+    let temporaryValue;
+    let randomIndex;
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+    return array;
+  }
+
+  const taskTranslationMessage = "Двигай буквы и собери слово";
+  showTaskMessage(taskTranslationMessage);
+
+  // const maxInputLength = 10;
+  // const userInput = createInputForAnswer(maxInputLength, TASK_SORTLETTERS);
+
+  // Append sortable letters
+  let lettersFragment = document.createDocumentFragment();
+  letters.forEach((letter) => {
+    let p = document.createElement('p');
+    p.textContent = letter;
+    p.classList.add('task__letter');
+    lettersFragment.appendChild(p);
+  });
+
+  appendCondition(taskCondContainer, lettersFragment);
+
+  $( function() {
+    $( ".task__condition" ).sortable({
+      axis: "x",
+      cursor: "move",
+      cancel: ".task__submit"
+    });
+    $( ".task__condition" ).disableSelection();
+  } );
+
+  taskForm.addEventListener('submit', solveSortLettersTask);
+  
+  function solveSortLettersTask() {
+    let userInput = getSortLettersSolution(taskCondContainer);
+    solveTask(taskForm, userInput, correctAnswer, solveSortLettersTask, event);
+  }
+
+  function getSortLettersSolution(container) {
+    let letters = [...container.children];
+    letters = letters.map((letter) => {
+      return letter.innerText;
+    });
+    return letters.join('');   
+  }
 }
 
-function clearForm(formToClear) {
-  while(formToClear.firstElementChild) {
-    formToClear.removeChild(formToClear.firstElementChild);
+function getCondContainer() {
+  return document.querySelector('.task__condition');
+}
+
+function getTaskForm() {
+  return document.querySelector('.task');
+}
+
+function clearContainer(container) {
+  while(container.firstElementChild) {
+    container.removeChild(container.firstElementChild);
   }
 }
 
 function appendCondition(taskForm, ...conditions) {
   conditions.forEach( condition => {
-    let conditionElement = document.createElement('p');
-    conditionElement.textContent = condition;
-    taskForm.appendChild(conditionElement);
+    if (typeof condition !== 'object') {
+      let conditionElement = document.createElement('p');
+      conditionElement.textContent = condition;  
+      taskForm.appendChild(conditionElement);
+    } else {
+      taskForm.appendChild(condition);
+    }
   });
 }
 
@@ -531,11 +620,8 @@ function showTaskMessage(textToDisplay) {
   taskMessage.innerText = textToDisplay;
 }
 
-function createInputForAnswer(answerLength, taskName) {
+function createInputForAnswer(answerLength = 5, taskName) {
   let userInput = document.createElement('input');
-
-  let defaultAnswerLength = 5;
-  answerLength = answerLength || defaultAnswerLength;
 
   userInput.type = "text";
   userInput.classList.add('task');
