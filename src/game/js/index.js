@@ -521,7 +521,7 @@ function damageOpponent(opponentHealth, maxDamage) {
 
   if (opponentHealth !== heroHealth) {
     showHeroMessage();
-
+    castSpell();
     if (currentDamage > maxDamage * 0.8) {
       showHeroMessage(`Я есть Грут!<br><br>***Чертовски крут!***`);
     } else if (currentDamage < maxDamage * 0.5) {
@@ -635,4 +635,10 @@ function showMonsterMessage(message, seconds) {
   setTimeout(() => {
      document.querySelector(".dialogue__monster").classList.add("dialogue--hidden");
   }, seconds);
+}
+
+function castSpell() {
+  let meteorit = document.createElement("div");
+  meteorit.classList.add("meteorit");
+  document.body.appendChild(meteorit);
 }
