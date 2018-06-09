@@ -434,7 +434,7 @@ function generateMathTask() {
 
       if(currentDamage > maxDamage*0.8) {
         alert('Опачки! Крит damage с вертушки!');
-      } else if (currentDamage > maxDamage*0.1) {
+      } else if (currentDamage < maxDamage*0.1) {
         alert('Пффф... Слабак! Каши мало ел?!');
       }
       

@@ -256,7 +256,7 @@ input[type="submit"]:hover {
   margin: auto;
   padding: 2rem;
   border: 2px solid #fecc00;
-  background-image: url("../img/background-modal-choose-spell.jpg");
+  background-image: url("../img/background-choose-spell.jpg");
   background-size: cover;
   display: flex;
   flex-direction: column;
