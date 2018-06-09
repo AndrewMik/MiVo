@@ -1,5 +1,6 @@
 import "../css/style.css";
 import monsterNames from './monsterNames.json';
+import dictionary from './dictionary.json';
 const pathToImgs = require.context("../img", true);
 
 
@@ -404,7 +405,10 @@ function generateTaskMath() {
 
 function solveTask(taskElement, userInput, correctAnswer, eventHandlerFunction, currentEvent) {
   currentEvent.preventDefault();
-  if( +userInput.value === correctAnswer || userInput.value === correctAnswer) {
+  
+  const userAnswer = userInput.value.toLowerCase();
+
+  if( +userAnswer === correctAnswer || userAnswer === correctAnswer) {
     let monsterHealth = document.querySelector('.state__health-monster');
     let maxDamage = 40;
 
@@ -438,6 +442,12 @@ function solveTask(taskElement, userInput, correctAnswer, eventHandlerFunction, 
       }
       monsterHealth.style.width = Number.parseInt(monsterHealth.style.width) - currentDamage + "%";
     }
+  } else if (Array.isArray(correctAnswer)) {
+    correctAnswer.forEach(answer => {
+      if(answer === userAnswer) {
+        alert('Во даешь! Правильно! Ответ: ' + answer);
+        }
+    });
   } else {
     alert('Друг мой, в этот раз ты дико ошибся'); 
   }
@@ -452,11 +462,11 @@ function generateTaskTranslation() {
   const taskForm = getTaskForm();
 
   clearForm(taskForm);
-
-  //TODO: JSON file and get a random word with relevant translations (array)
-  // const dictionary = parseJSON();
-  const word = "cat";
-  const correctAnswer = "кот";
+ 
+  const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
+  
+  const word = dictionary[randomWordInDictionary]['word'];
+  const correctAnswer = dictionary[randomWordInDictionary]['translation'];
 
   const taskTranslationMessage = "Переведи слово";
   showTaskMessage(taskTranslationMessage);

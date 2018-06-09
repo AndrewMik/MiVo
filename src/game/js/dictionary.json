@@ -1,0 +1,40 @@
+[{
+	"word": "cat",
+	"translation": ["котик", "кот", "кошка", "кошечка"]
+}, {
+	"word": "dog",
+	"translation": ["собака", "собачка", "пёс", "пёсик", "пес", "песик"]
+}, {
+	"word": "cow",
+	"translation": ["корова", "коровка"]
+}, {
+	"word": "duck",
+	"translation": ["утка", "уточка", "утенок", "утёнок"]
+}, {
+	"word": "horse",
+	"translation": ["лошадь", "лошадка"]
+}, {
+	"word": "rabbit",
+	"translation": ["кролик"]
+}, {
+	"word": "mother",
+	"translation": ["мама", "мамочка", "мамуля"]
+}, {
+	"word": "father",
+	"translation": ["папа", "отец", "папочка"]
+}, {
+	"word": "sister",
+	"translation": ["сестра", "сестренка", "сестрёнка", "сестричка"]
+}, {
+	"word": "hello",
+	"translation": ["привет"]
+}, {
+	"word": "goodbye",
+	"translation": ["пока", "до свидания"]
+}, {
+	"word": "boy",
+	"translation": ["мальчик"]
+}, {
+	"word": "girl",
+	"translation": ["девочка"]
+}]
