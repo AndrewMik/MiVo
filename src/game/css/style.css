@@ -598,7 +598,8 @@ input.task__translation {
 }
 
 .meteorite,
-.fist {
+.fist-hero,
+.fist-monster {
   position: absolute;
   top: 50%;
   left: -300px;
@@ -608,8 +609,14 @@ input.task__translation {
   height: 150px;
 }
 
-.fist {
+.fist-hero {
   background-image: url('../img/fist-red.png');
+  width: 200px;
+  height: 250px;
+}
+
+.fist-monster {
+  background-image: url('../img/fist-yellow.png');
   width: 200px;
   height: 250px;
 }
@@ -619,8 +626,16 @@ input.task__translation {
   animation-timing-function: cubic-bezier(1,.2,1,.98);
 }
 
-.fist {
-  animation: flightFist 3s;
+.fist-hero {
+  animation: flightFistHero 3s;
+}
+
+.fist-monster {
+  animation: flightFistMonster 3s;
+}
+
+.fist-hero,
+.fist-monster {
   animation-timing-function: cubic-bezier(1,.2,1,.98);
 }
 
@@ -638,13 +653,27 @@ input.task__translation {
   }
 }
 
-@keyframes flightFist {
+@keyframes flightFistHero {
   0% {
       transform: translate(0px, 0px) scale(-1, 1) rotate(-90deg);
   }
 
   99% {
     transform: translate(82vw, 0px) scale(-1, 1) rotate(-90deg);
+  }
+
+  100% {
+    transform: scale(0, 0);
+  }
+}
+
+@keyframes flightFistMonster {
+  0% {
+      transform: translate(150vw, 0px) scale(-1, -1) rotate(90deg);
+  }
+
+  99% {
+    transform: translate(40vw, 0px) scale(-1, -1) rotate(90deg);
   }
 
   100% {

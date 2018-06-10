@@ -9,7 +9,8 @@ import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/disable-selection';
 
 const METEORITE = 'meteorite';
-const FIST = 'fist';
+const FIST_HERO = 'fist-hero';
+const FIST_MONSTER = 'fist-monster';
 
 // Should run only once
 $( function() {
@@ -511,38 +512,48 @@ function fightRound(isHeroHitsMonster) {
   let isMonsterDead = false;
   let isHeroDead = false;
 
+  const delayMonsterSpellAnimation = 3000;
+  let delayMonsterHit = 0;
+
   if (isHeroHitsMonster) {
-    isMonsterDead = damageOpponent(monsterHealth, maxDamageFromUser);
+    isMonsterDead = damageMonster();
 
     if (isMonsterDead) {
-      victory();
-      setTimeout(() => {
-        startGame(+document.querySelector('.level__num').textContent + 1);
-      }, 4000);
       return;
     }
 
-     //monster hits hero after hero spell animation
-     damageHero(3000);
+    setTimeout(() => {
+      delayMonsterHit = castSpell(FIST_MONSTER);
+      damageHero(delayMonsterHit);
+    }, delayMonsterSpellAnimation);
   } else {
-    //monster hits hero without hero spell animation
-    damageHero(100);
+    delayMonsterHit = castSpell(FIST_MONSTER);
+    damageHero(delayMonsterHit);
   }
 
-  function damageHero(milliseconds){
-    milliseconds = milliseconds || 3000;
+  function damageMonster(){
+      isMonsterDead = damageOpponent(monsterHealth, maxDamageFromUser);
+      if (isMonsterDead) {
+        victory();
+        setTimeout(() => {
+          startGame(+document.querySelector('.level__num').textContent + 1);
+        }, 4000);
+      } 
+    return isMonsterDead;
+  }
+
+  function damageHero(milliseconds = 3000){
     setTimeout(() => {
       isHeroDead = damageOpponent(heroHealth, maxDamageFromMonster);
       if (isHeroDead) {
         gameOver();
       } else {
-        setTimeout(chooseSpell, 6000);
+        setTimeout(chooseSpell, 3000);
       }
     }, milliseconds);
   }
+  return isHeroDead;
 }
-
-
 
 function victory(){
   showHeroMessage(`Я ЕСТЬ ГРУУУУУУУТ!!!`);
@@ -551,7 +562,7 @@ function victory(){
 }
 
 function gameOver(){
-  sayAfterDelay(showMonsterMessage, `Лузер!`, 2000);
+  sayAfterDelay(showMonsterMessage, `Лузер!`, 1000);
 }
 
 let maxDamageFromUser = 140;
@@ -566,13 +577,15 @@ function damageOpponent(opponentHealth, maxDamage) {
 
   let durationSpellAnimation = 2000;
 
+  isDead = checkIsDead(opponentHealth, currentDamage);
+
   if (opponentHealth !== heroHealth) {
     showHeroMessage();
 
     if (currentDamage > maxDamage * 0.8) {
       durationSpellAnimation = castSpell(METEORITE);
     } else {
-      durationSpellAnimation = castSpell(FIST);
+      durationSpellAnimation = castSpell(FIST_HERO);
     }
 
     let delayAfterSpellAnimation = durationSpellAnimation;
@@ -581,28 +594,24 @@ function damageOpponent(opponentHealth, maxDamage) {
       reduceHealth(opponentHealth, currentDamage);
 
       if (currentDamage > maxDamage * 0.8) {
-        showHeroMessage(`Я есть Грут!<br><br>***Чертовски крут!***`);
+        sayAfterDelay(showHeroMessage, `Я есть Грут!<br><br>***Чертовски крут!***`, 1000);
       } else if (currentDamage < maxDamage * 0.2) {
         sayAfterDelay(showMonsterMessage, `Пффф... Слабак!<br><br> Каши мало ел?!`, 1000);
       }
     }, delayAfterSpellAnimation);
 
-  } else if (checkIsDead(opponentHealth, currentDamage)){
+  } else if (isDead){
     //if an enemy (hero) is dead - just return isDead
     // alert('Dead');
   } else {
-    setTimeout(() => {   
       showMonsterMessage(`Получай!`);   
       reduceHealth(opponentHealth, currentDamage);
-    }, 2000);
   }
 
-  isDead = checkIsDead(opponentHealth, currentDamage);
-
   if(isDead){
-    setTimeout(() => {
+    // setTimeout(() => {
       setHealthZero(opponentHealth);
-    }, durationSpellAnimation);
+    // }, durationSpellAnimation);
   }
 
   return isDead;
@@ -840,16 +849,21 @@ function showMonsterMessage(message, milliseconds) {
   }, milliseconds);
 }
 
-function castSpell(spellName) {
-  spellName = spellName || FIST;
+function castSpell(spellName = FIST_HERO) {
   let spell = document.createElement("div");
 
   if(spellName === METEORITE) {
     spell.classList.add(METEORITE);
-  } else if (spellName === FIST) {
-    spell.classList.add(FIST);
+  } else if (spellName === FIST_MONSTER) {
+    spell.classList.add(FIST_MONSTER);
+  } else if (spellName === FIST_HERO) {
+    spell.classList.add(FIST_HERO);
   }
   document.body.appendChild(spell);
+
+  setTimeout(() => {
+    document.body.removeChild(spell);
+  }, 5000);
 
   let animationDuration = getComputedStyle(spell).animationDuration;
   animationDuration = Number.parseFloat(animationDuration) * 1000;
