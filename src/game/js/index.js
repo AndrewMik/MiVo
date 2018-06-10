@@ -18,6 +18,9 @@ $( function() {
   $( ".task__condition" ).disableSelection();
 } );
 
+// Object used to speak
+let utterance = new SpeechSynthesisUtterance();
+
 // Temporary loads the game
 // TODO: Remove in last version
 document.addEventListener("DOMContentLoaded", registerPlayer);
@@ -360,6 +363,9 @@ function chooseSpell() {
   let spellSortLetters = document.getElementById('spell-sort-letters');
   setSpellTask(spellSortLetters, generateTaskSortLetters);
 
+  let spellListening = document.getElementById('listening');
+  setSpellTask(spellListening, generateTaskListening);
+
   document.body.addEventListener('click', checkModalChooseSpellClicked);
 }
 
@@ -629,6 +635,50 @@ function generateTaskTranslation() {
   }
 }
 
+function generateTaskListening() {
+  $(".task__condition").sortable("disable");
+  const TASK_LISTENING = "listening";
+
+  const taskForm = getTaskForm();
+  let taskCondContainer = getCondContainer();
+
+  clearContainer(taskCondContainer);
+ 
+  const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
+  
+  const word = dictionary[randomWordInDictionary]['word'];
+  
+  const correctAnswer = word;
+
+  utterance.text = word;
+
+  const taskListening = "Напиши услышанное слово";
+  showTaskMessage(taskListening);
+
+  const maxInputLength = 20;
+  const userInput = createInputForAnswer(maxInputLength, TASK_LISTENING);
+
+  let button = document.createElement('button');
+  button.classList.add('task__repeat-button');
+  button.innerText = 'Послушать';
+
+  button.addEventListener('click', listenAgain);
+
+  function listenAgain() {
+    event.preventDefault();
+    window.speechSynthesis.speak(utterance);
+  }
+
+  appendCondition(taskCondContainer, button, userInput);
+  // taskForm.appendChild(userInput);
+
+  taskForm.addEventListener('submit', solveTranslationTask);
+  
+  function solveTranslationTask() {
+    solveTask(taskForm, userInput, correctAnswer, solveTranslationTask, event);
+  }
+}
+
 function generateTaskSortLetters() {
 
   $(".task__condition").sortable("enable");
@@ -723,7 +773,7 @@ function showTaskMessage(textToDisplay) {
   taskMessage.innerText = textToDisplay;
 }
 
-function createInputForAnswer(answerLength = 5, taskName) {
+function createInputForAnswer(answerLength = 5, taskName) {  
   let userInput = document.createElement('input');
 
   userInput.type = "text";
