@@ -2,6 +2,7 @@ import "../css/style.css";
 import monsterNames from './monsterNames.json';
 import dictionary from './dictionary.json';
 import words from './words.json';
+import antonyms from './antonyms.json';
 const pathToImgs = require.context("../img", true);
 import $ from 'jquery';
 import 'jquery-ui';
@@ -368,6 +369,9 @@ function chooseSpell() {
   let spellListening = document.getElementById('listening');
   setSpellTask(spellListening, generateTaskListening);
 
+  let spellAntonyms = document.getElementById('antonyms');
+  setSpellTask(spellAntonyms, generateTaskAntonyms);
+
   document.body.addEventListener('click', checkModalChooseSpellClicked);
 }
 
@@ -654,6 +658,41 @@ function generateTaskTranslation() {
 
   const maxInputLength = 10;
   const userInput = createInputForAnswer(maxInputLength, TASK_TRANSLATION);
+
+  appendCondition(taskCondContainer, word, userInput);
+  // taskForm.appendChild(userInput);
+
+  taskForm.addEventListener('submit', solveTranslationTask);
+  
+  function solveTranslationTask() {
+    solveTask(taskForm, userInput, correctAnswer, solveTranslationTask, event);
+  }
+}
+
+function generateTaskAntonyms() {
+  $(".task__condition").sortable("disable");
+  const TASK_ANTONYMS = "antonyms";
+
+  const taskForm = getTaskForm();
+  let taskCondContainer = getCondContainer();
+
+  clearContainer(taskCondContainer);
+
+  const keys = ['word', 'antonym'];
+ 
+  const randomPair = getRandomInt(0, antonyms.length-1);
+  const randomIndex = getRandomInt(0, 1);
+  const randomKey = keys[randomIndex];
+  const correctAnswerKey = keys[Math.abs(randomIndex-1)];
+  
+  const word = antonyms[randomPair][randomKey];
+  const correctAnswer = antonyms[randomPair][correctAnswerKey];
+
+  const taskMessage = "Наколдуй антоним";
+  showTaskMessage(taskMessage);
+
+  const maxInputLength = 15;
+  const userInput = createInputForAnswer(maxInputLength, TASK_ANTONYMS);
 
   appendCondition(taskCondContainer, word, userInput);
   // taskForm.appendChild(userInput);

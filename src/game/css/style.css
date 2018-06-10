@@ -339,6 +339,7 @@ input[type="submit"]:hover {
 
 .modal__spells {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   padding: 20px 0;
   height: 50%;
@@ -552,7 +553,8 @@ input[type="submit"]:hover {
   margin: 10px;
 }
 
-input.task__translation {
+.task__translation,
+.task__antonyms {
   width: 230px;
 }
 
