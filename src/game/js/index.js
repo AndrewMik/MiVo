@@ -807,7 +807,7 @@ function createInputForAnswer(answerLength = 5, taskName) {
   let userInput = document.createElement('input');
 
   userInput.type = "text";
-  userInput.classList.add('task');
+  userInput.classList.add('task__input');
   userInput.placeholder = "Ответ";
   userInput.autofocus = true;
   userInput.maxLength = answerLength;

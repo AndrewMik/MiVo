@@ -321,20 +321,20 @@ input[type="submit"]:hover {
   font-size: 24px;
 }
 
-.task__listening {
-  width: 230px;
-}
-
-input.task {
-  /* width: 100px; */
+.task__input {
+  width: 100px;
   margin-left: 10px;
   font-size: 40px;
   text-align: center;
   color: green;
 }
 
-input.task:placeholder-shown {
+.task__input:placeholder-shown {
   font-size: 20px;
+}
+
+.task__listening {
+  width: 230px;
 }
 
 .modal__spells {
