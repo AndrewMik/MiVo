@@ -1,16 +1,15 @@
 import "../css/style.css";
-import monsterNames from './monsterNames.json';
-import dictionary from './dictionary.json';
-import words from './words.json';
-import antonyms from './antonyms.json';
-import oddWords from './oddword.json';
+import monsterNames from './json/monsterNames.json';
+import dictionary from './json/dictionary.json';
+import words from './json/words.json';
+import antonyms from './json/antonyms.json';
+import oddWords from './json/oddword.json';
 const pathToImgs = require.context("../img", true);
 import $ from 'jquery';
 import 'jquery-ui';
 import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/widgets/selectable';
 import 'jquery-ui/ui/disable-selection';
-import { equal } from "assert";
 
 const METEORITE = 'meteorite';
 const FIST_HERO = 'fist-hero';
