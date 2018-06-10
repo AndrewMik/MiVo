@@ -282,6 +282,13 @@ input[type="submit"]:hover {
   min-width: 700px;
 }
 
+.modal__content--scores {
+  width: 80%;
+  height: 80%;
+  background-image: none;
+  background-color: rgba(0,0,0,0.8);
+}
+
 .modal__content--task {
   height: 30%;
   background-image: none;
@@ -337,12 +344,21 @@ input[type="submit"]:hover {
   width: 230px;
 }
 
-.modal__spells {
+.modal__spells,
+.modal__top-scores {
   display: flex;
   justify-content: space-around;
   padding: 20px 0;
   height: 50%;
   align-items: center;
+}
+
+.modal__top-scores {
+  flex-direction: column;
+}
+
+.modal__top-scores {
+  color: white;
 }
 
 .spells__item {
@@ -679,4 +695,42 @@ input.task__translation {
   100% {
     transform: scale(0, 0);
   }
+}
+
+
+.button-play {
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+  border: none;
+  color: white;
+  user-select: none;
+  font-size: 30px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.button-play:hover {
+  background-color: transparent;
+  background-image: url('../img/planet-earth.png');
+  background-size: cover;
+  font-size: 0px;
+  box-shadow: inset 0px 0px 20px 2px black;
+}
+
+@keyframes spin {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(360deg);}
+}
+
+.button-play:hover{
+  animation: spin 20s linear 0s infinite;
+}
+
+th, td {
+  padding: 5px 20px;
+  text-align: center;
 }

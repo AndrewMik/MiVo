@@ -118,7 +118,7 @@ function setFullHealth() {
 }
 
 function startGame(level = 1) {
-
+  
   setFullHealth();
 
   if (level !== 1) {
@@ -558,15 +558,100 @@ function fightRound(isHeroHitsMonster) {
 function victory(){
   showHeroMessage(`Я ЕСТЬ ГРУУУУУУУТ!!!`);
   maxDamageFromUser -= 1;
-  maxDamageFromMonster += 2;
+  maxDamageFromMonster += 2; 
 }
 
 function gameOver(){
   sayAfterDelay(showMonsterMessage, `Лузер!`, 1000);
+
+  let winner = {};
+
+  winner.nickName = document.getElementById('login').value || "Грут-аноним";
+  winner.email = document.getElementById('email').value || "groot@groot.I.am";
+
+  let currentLevel = document.querySelector('.level__text').innerText;
+  currentLevel = currentLevel.replace("Уровень ", "");
+  
+  winner.monsterKilled = +currentLevel - 1;
+ 
+  let bestPlayers = JSON.parse(localStorage.getItem('top-players')) || [];
+
+  bestPlayers = compareWinnerWithBestPlayers(winner, bestPlayers);
+
+  showBestPlayers(bestPlayers);
+ 
+  localStorage.setItem('top-players', JSON.stringify(bestPlayers));
+
+  function compareWinnerWithBestPlayers(winner, bestPlayers) {
+    const maxNumberOfTopPlayers = 4;
+    let currentTopPlayers = bestPlayers.length;
+
+    for (let i = 0; i < maxNumberOfTopPlayers; i++) {
+      if (bestPlayers[i] === undefined) {
+        bestPlayers.push(winner);
+        break;
+      } else if (bestPlayers[i].monsterKilled < winner.monsterKilled) {
+        bestPlayers.splice(i, 0, winner);
+
+        if (bestPlayers.length === maxNumberOfTopPlayers + 1) {
+          bestPlayers.pop();
+        }
+        break;
+      }
+    }
+    return bestPlayers;
+  }
+
+      function showBestPlayers(bestPlayers) {
+        let topScoresDiv = document.querySelector('.modal__top-scores');
+
+        clearContainer(topScoresDiv);
+
+        let table = document.createElement('table');
+        let tr = document.createElement('tr');
+        let placeHeader = document.createElement('th');
+        let nickName = document.createElement('th');
+        let monsterKilled = document.createElement('th');
+
+        placeHeader.innerText = "Место";
+        nickName.innerText = "Игрок";
+        monsterKilled.innerText = "Убито монстров";
+
+        tr.appendChild(placeHeader);
+        tr.appendChild(nickName);
+        tr.appendChild(monsterKilled);
+        table.appendChild(tr);
+
+        let place = 1;
+
+        bestPlayers.forEach((player) => {
+          let currentPlayerRow = document.createElement('tr');
+          let placeOfPlayer = document.createElement('td');
+          let playerNickName = document.createElement('td');
+          let playerMonsterKilled = document.createElement('td');
+
+          placeOfPlayer.innerText = place;
+          playerNickName.innerText = player.nickName;
+          playerMonsterKilled.innerText = player.monsterKilled;
+
+          currentPlayerRow.appendChild(placeOfPlayer);
+          currentPlayerRow.appendChild(playerNickName);
+          currentPlayerRow.appendChild(playerMonsterKilled);
+          table.appendChild(currentPlayerRow);
+
+          place++;
+        });
+
+        topScoresDiv.appendChild(table);
+
+        setTimeout(() => {
+          toggleElementVisibility(document.getElementById('top-scores'));
+        }, 3000);
+      }
 }
 
-let maxDamageFromUser = 140;
-let maxDamageFromMonster = 140;
+let maxDamageFromUser = 40;
+let maxDamageFromMonster = 40;
 
 function damageOpponent(opponentHealth, maxDamage) {
   let isDead = false;
@@ -591,6 +676,10 @@ function damageOpponent(opponentHealth, maxDamage) {
     let delayAfterSpellAnimation = durationSpellAnimation;
 
     setTimeout(() => {
+      if(isDead){
+          setHealthZero(opponentHealth);
+          return;
+      }
       reduceHealth(opponentHealth, currentDamage);
 
       if (currentDamage > maxDamage * 0.8) {
@@ -601,17 +690,10 @@ function damageOpponent(opponentHealth, maxDamage) {
     }, delayAfterSpellAnimation);
 
   } else if (isDead){
-    //if an enemy (hero) is dead - just return isDead
-    // alert('Dead');
+        setHealthZero(opponentHealth);
   } else {
       showMonsterMessage(`Получай!`);   
       reduceHealth(opponentHealth, currentDamage);
-  }
-
-  if(isDead){
-    // setTimeout(() => {
-      setHealthZero(opponentHealth);
-    // }, durationSpellAnimation);
   }
 
   return isDead;
@@ -629,7 +711,6 @@ function setHealthZero(healthBar){
   healthBar.style.width = '0%';
 }
 
-//reduces opponents health
 function reduceHealth(healthBar, damage){
   healthBar.style.width = Number.parseInt(healthBar.style.width) - damage + "%";
   return false;
