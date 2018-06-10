@@ -347,6 +347,7 @@ input[type="submit"]:hover {
 .modal__spells,
 .modal__top-scores {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-around;
   padding: 20px 0;
   height: 50%;
@@ -568,8 +569,23 @@ input[type="submit"]:hover {
   margin: 10px;
 }
 
-input.task__translation {
+.task__translation,
+.task__antonyms {
   width: 230px;
+}
+
+.task__condition .ui-selecting { 
+  background: #FECA40; 
+}
+
+.task__condition .ui-selected { 
+  background: #F39814; 
+  color: white; 
+  border-radius: 5px;
+}
+
+.task__word {
+  padding: 10px;
 }
 
 .task__letter {
