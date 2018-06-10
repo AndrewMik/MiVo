@@ -8,6 +8,8 @@ import 'jquery-ui';
 import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/disable-selection';
 
+const METEORITE = 'meteorite';
+const FIST = 'fist';
 
 // Should run only once
 $( function() {
@@ -130,7 +132,6 @@ function startGame(level = 1) {
   let monsterName = generateMonsterName();
   setLevel(level);
   setMonsterName(monsterName);
-
   //   //Temporary loads math task
   //   // TODO: Remove in last version
   // toggleTaskScreen();
@@ -511,7 +512,7 @@ function fightRound(isHeroHitsMonster) {
       victory();
       setTimeout(() => {
         startGame(+document.querySelector('.level__num').textContent + 1);
-      }, 2000);
+      }, 4000);
       return;
     }
 
@@ -544,11 +545,11 @@ function victory(){
 }
 
 function gameOver(){
-  showMonsterMessage(`Лузер!`);
+  sayAfterDelay(showMonsterMessage, `Лузер!`, 2000);
 }
 
-let maxDamageFromUser = 40;
-let maxDamageFromMonster = 40;
+let maxDamageFromUser = 140;
+let maxDamageFromMonster = 140;
 
 function damageOpponent(opponentHealth, maxDamage) {
   let isDead = false;
@@ -557,21 +558,32 @@ function damageOpponent(opponentHealth, maxDamage) {
 
   let currentDamage = Math.floor((Math.random() * maxDamage));
 
+  let durationSpellAnimation = 2000;
+
   if (opponentHealth !== heroHealth) {
     showHeroMessage();
-    castSpell();
-    reduceHealth(opponentHealth, currentDamage);
 
     if (currentDamage > maxDamage * 0.8) {
-      showHeroMessage(`Я есть Грут!<br><br>***Чертовски крут!***`);
-    } else if (currentDamage < maxDamage * 0.2) {
-      setTimeout(() => {  
-      showMonsterMessage(`Пффф... Слабак!<br><br> Каши мало ел?!`);
-      }, 2000);
+      durationSpellAnimation = castSpell(METEORITE);
+    } else {
+      durationSpellAnimation = castSpell(FIST);
     }
+
+    let delayAfterSpellAnimation = durationSpellAnimation;
+
+    setTimeout(() => {
+      reduceHealth(opponentHealth, currentDamage);
+
+      if (currentDamage > maxDamage * 0.8) {
+        showHeroMessage(`Я есть Грут!<br><br>***Чертовски крут!***`);
+      } else if (currentDamage < maxDamage * 0.2) {
+        sayAfterDelay(showMonsterMessage, `Пффф... Слабак!<br><br> Каши мало ел?!`, 1000);
+      }
+    }, delayAfterSpellAnimation);
 
   } else if (checkIsDead(opponentHealth, currentDamage)){
     //if an enemy (hero) is dead - just return isDead
+    // alert('Dead');
   } else {
     setTimeout(() => {   
       showMonsterMessage(`Получай!`);   
@@ -581,16 +593,25 @@ function damageOpponent(opponentHealth, maxDamage) {
 
   isDead = checkIsDead(opponentHealth, currentDamage);
 
+  if(isDead){
+    setTimeout(() => {
+      setHealthZero(opponentHealth);
+    }, durationSpellAnimation);
+  }
+
   return isDead;
 }
 
 function checkIsDead(healthBar, damage){
   let health = Number.parseInt(healthBar.style.width);
   if(health - damage <= 0) {
-    healthBar.style.width = '0%';
     return true;
   }
   return false;
+}
+
+function setHealthZero(healthBar){
+  healthBar.style.width = '0%';
 }
 
 //reduces opponents health
@@ -747,30 +768,46 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function showHeroMessage(message, seconds) {
+function showHeroMessage(message, milliseconds) {
   message = message || "Я есть Грут!";
-  seconds = seconds * 1000 || 2000;
+  milliseconds = milliseconds || 2000;
 
   document.querySelector(".dialogue__hero").classList.remove("dialogue--hidden");
   document.querySelector(".dialogue__hero-message").innerHTML = message;
   setTimeout(() => {
      document.querySelector(".dialogue__hero").classList.add("dialogue--hidden");
-  }, seconds);
+  }, milliseconds);
 }
 
-function showMonsterMessage(message, seconds) {
+function showMonsterMessage(message, milliseconds) {
   message = message || "Ты есть грунт!!!";
-  seconds = seconds * 1000 || 2000;
+  milliseconds = milliseconds || 2000;
 
   document.querySelector(".dialogue__monster").classList.remove("dialogue--hidden");
   document.querySelector(".dialogue__monster-message").innerHTML = message;
   setTimeout(() => {
      document.querySelector(".dialogue__monster").classList.add("dialogue--hidden");
-  }, seconds);
+  }, milliseconds);
 }
 
-function castSpell() {
-  let meteorite = document.createElement("div");
-  meteorite.classList.add("meteorite");
-  document.body.appendChild(meteorite);
+function castSpell(spellName) {
+  spellName = spellName || FIST;
+  let spell = document.createElement("div");
+
+  if(spellName === METEORITE) {
+    spell.classList.add(METEORITE);
+  } else if (spellName === FIST) {
+    spell.classList.add(FIST);
+  }
+  document.body.appendChild(spell);
+
+  let animationDuration = getComputedStyle(spell).animationDuration;
+  animationDuration = Number.parseFloat(animationDuration) * 1000;
+  return animationDuration;
+}
+
+function sayAfterDelay(func, message, delay){
+  setTimeout(() => {  
+    func(message);
+  }, delay);
 }
