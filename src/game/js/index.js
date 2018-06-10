@@ -10,6 +10,7 @@ import 'jquery-ui';
 import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/widgets/selectable';
 import 'jquery-ui/ui/disable-selection';
+import { equal } from "assert";
 
 const METEORITE = 'meteorite';
 const FIST_HERO = 'fist-hero';
@@ -214,16 +215,6 @@ function generateMonsterName() {
 function setLevel(level) {
   document.querySelector(".level__num").innerText = level;
 }
-
-// function showGameField() {
-//   let gameField = document.querySelector(".game-container");
-//   gameField.classList.remove("game-container--hidden");
-// }
-
-// function hideLandingPage() {
-//   let landing = document.querySelector(".landing-container");
-//   landing.classList.add("landing-container--hidden");
-// }
 
 function toggleRegisterFieldVisibility() {
   let form = document.querySelector(".register-form");
@@ -430,8 +421,11 @@ function setSpellTask(spell, generateSpellTask) {
 function generateTaskMath() {
   $(".task__condition").sortable("disable");
   $(".task__condition").selectable("disable");
-  const taskForm = getTaskForm();
-  const taskCondContainer = getCondContainer();
+
+  const taskName = 'math';
+  const taskMessage = "Реши пример";
+  let conditions;
+
   const min = 1;
   const max = 10;
 
@@ -469,46 +463,34 @@ function generateTaskMath() {
   math[mathOperation](firstNumber, secondNumber);
   const EQUALS = '=';
 
-  const taskTranslationMessage = "Реши пример";
-  showTaskMessage(taskTranslationMessage);
+  conditions = [firstNumber, mathOperator, secondNumber, EQUALS];
 
-  const userInput = createInputForAnswer();
-
-  clearContainer(taskCondContainer);
-  
-  appendCondition(taskCondContainer, firstNumber, mathOperator, secondNumber, EQUALS, userInput);
-  // taskCondContainer.appendChild(userInput);
-
-  taskForm.addEventListener('submit', solveMathTask);
-  
-  function solveMathTask() {    
-    solveTask(taskForm, userInput, correctAnswer, solveMathTask, event);
-  }
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
-function solveTask(taskElement, userInput, correctAnswer, eventHandlerFunction, currentEvent) {
+function solveTask(taskElement, isAnswerCorrect, eventHandlerFunction, currentEvent) {
   currentEvent.preventDefault();
-  let userAnswer;
-  if (typeof userInput === 'object' ) {
-    userAnswer = userInput.value.toLowerCase();   
-  } else {
-    userAnswer = userInput;
-  }
+  // let userAnswer;
+  // if (typeof userInput === 'object' ) {
+  //   userAnswer = userInput.value.toLowerCase();   
+  // } else {
+  //   userAnswer = userInput;
+  // }
 
-  let isAnswerCorrect = false;
+  // let isAnswerCorrect = false;
 
-  if( +userAnswer === correctAnswer || userAnswer === correctAnswer) {
-    isAnswerCorrect = true;
-  } else if (Array.isArray(correctAnswer)) {
-    correctAnswer.forEach(answer => {
-      if(answer === userAnswer) {
-        isAnswerCorrect = true;
-        showMonsterMessage('Как ты догадался?!');
-      }
-    });
-  } else {
-    showMonsterMessage(`Уха-ХA-ха!`);
-  }
+  // if( +userAnswer === correctAnswer || userAnswer === correctAnswer) {
+  //   isAnswerCorrect = true;
+  // } else if (Array.isArray(correctAnswer)) {
+  //   correctAnswer.forEach(answer => {
+  //     if(answer === userAnswer) {
+  //       isAnswerCorrect = true;
+  //       showMonsterMessage('Как ты догадался?!');
+  //     }
+  //   });
+  // } else {
+  //   showMonsterMessage(`Уха-ХA-ха!`);
+  // }
 
   fightRound(isAnswerCorrect);
 
@@ -531,6 +513,7 @@ function fightRound(isHeroHitsMonster) {
 
   if (isHeroHitsMonster) {
     isMonsterDead = damageMonster();
+    showMonsterMessage('Как ты догадался?!');
 
     if (isMonsterDead) {
       return;
@@ -541,6 +524,7 @@ function fightRound(isHeroHitsMonster) {
       damageHero(delayMonsterHit);
     }, delayMonsterSpellAnimation);
   } else {
+    showMonsterMessage(`Уха-ХA-ха!`);
     delayMonsterHit = castSpell(FIST_MONSTER);
     damageHero(delayMonsterHit);
   }
@@ -731,45 +715,122 @@ function reduceHealth(healthBar, damage){
 }
 
 function generateTaskTranslation() {
+  
   $(".task__condition").sortable("disable");
   $(".task__condition").selectable("disable");
   const TASK_TRANSLATION = "translation";
 
-  const taskForm = getTaskForm();
-  let taskCondContainer = getCondContainer();
+  // const taskForm = getTaskForm();
+  // let taskCondContainer = getCondContainer();
 
-  clearContainer(taskCondContainer);
+  // clearContainer(taskCondContainer);
  
   const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
   
   const word = dictionary[randomWordInDictionary]['word'];
   const correctAnswer = dictionary[randomWordInDictionary]['translation'];
-
-  const taskTranslationMessage = "Переведи слово";
-  showTaskMessage(taskTranslationMessage);
-
-  const maxInputLength = 10;
-  const userInput = createInputForAnswer(maxInputLength, TASK_TRANSLATION);
-
-  appendCondition(taskCondContainer, word, userInput);
-  // taskForm.appendChild(userInput);
-
-  taskForm.addEventListener('submit', solveTranslationTask);
   
-  function solveTranslationTask() {
-    solveTask(taskForm, userInput, correctAnswer, solveTranslationTask, event);
+  const taskMessage = "Переведи слово";
+  // showTaskMessage(taskTranslationMessage);
+
+  //const maxInputLength = 10;
+  // const userInput = createInputForAnswer(maxInputLength, TASK_TRANSLATION);
+
+  // appendCondition(taskCondContainer, word, userInput);
+
+  let conditions = [word];
+
+  generateTask(taskMessage, conditions, correctAnswer, TASK_TRANSLATION);
+
+  // taskForm.addEventListener('submit', solveTranslationTask);
+  
+  // function solveTranslationTask() {
+  //   getUserAnswer();
+  //   checkAnswer();
+  //   solveTask(taskForm, userInput, correctAnswer, solveTranslationTask, event);
+  // }
+}
+
+function generateTask(taskMessage, conditions, correctAnswer, className) {
+
+  let taskCondContainer = getCondContainer();
+
+  clearContainer(taskCondContainer);
+
+  showTaskMessage(taskMessage);
+  let userInput;  
+
+  if (className !== 'sortletters' && className !== 'oddword') {
+    userInput = createInputForAnswer(className);  
+    conditions.push(userInput);
+  }
+
+  const taskForm = getTaskForm();
+  appendCondition(taskCondContainer, conditions);
+
+  taskForm.addEventListener('submit', solveCurrentTask);
+  let userAnswer;
+  function solveCurrentTask() {
+    if (userInput) {
+      userAnswer = getUserAnswer(className, userInput);
+    } else {
+      userAnswer = getUserAnswer(className);
+    }
+    
+    let isAnswerCorrect = checkAnswer(userAnswer, correctAnswer); 
+    solveTask(taskForm, isAnswerCorrect, solveCurrentTask, event);
+  }
+}
+
+function checkAnswer(userAnswer, correctAnswer) {
+  let flag = false;
+
+  if( +userAnswer === correctAnswer || userAnswer === correctAnswer) {
+    return true;
+  } else if (Array.isArray(correctAnswer)) {
+    correctAnswer.forEach(answer => {
+      if(answer === userAnswer) {
+        flag = true;
+      }
+    });
+  } else {
+    return false;
+  }
+
+  return flag;
+}
+
+function getUserAnswer(className, userInput) {
+  if (userInput) {
+    return userInput.value;
+  } 
+
+  let container = getCondContainer();
+  switch (className) {
+    case 'sortletters':
+      let letters = [...container.children];
+      letters = letters.map((letter) => {
+        return letter.innerText;
+      });
+      return letters.join('');
+      break;
+    case 'oddword':
+      let word = container.querySelector('.ui-selected').textContent;
+      return word;
+      break;
+  
+    default:
+      break;
   }
 }
 
 function generateTaskAntonyms() {
   $(".task__condition").sortable("disable");
   $(".task__condition").selectable("disable");
-  const TASK_ANTONYMS = "antonyms";
 
-  const taskForm = getTaskForm();
-  let taskCondContainer = getCondContainer();
-
-  clearContainer(taskCondContainer);
+  const taskName = "antonyms";
+  const taskMessage = "Наколдуй антоним";
+  let conditions;
 
   const keys = ['word', 'antonym'];
  
@@ -781,45 +842,24 @@ function generateTaskAntonyms() {
   const word = antonyms[randomPair][randomKey];
   const correctAnswer = antonyms[randomPair][correctAnswerKey];
 
-  const taskMessage = "Наколдуй антоним";
-  showTaskMessage(taskMessage);
-
-  const maxInputLength = 15;
-  const userInput = createInputForAnswer(maxInputLength, TASK_ANTONYMS);
-
-  appendCondition(taskCondContainer, word, userInput);
-  // taskForm.appendChild(userInput);
-
-  taskForm.addEventListener('submit', solveTranslationTask);
+  conditions = [word];
   
-  function solveTranslationTask() {
-    solveTask(taskForm, userInput, correctAnswer, solveTranslationTask, event);
-  }
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
 function generateTaskListening() {
   $(".task__condition").sortable("disable");
   $(".task__condition").selectable("disable");
-  const TASK_LISTENING = "listening";
 
-  const taskForm = getTaskForm();
-  let taskCondContainer = getCondContainer();
-
-  clearContainer(taskCondContainer);
+  const taskName = "listening";
+  const taskMessage = "Напиши услышанное слово";
+  let conditions;
  
   const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
-  
   const word = dictionary[randomWordInDictionary]['word'];
-  
   const correctAnswer = word;
 
   utterance.text = word;
-
-  const taskListening = "Напиши услышанное слово";
-  showTaskMessage(taskListening);
-
-  const maxInputLength = 20;
-  const userInput = createInputForAnswer(maxInputLength, TASK_LISTENING);
 
   let button = document.createElement('button');
   button.classList.add('task__repeat-button');
@@ -832,14 +872,9 @@ function generateTaskListening() {
     window.speechSynthesis.speak(utterance);
   }
 
-  appendCondition(taskCondContainer, button, userInput);
-  // taskForm.appendChild(userInput);
+  conditions = [button];
 
-  taskForm.addEventListener('submit', solveTranslationTask);
-  
-  function solveTranslationTask() {
-    solveTask(taskForm, userInput, correctAnswer, solveTranslationTask, event);
-  }
+  generateTask(taskMessage, conditions, correctAnswer, taskName); 
 }
 
 function generateTaskSortLetters() {
@@ -847,63 +882,19 @@ function generateTaskSortLetters() {
   $(".task__condition").sortable("enable");
   $(".task__condition").selectable("disable");
 
-  const taskForm = getTaskForm();
-  let taskCondContainer = getCondContainer();
-
-  clearContainer(taskCondContainer);
+  const taskName = 'sortletters';
+  const taskMessage = "Двигай буквы и собери слово";
+  let conditions= [];
  
   const randomWord = getRandomInt(0, words.length-1);
-  
   const correctAnswer = words[randomWord];
-  
-  const letters = shuffleLetters(correctAnswer.split(''));  
+  const letters = shuffle(correctAnswer.split(''));  
 
-  function shuffleLetters(array) {
-    let currentIndex = array.length;
-    let temporaryValue;
-    let randomIndex;
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-    return array;
-  }
-
-  const taskTranslationMessage = "Двигай буквы и собери слово";
-  showTaskMessage(taskTranslationMessage);
-
-  // const maxInputLength = 10;
-  // const userInput = createInputForAnswer(maxInputLength, TASK_SORTLETTERS);
-
-  // Append sortable letters
-  let lettersFragment = document.createDocumentFragment();
   letters.forEach((letter) => {
-    let p = document.createElement('p');
-    p.textContent = letter;
-    p.classList.add('task__letter');
-    lettersFragment.appendChild(p);
+    conditions.push(letter);
   });
 
-  appendCondition(taskCondContainer, lettersFragment);
-
-  taskForm.addEventListener('submit', solveSortLettersTask);
-  
-  function solveSortLettersTask() {
-    let userInput = getSortLettersSolution(taskCondContainer);
-    $(".task__condition").sortable("disable");
-    solveTask(taskForm, userInput, correctAnswer, solveSortLettersTask, event);
-  }
-
-  function getSortLettersSolution(container) {
-    let letters = [...container.children];
-    letters = letters.map((letter) => {
-      return letter.innerText;
-    });
-    return letters.join('');   
-  }
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
 function generateTaskOddWord() {
@@ -911,60 +902,33 @@ function generateTaskOddWord() {
   $(".task__condition").sortable("disable");
   $(".task__condition").selectable("enable");
 
-  const taskForm = getTaskForm();
-  let taskCondContainer = getCondContainer();
-
-  clearContainer(taskCondContainer);
+  const taskName = 'oddword';
+  const taskMessage = "Выбери лишнее слово";
+  let conditions = [];
  
   const randomWord = getRandomInt(0, oddWords.length-1);
-  
   const correctAnswer = oddWords[randomWord]['oddWord'];
-  
-  const words = shuffleWords(oddWords[randomWord]['words']);  
+  const words = shuffle(oddWords[randomWord]['words']);  
 
-  function shuffleWords(array) {
-    let currentIndex = array.length;
-    let temporaryValue;
-    let randomIndex;
-    while (currentIndex !== 0) {
-      randomIndex = Math.floor(Math.random() * currentIndex);
-      currentIndex -= 1;
-      temporaryValue = array[currentIndex];
-      array[currentIndex] = array[randomIndex];
-      array[randomIndex] = temporaryValue;
-    }
-    return array;
-  }
-
-  const taskMessage = "Выбери лишнее слово";
-  showTaskMessage(taskMessage);
-
-  // const maxInputLength = 10;
-  // const userInput = createInputForAnswer(maxInputLength, TASK_SORTLETTERS);
-
-  // Append sortable letters
-  let wordsFragment = document.createDocumentFragment();
   words.forEach((word) => {
-    let p = document.createElement('p');
-    p.textContent = word;
-    p.classList.add('task__word');
-    wordsFragment.appendChild(p);
+    conditions.push(word);
   });
 
-  appendCondition(taskCondContainer, wordsFragment);
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
+}
 
-  taskForm.addEventListener('submit', solveSortLettersTask);
-  
-  function solveSortLettersTask() {
-    $(".task__condition").selectable("disable");
-    let userInput = getSolution(taskCondContainer);
-    solveTask(taskForm, userInput, correctAnswer, solveSortLettersTask, event);
+function shuffle(array) {
+  let currentIndex = array.length;
+  let temporaryValue;
+  let randomIndex;
+  while (currentIndex !== 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex -= 1;
+    temporaryValue = array[currentIndex];
+    array[currentIndex] = array[randomIndex];
+    array[randomIndex] = temporaryValue;
   }
-
-  function getSolution(container) {
-    let word = container.querySelector('.ui-selected').textContent;
-    return word;   
-  }
+  return array;
 }
 
 function getCondContainer() {
@@ -981,7 +945,7 @@ function clearContainer(container) {
   }
 }
 
-function appendCondition(taskForm, ...conditions) {
+function appendCondition(taskForm, conditions) {
   conditions.forEach( condition => {
     if (typeof condition !== 'object') {
       let conditionElement = document.createElement('p');
@@ -998,14 +962,14 @@ function showTaskMessage(textToDisplay) {
   taskMessage.innerText = textToDisplay;
 }
 
-function createInputForAnswer(answerLength = 5, taskName) {  
+function createInputForAnswer(taskName) {  
   let userInput = document.createElement('input');
 
   userInput.type = "text";
   userInput.classList.add('task__input');
   userInput.placeholder = "Ответ";
   userInput.autofocus = true;
-  userInput.maxLength = answerLength;
+  //userInput.maxLength = answerLength;
   userInput.autocomplete = "off";
 
   if(taskName) {
