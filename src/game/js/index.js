@@ -139,9 +139,9 @@ function startGame(level = 1) {
   setTimeout(showFightBox, 2000);
   setTimeout(() => {
     hideFightBox();
-    showHeroMessage();
-    showMonsterMessage();
-    setTimeout(chooseSpell, 3000);
+    setTimeout(showHeroMessage, 1000);
+    setTimeout(showMonsterMessage, 3000);
+    setTimeout(chooseSpell, 5000);
     //Temporary shows and hides the modal dialogue to choose a spell
     // TODO: Remove in last version
     // setTimeout(hideModalChooseSpell, 2000);
@@ -473,53 +473,69 @@ function solveTask(taskElement, userInput, correctAnswer, eventHandlerFunction, 
     userAnswer = userInput;
   }
 
-  let monsterHealth = document.querySelector('.state__health-monster');
-  let heroHealth = document.querySelector('.state__health-hero');
-  let isOpponentDead = false;
-  let isHeroDead = false;
+  let isAnswerCorrect = false;
 
   if( +userAnswer === correctAnswer || userAnswer === correctAnswer) {
-    isOpponentDead = damageOpponent(monsterHealth, maxDamageFromUser);
-
-    if (isOpponentDead) {
-      victory();
-      taskElement.removeEventListener('submit', eventHandlerFunction);
-      toggleTaskScreen();
-
-      startGame(+document.querySelector('.level__num').textContent + 1);
-      return;
-    } 
-    
-      isHeroDead = damageOpponent(heroHealth, maxDamageFromMonster);
-      if (isHeroDead) {
-        taskElement.removeEventListener('submit', eventHandlerFunction);
-        toggleTaskScreen();
-
-        gameOver();
-        return;
-    }
-
+    isAnswerCorrect = true;
   } else if (Array.isArray(correctAnswer)) {
     correctAnswer.forEach(answer => {
       if(answer === userAnswer) {
+        isAnswerCorrect = true;
         showMonsterMessage('Как ты догадался?!');
       }
     });
   } else {
     showMonsterMessage(`Уха-ХA-ха!`);
-    isHeroDead = damageOpponent(heroHealth, maxDamageFromMonster);
-    if (isHeroDead) {
-      taskElement.removeEventListener('submit', eventHandlerFunction);
-      toggleTaskScreen();
+  }
 
-      gameOver();
-      return;
-  }
-  }
-  taskElement.removeEventListener('submit', eventHandlerFunction);
-  toggleTaskScreen();
-  setTimeout(chooseSpell, 3000);
+  fightRound(isAnswerCorrect);
+
+  closeTask(taskElement, eventHandlerFunction);
 }
+
+function closeTask(taskElement, eventHandlerFunction) {
+  taskElement.removeEventListener('submit', eventHandlerFunction);
+  document.getElementById('task').classList.add("modal--hidden");
+}
+
+function fightRound(isHeroHitsMonster) {
+  let monsterHealth = document.querySelector('.state__health-monster');
+  let heroHealth = document.querySelector('.state__health-hero');
+  let isMonsterDead = false;
+  let isHeroDead = false;
+
+  if (isHeroHitsMonster) {
+    isMonsterDead = damageOpponent(monsterHealth, maxDamageFromUser);
+
+    if (isMonsterDead) {
+      victory();
+      setTimeout(() => {
+        startGame(+document.querySelector('.level__num').textContent + 1);
+      }, 2000);
+      return;
+    }
+
+     //monster hits hero after hero spell animation
+     damageHero(3000);
+  } else {
+    //monster hits hero without hero spell animation
+    damageHero(100);
+  }
+
+  function damageHero(milliseconds){
+    milliseconds = milliseconds || 3000;
+    setTimeout(() => {
+      isHeroDead = damageOpponent(heroHealth, maxDamageFromMonster);
+      if (isHeroDead) {
+        gameOver();
+      } else {
+        setTimeout(chooseSpell, 6000);
+      }
+    }, milliseconds);
+  }
+}
+
+
 
 function victory(){
   showHeroMessage(`Я ЕСТЬ ГРУУУУУУУТ!!!`);
@@ -532,7 +548,7 @@ function gameOver(){
 }
 
 let maxDamageFromUser = 40;
-let maxDamageFromMonster = 10;
+let maxDamageFromMonster = 40;
 
 function damageOpponent(opponentHealth, maxDamage) {
   let isDead = false;
@@ -541,29 +557,46 @@ function damageOpponent(opponentHealth, maxDamage) {
 
   let currentDamage = Math.floor((Math.random() * maxDamage));
 
-  if (Number.parseInt(opponentHealth.style.width) - currentDamage <= 0) {
-    opponentHealth.style.width = '0%';
-    
-    isDead = true;
-    return isDead;
-  }
-
   if (opponentHealth !== heroHealth) {
     showHeroMessage();
     castSpell();
+    reduceHealth(opponentHealth, currentDamage);
+
     if (currentDamage > maxDamage * 0.8) {
       showHeroMessage(`Я есть Грут!<br><br>***Чертовски крут!***`);
-    } else if (currentDamage < maxDamage * 0.5) {
+    } else if (currentDamage < maxDamage * 0.2) {
+      setTimeout(() => {  
       showMonsterMessage(`Пффф... Слабак!<br><br> Каши мало ел?!`);
+      }, 2000);
     }
+
+  } else if (checkIsDead(opponentHealth, currentDamage)){
+    //if an enemy (hero) is dead - just return isDead
   } else {
     setTimeout(() => {   
       showMonsterMessage(`Получай!`);   
-    }, 500);
+      reduceHealth(opponentHealth, currentDamage);
+    }, 2000);
   }
 
-  opponentHealth.style.width = Number.parseInt(opponentHealth.style.width) - currentDamage + "%";
+  isDead = checkIsDead(opponentHealth, currentDamage);
+
   return isDead;
+}
+
+function checkIsDead(healthBar, damage){
+  let health = Number.parseInt(healthBar.style.width);
+  if(health - damage <= 0) {
+    healthBar.style.width = '0%';
+    return true;
+  }
+  return false;
+}
+
+//reduces opponents health
+function reduceHealth(healthBar, damage){
+  healthBar.style.width = Number.parseInt(healthBar.style.width) - damage + "%";
+  return false;
 }
 
 function generateTaskTranslation() {
@@ -737,7 +770,7 @@ function showMonsterMessage(message, seconds) {
 }
 
 function castSpell() {
-  let meteorit = document.createElement("div");
-  meteorit.classList.add("meteorit");
-  document.body.appendChild(meteorit);
+  let meteorite = document.createElement("div");
+  meteorite.classList.add("meteorite");
+  document.body.appendChild(meteorite);
 }
