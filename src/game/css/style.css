@@ -558,6 +558,20 @@ input[type="submit"]:hover {
   width: 230px;
 }
 
+.task__condition .ui-selecting { 
+  background: #FECA40; 
+}
+
+.task__condition .ui-selected { 
+  background: #F39814; 
+  color: white; 
+  border-radius: 5px;
+}
+
+.task__word {
+  padding: 10px;
+}
+
 .task__letter {
   padding: 10px;
   width: 40px;

@@ -3,10 +3,12 @@ import monsterNames from './monsterNames.json';
 import dictionary from './dictionary.json';
 import words from './words.json';
 import antonyms from './antonyms.json';
+import oddWords from './oddword.json';
 const pathToImgs = require.context("../img", true);
 import $ from 'jquery';
 import 'jquery-ui';
 import 'jquery-ui/ui/widgets/sortable';
+import 'jquery-ui/ui/widgets/selectable';
 import 'jquery-ui/ui/disable-selection';
 
 const METEORITE = 'meteorite';
@@ -20,6 +22,10 @@ $( function() {
     cursor: "move"
   });
   $( ".task__condition" ).disableSelection();
+} );
+
+$( function() {
+  $( ".task__condition" ).selectable();
 } );
 
 // Object used to speak
@@ -372,6 +378,9 @@ function chooseSpell() {
   let spellAntonyms = document.getElementById('antonyms');
   setSpellTask(spellAntonyms, generateTaskAntonyms);
 
+  let spellOddWord = document.getElementById('odd-word');
+  setSpellTask(spellOddWord, generateTaskOddWord);
+
   document.body.addEventListener('click', checkModalChooseSpellClicked);
 }
 
@@ -420,6 +429,7 @@ function setSpellTask(spell, generateSpellTask) {
 
 function generateTaskMath() {
   $(".task__condition").sortable("disable");
+  $(".task__condition").selectable("disable");
   const taskForm = getTaskForm();
   const taskCondContainer = getCondContainer();
   const min = 1;
@@ -641,6 +651,7 @@ function reduceHealth(healthBar, damage){
 
 function generateTaskTranslation() {
   $(".task__condition").sortable("disable");
+  $(".task__condition").selectable("disable");
   const TASK_TRANSLATION = "translation";
 
   const taskForm = getTaskForm();
@@ -671,6 +682,7 @@ function generateTaskTranslation() {
 
 function generateTaskAntonyms() {
   $(".task__condition").sortable("disable");
+  $(".task__condition").selectable("disable");
   const TASK_ANTONYMS = "antonyms";
 
   const taskForm = getTaskForm();
@@ -706,6 +718,7 @@ function generateTaskAntonyms() {
 
 function generateTaskListening() {
   $(".task__condition").sortable("disable");
+  $(".task__condition").selectable("disable");
   const TASK_LISTENING = "listening";
 
   const taskForm = getTaskForm();
@@ -751,6 +764,7 @@ function generateTaskListening() {
 function generateTaskSortLetters() {
 
   $(".task__condition").sortable("enable");
+  $(".task__condition").selectable("disable");
 
   const taskForm = getTaskForm();
   let taskCondContainer = getCondContainer();
@@ -808,6 +822,67 @@ function generateTaskSortLetters() {
       return letter.innerText;
     });
     return letters.join('');   
+  }
+}
+
+function generateTaskOddWord() {
+
+  $(".task__condition").sortable("disable");
+  $(".task__condition").selectable("enable");
+
+  const taskForm = getTaskForm();
+  let taskCondContainer = getCondContainer();
+
+  clearContainer(taskCondContainer);
+ 
+  const randomWord = getRandomInt(0, oddWords.length-1);
+  
+  const correctAnswer = oddWords[randomWord]['oddWord'];
+  
+  const words = shuffleWords(oddWords[randomWord]['words']);  
+
+  function shuffleWords(array) {
+    let currentIndex = array.length;
+    let temporaryValue;
+    let randomIndex;
+    while (currentIndex !== 0) {
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex -= 1;
+      temporaryValue = array[currentIndex];
+      array[currentIndex] = array[randomIndex];
+      array[randomIndex] = temporaryValue;
+    }
+    return array;
+  }
+
+  const taskMessage = "Выбери лишнее слово";
+  showTaskMessage(taskMessage);
+
+  // const maxInputLength = 10;
+  // const userInput = createInputForAnswer(maxInputLength, TASK_SORTLETTERS);
+
+  // Append sortable letters
+  let wordsFragment = document.createDocumentFragment();
+  words.forEach((word) => {
+    let p = document.createElement('p');
+    p.textContent = word;
+    p.classList.add('task__word');
+    wordsFragment.appendChild(p);
+  });
+
+  appendCondition(taskCondContainer, wordsFragment);
+
+  taskForm.addEventListener('submit', solveSortLettersTask);
+  
+  function solveSortLettersTask() {
+    $(".task__condition").selectable("disable");
+    let userInput = getSolution(taskCondContainer);
+    solveTask(taskForm, userInput, correctAnswer, solveSortLettersTask, event);
+  }
+
+  function getSolution(container) {
+    let word = container.querySelector('.ui-selected').textContent;
+    return word;   
   }
 }
 
