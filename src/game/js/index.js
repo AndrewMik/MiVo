@@ -10,10 +10,7 @@ import 'jquery-ui';
 import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/widgets/selectable';
 import 'jquery-ui/ui/disable-selection';
-
-const METEORITE = 'meteorite';
-const FIST_HERO = 'fist-hero';
-const FIST_MONSTER = 'fist-monster';
+import View from "./View";
 
 // Should run only once
 $( function() {
@@ -31,6 +28,9 @@ $( function() {
 // Object used to speak
 let utterance = new SpeechSynthesisUtterance();
 
+// Controller object
+let view = new View();
+
 // Temporary loads the game
 // TODO: Remove in last version
 document.addEventListener("DOMContentLoaded", registerPlayer);
@@ -40,7 +40,7 @@ function initHero(heroName, char) {
   let character = document.querySelector(".hero");
   character.style.backgroundPosition = -(12 - char) * 267 + "px 0";
   
-  setHeroName(heroName);
+  view.setHeroName(heroName);
 }
 
 function generateMonster() {
@@ -91,100 +91,40 @@ function createMonsterDialogue(monsterDiv) {
   monsterDialogue.appendChild(monsterMessage);
 }
 
-function showGameInfoPanel() {
-  document.querySelector('.panel').classList.remove('panel--hidden');
-}
-
-function showHeroes() {
-  let heroContainer = document.querySelector(".hero");
-  // heroContainer.appendChild(hero);
-
-  let monsterContainer = document.querySelector(".monster");
-  // monsterContainer.appendChild(monster);
-
-  heroContainer.classList.add("hero--appear");
-  monsterContainer.classList.add("monster--appear");
-}
-
 function changeMonster() {
   let monster = document.querySelector('.monster');
   monster.classList.add('monster--hide');
   setTimeout(() => {
-    clearContainer(monster);
-    // while (monster.firstChild) {
-    //   monster.removeChild(monster.firstChild);
-    // }
+    view.clearContainer(monster);
     generateMonster();
     monster.classList.remove('monster--hide');
   }, 2000);  
 }
 
-function setFullHealth() {
-  document.querySelector('.state__health-monster').style.width = 100 + '%';
-  document.querySelector('.state__health-hero').style.width = 100 + '%';
-}
-
 function startGame(level = 1) {
   
-  setFullHealth();
+  view.setFullHealth();
 
   if (level !== 1) {
     changeMonster();
   } else {
     generateMonster();
-    showHeroes();
+    view.showHeroes();
   }
   
   // Level by default is 1
   // If level === 1 showGuide() (guidance how to play, where to click and so on)
-  // When monster will be defeated, we can call startGame()
-  // again with incremented level
 
   let monsterName = generateMonsterName();
-  setLevel(level);
-  setMonsterName(monsterName);
-  //   //Temporary loads math task
-  //   // TODO: Remove in last version
-  // toggleTaskScreen();
-  // hideModalChooseSpell();
-  // generateTaskMath();
-  setTimeout(showFightBox, 2000);
+  view.setLevel(level);
+  view.setMonsterName(monsterName);
+  setTimeout(view.showFightBox, 2000);
   setTimeout(() => {
-    hideFightBox();
-    setTimeout(showHeroMessage, 1000);
-    setTimeout(showMonsterMessage, 3000);
+    view.hideFightBox();
+    setTimeout(view.showHeroMessage, 1000);
+    setTimeout(view.showMonsterMessage, 3000);
     setTimeout(chooseSpell, 5000);
-    //Temporary shows and hides the modal dialogue to choose a spell
-    // TODO: Remove in last version
-    // setTimeout(hideModalChooseSpell, 2000);
-    //Temporary shows and hides the screen with a task
-    // TODO: Remove in last version
-    // setTimeout(toggleTaskScreen, 3000);
-    // setTimeout(toggleTaskScreen, 4000);
   }, 6000);
-}
-
-function hideFightBox() {
-  document.querySelector(".fight-box").classList.add("fight-box--collapse");
-  setTimeout(() => {
-    document.querySelector(".fight-box").classList.add("fight-box--hidden");
-    document.querySelector(".fight-box").classList.remove("fight-box--collapse");
-  }, 1000);
-}
-
-function showFightBox() {
-  document.querySelector(".fight-box").classList.remove("fight-box--hidden");
-  document.querySelector('.fight-box__text').classList.add('fight-box__text--slide');
-}
-
-function setHeroName(heroName) {
-  let hero = document.querySelector(".state__name--hero");
-  hero.innerText = heroName;
-}
-
-function setMonsterName(monsterName) {
-  let monster = document.querySelector(".state__name--monster");
-  monster.innerText = monsterName;
 }
 
 function generateMonsterName() {
@@ -211,18 +151,9 @@ function generateMonsterName() {
   return name;
 }
 
-function setLevel(level) {
-  document.querySelector(".level__num").innerText = level;
-}
-
-function toggleRegisterFieldVisibility() {
-  let form = document.querySelector(".register-form");
-  form.classList.toggle("register-form--hidden");
-}
-
 function registerPlayer() {
-  toggleRegisterFieldVisibility();
-  initCharacterSelectField();
+  view.toggleRegisterFieldVisibility();
+  view.initCharacterSelectField();
   let login;
   let mail;
   let char;
@@ -235,123 +166,17 @@ function registerPlayer() {
     char = document
       .querySelector(".role__slide--active")
       .getAttribute("data-slide");
-    toggleRegisterFieldVisibility();
-    showGameInfoPanel();
+    view.toggleRegisterFieldVisibility();
+    view.showGameInfoPanel();
     initHero(login, char);
     startGame();
   });
 }
 
-function initCharacterSelectField() {
-  let characterSelect = document.querySelector(".character-select");
-  let partSelect = [...document.querySelectorAll(".part-select")];
-  let roleSliders = [...document.querySelectorAll(".role__slider")];
-
-  roleSliders.forEach((slider, index) => {
-    setParts(slider, 13, index);
-  });
-
-  partSelect.forEach(slider => {
-    setSliderEvents(slider);
-  });
-}
-
-function setParts(slider, sources, index) {
-  for (let i = 0; i < sources; i++) {
-    let partSlide = document.createElement("div");
-    partSlide.classList.add("role__slide");
-    partSlide.setAttribute("data-slide", i);
-    partSlide.style.left = i * 267 + "px";
-
-    let character = document.createElement("div");
-    character.classList.add("slide__img");
-    character.style.backgroundPosition = (i + 1) * 267 + "px 0";
-
-    if (i === 0) {
-      partSlide.classList.add("role__slide--active");
-    }
-
-    slider.appendChild(partSlide);
-    partSlide.appendChild(character);
-  }
-}
-
-function setSliderEvents(slider) {
-  // TODO: add listeners for keyboard
-  slider.addEventListener("click", slide);
-}
-
-function slide(e) {
-  let slider = this;
-  let slides = [...slider.querySelector(".role__slider").children];
-
-  let slidesList = slider.querySelector(".role__slider");
-  let activeSlide = slider.querySelector(".role__slide--active");
-  let clickedButton = e.target;
-
-  // PREVIOUS BUTTON
-  // check if clicked button is 'previous button'
-  if (clickedButton.classList.contains("role__prev") || clickedButton.classList.contains("role__prev-button")) {
-    // check if active indicator is the first one
-    if (activeSlide === slidesList.firstElementChild) {
-      // make the last slide active
-      let lastSlide = slidesList.lastElementChild;
-      lastSlide.classList.add("role__slide--active");
-
-      // switch to the last slide
-      let lastSlideNumber = lastSlide.getAttribute("data-slide");
-      slides.forEach(slide => {
-        slide.style.transform = "translateX(" + lastSlideNumber * -267 + "px)";
-      });
-    } else {
-      // make previous indicator active
-      let prevSlide = activeSlide.previousElementSibling;
-      prevSlide.classList.add("role__slide--active");
-
-      // switch to previous slide
-      let prevSlideNumber = prevSlide.getAttribute("data-slide");
-      slides.forEach(slide => {
-        slide.style.transform = "translateX(" + prevSlideNumber * -267 + "px)";
-      });
-    }
-
-    activeSlide.classList.remove("role__slide--active");
-  }
-
-  // NEXT BUTTON
-  // check if clicked button is 'next button'
-  if (clickedButton.classList.contains("role__next") || clickedButton.classList.contains("role__next-button")) {
-    //check if active indicator is the last one
-    if (activeSlide === slidesList.lastElementChild) {
-      // make the first indicator active
-      let firstSlide = slidesList.firstElementChild;
-      firstSlide.classList.add("role__slide--active");
-
-      // switch to the first slide
-      let firstSlideNumber = firstSlide.getAttribute("data-slide");
-      slides.forEach(slide => {
-        slide.style.transform = "translateX(" + firstSlideNumber * -267 + "px)";
-      });
-    } else {
-      // make next indicator active
-      let nextSlide = activeSlide.nextElementSibling;
-      nextSlide.classList.add("role__slide--active");
-
-      // switch to the next slide
-      let nextSlideNumber = nextSlide.getAttribute("data-slide");
-      slides.forEach(slide => {
-        slide.style.transform = "translateX(" + nextSlideNumber * -267 + "px)";
-      });
-    }
-
-    activeSlide.classList.remove("role__slide--active");
-  }
-}
-
 function chooseSpell() {
   let modalChooseSpell = document.getElementById('choose-spell');
 
-  toggleElementVisibility(modalChooseSpell);
+  view.toggleElementVisibility(modalChooseSpell);
 
   let spellMath = document.getElementById('spell-math');
   setSpellTask(spellMath, generateTaskMath);
@@ -371,49 +196,17 @@ function chooseSpell() {
   let spellOddWord = document.getElementById('odd-word');
   setSpellTask(spellOddWord, generateTaskOddWord);
 
-  document.body.addEventListener('click', checkModalChooseSpellClicked);
-}
-
-function hideModalChooseSpell() {
-  let modalChooseSpell = document.getElementById('choose-spell');
-  modalChooseSpell.classList.add('modal--hidden');
-  document.body.removeEventListener('click', checkModalChooseSpellClicked);
-}
-
-//Screen task
-function toggleTaskScreen() {
-  let taskScreen = document.getElementById('task');
-
-  toggleElementVisibility(taskScreen);
-}
-
-function toggleElementVisibility(element) {
-  element.classList.toggle("modal--hidden");
-}
-
-function checkModalChooseSpellClicked() {
-  let modalChooseSpell = document.getElementById('choose-spell');
-  let modalContentChooseSpell = document.getElementById('choose-spell-content');
-
-  //event.target is read only
-  let eventTarget = event.target;
-  let isModalContentClicked = false;
-
-  while (eventTarget !== document.body) {
-    if ( eventTarget === modalContentChooseSpell ) {
-      isModalContentClicked = true;
-    }
-    eventTarget = eventTarget.parentElement;
-  }
-
-  if (!isModalContentClicked) {
-    toggleElementVisibility(modalChooseSpell);
-  }
+  document.body.addEventListener('click', view.checkModalChooseSpellClicked);
 }
 
 function setSpellTask(spell, generateSpellTask) {
-  spell.addEventListener('click', hideModalChooseSpell);
-  spell.addEventListener('click', toggleTaskScreen);
+  spell.addEventListener('click', () => {
+    view.hideModalChooseSpell();
+    document.body.removeEventListener('click', view.checkModalChooseSpellClicked);
+  });
+  spell.addEventListener('click', () => {
+    view.toggleTaskScreen();
+  });
   spell.addEventListener('click', generateSpellTask);
 }
 
@@ -469,36 +262,10 @@ function generateTaskMath() {
 
 function solveTask(taskElement, isAnswerCorrect, eventHandlerFunction, currentEvent) {
   currentEvent.preventDefault();
-  // let userAnswer;
-  // if (typeof userInput === 'object' ) {
-  //   userAnswer = userInput.value.toLowerCase();   
-  // } else {
-  //   userAnswer = userInput;
-  // }
-
-  // let isAnswerCorrect = false;
-
-  // if( +userAnswer === correctAnswer || userAnswer === correctAnswer) {
-  //   isAnswerCorrect = true;
-  // } else if (Array.isArray(correctAnswer)) {
-  //   correctAnswer.forEach(answer => {
-  //     if(answer === userAnswer) {
-  //       isAnswerCorrect = true;
-  //       showMonsterMessage('Как ты догадался?!');
-  //     }
-  //   });
-  // } else {
-  //   showMonsterMessage(`Уха-ХA-ха!`);
-  // }
 
   fightRound(isAnswerCorrect);
 
-  closeTask(taskElement, eventHandlerFunction);
-}
-
-function closeTask(taskElement, eventHandlerFunction) {
-  taskElement.removeEventListener('submit', eventHandlerFunction);
-  document.getElementById('task').classList.add("modal--hidden");
+  view.closeTask(taskElement, eventHandlerFunction);
 }
 
 function fightRound(isHeroHitsMonster) {
@@ -512,19 +279,19 @@ function fightRound(isHeroHitsMonster) {
 
   if (isHeroHitsMonster) {
     isMonsterDead = damageMonster();
-    showMonsterMessage('Как ты догадался?!');
+    view.showMonsterMessage('Как ты догадался?!');
 
     if (isMonsterDead) {
       return;
     }
 
     setTimeout(() => {
-      delayMonsterHit = castSpell(FIST_MONSTER);
+      delayMonsterHit = view.castSpell(FIST_MONSTER);
       damageHero(delayMonsterHit);
     }, delayMonsterSpellAnimation);
   } else {
-    showMonsterMessage(`Уха-ХA-ха!`);
-    delayMonsterHit = castSpell(FIST_MONSTER);
+    view.showMonsterMessage(`Уха-ХA-ха!`);
+    delayMonsterHit = view.castSpell(FIST_MONSTER);
     damageHero(delayMonsterHit);
   }
 
@@ -553,13 +320,13 @@ function fightRound(isHeroHitsMonster) {
 }
 
 function victory(){
-  showHeroMessage(`Я ЕСТЬ ГРУУУУУУУТ!!!`);
+  view.showHeroMessage(`Я ЕСТЬ ГРУУУУУУУТ!!!`);
   maxDamageFromUser -= 1;
   maxDamageFromMonster += 2; 
 }
 
 function gameOver(){
-  sayAfterDelay(showMonsterMessage, `Лузер!`, 1000);
+  sayAfterDelay(view.showMonsterMessage, `Лузер!`, 1000);
 
   let winner = {};
 
@@ -602,7 +369,7 @@ function gameOver(){
       function showBestPlayers(bestPlayers) {
         let topScoresDiv = document.querySelector('.modal__top-scores');
 
-        clearContainer(topScoresDiv);
+        view.clearContainer(topScoresDiv);
 
         let table = document.createElement('table');
         let tr = document.createElement('tr');
@@ -642,7 +409,7 @@ function gameOver(){
         topScoresDiv.appendChild(table);
 
         setTimeout(() => {
-          toggleElementVisibility(document.getElementById('top-scores'));
+          view.toggleElementVisibility(document.getElementById('top-scores'));
         }, 3000);
       }
 }
@@ -662,35 +429,35 @@ function damageOpponent(opponentHealth, maxDamage) {
   isDead = checkIsDead(opponentHealth, currentDamage);
 
   if (opponentHealth !== heroHealth) {
-    showHeroMessage();
+    view.showHeroMessage();
 
     if (currentDamage > maxDamage * 0.8) {
-      durationSpellAnimation = castSpell(METEORITE);
+      durationSpellAnimation = view.castSpell(METEORITE);
     } else {
-      durationSpellAnimation = castSpell(FIST_HERO);
+      durationSpellAnimation = view.castSpell(FIST_HERO);
     }
 
     let delayAfterSpellAnimation = durationSpellAnimation;
 
     setTimeout(() => {
       if(isDead){
-          setHealthZero(opponentHealth);
+          view.setHealthZero(opponentHealth);
           return;
       }
-      reduceHealth(opponentHealth, currentDamage);
+      view.reduceHealth(opponentHealth, currentDamage);
 
       if (currentDamage > maxDamage * 0.8) {
-        sayAfterDelay(showHeroMessage, `Я есть Грут!<br><br>***Чертовски крут!***`, 1000);
+        sayAfterDelay(view.showHeroMessage, `Я есть Грут!<br><br>***Чертовски крут!***`, 1000);
       } else if (currentDamage < maxDamage * 0.2) {
-        sayAfterDelay(showMonsterMessage, `Пффф... Слабак!<br><br> Каши мало ел?!`, 1000);
+        sayAfterDelay(view.showMonsterMessage, `Пффф... Слабак!<br><br> Каши мало ел?!`, 1000);
       }
     }, delayAfterSpellAnimation);
 
   } else if (isDead){
-        setHealthZero(opponentHealth);
+      view.setHealthZero(opponentHealth);
   } else {
-      showMonsterMessage(`Получай!`);   
-      reduceHealth(opponentHealth, currentDamage);
+      view.showMonsterMessage(`Получай!`);   
+      view.reduceHealth(opponentHealth, currentDamage);
   }
 
   return isDead;
@@ -704,68 +471,41 @@ function checkIsDead(healthBar, damage){
   return false;
 }
 
-function setHealthZero(healthBar){
-  healthBar.style.width = '0%';
-}
-
-function reduceHealth(healthBar, damage){
-  healthBar.style.width = Number.parseInt(healthBar.style.width) - damage + "%";
-  return false;
-}
-
 function generateTaskTranslation() {
   
   $(".task__condition").sortable("disable");
   $(".task__condition").selectable("disable");
-  const TASK_TRANSLATION = "translation";
 
-  // const taskForm = getTaskForm();
-  // let taskCondContainer = getCondContainer();
-
-  // clearContainer(taskCondContainer);
+  const taskName = "translation";
+  const taskMessage = "Переведи слово";
+  let condition;
  
   const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
-  
   const word = dictionary[randomWordInDictionary]['word'];
   const correctAnswer = dictionary[randomWordInDictionary]['translation'];
-  
-  const taskMessage = "Переведи слово";
-  // showTaskMessage(taskTranslationMessage);
 
-  //const maxInputLength = 10;
-  // const userInput = createInputForAnswer(maxInputLength, TASK_TRANSLATION);
+  conditions = [word];
 
-  // appendCondition(taskCondContainer, word, userInput);
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
 
-  let conditions = [word];
-
-  generateTask(taskMessage, conditions, correctAnswer, TASK_TRANSLATION);
-
-  // taskForm.addEventListener('submit', solveTranslationTask);
-  
-  // function solveTranslationTask() {
-  //   getUserAnswer();
-  //   checkAnswer();
-  //   solveTask(taskForm, userInput, correctAnswer, solveTranslationTask, event);
-  // }
 }
 
 function generateTask(taskMessage, conditions, correctAnswer, className) {
 
-  let taskCondContainer = getCondContainer();
+  let taskCondContainer = view.getCondContainer();
 
-  clearContainer(taskCondContainer);
+  view.clearContainer(taskCondContainer);
 
-  showTaskMessage(taskMessage);
+  view.showTaskMessage(taskMessage);
   let userInput;  
 
   if (className !== 'sortletters' && className !== 'oddword') {
-    userInput = createInputForAnswer(className);  
+    userInput = view.createInputForAnswer(className);  
     conditions.push(userInput);
   }
 
-  const taskForm = getTaskForm();
-  appendCondition(taskCondContainer, conditions);
+  const taskForm = view.getTaskForm();
+  view.appendCondition(taskCondContainer, conditions);
 
   taskForm.addEventListener('submit', solveCurrentTask);
   let userAnswer;
@@ -804,7 +544,7 @@ function getUserAnswer(className, userInput) {
     return userInput.value;
   } 
 
-  let container = getCondContainer();
+  let container = view.getCondContainer();
   switch (className) {
     case 'sortletters':
       let letters = [...container.children];
@@ -930,102 +670,8 @@ function shuffle(array) {
   return array;
 }
 
-function getCondContainer() {
-  return document.querySelector('.task__condition');
-}
-
-function getTaskForm() {
-  return document.querySelector('.task');
-}
-
-function clearContainer(container) {
-  while(container.firstElementChild) {
-    container.removeChild(container.firstElementChild);
-  }
-}
-
-function appendCondition(taskForm, conditions) {
-  conditions.forEach( condition => {
-    if (typeof condition !== 'object') {
-      let conditionElement = document.createElement('p');
-      conditionElement.textContent = condition;  
-      taskForm.appendChild(conditionElement);
-    } else {
-      taskForm.appendChild(condition);
-    }
-  });
-}
-
-function showTaskMessage(textToDisplay) {
-  let taskMessage = document.getElementById('task-todo-message');
-  taskMessage.innerText = textToDisplay;
-}
-
-function createInputForAnswer(taskName) {  
-  let userInput = document.createElement('input');
-
-  userInput.type = "text";
-  userInput.classList.add('task__input');
-  userInput.placeholder = "Ответ";
-  userInput.autofocus = true;
-  //userInput.maxLength = answerLength;
-  userInput.autocomplete = "off";
-
-  if(taskName) {
-    userInput.classList.add('task__' + taskName);
-  }
-
-  return userInput;
-}
-/**
- * Returns a random integer between min (inclusive) and max (inclusive)
- * Using Math.round() will give you a non-uniform distribution!
- */
 function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function showHeroMessage(message, milliseconds) {
-  message = message || "Я есть Грут!";
-  milliseconds = milliseconds || 2000;
-
-  document.querySelector(".dialogue__hero").classList.remove("dialogue--hidden");
-  document.querySelector(".dialogue__hero-message").innerHTML = message;
-  setTimeout(() => {
-     document.querySelector(".dialogue__hero").classList.add("dialogue--hidden");
-  }, milliseconds);
-}
-
-function showMonsterMessage(message, milliseconds) {
-  message = message || "Ты есть грунт!!!";
-  milliseconds = milliseconds || 2000;
-
-  document.querySelector(".dialogue__monster").classList.remove("dialogue--hidden");
-  document.querySelector(".dialogue__monster-message").innerHTML = message;
-  setTimeout(() => {
-     document.querySelector(".dialogue__monster").classList.add("dialogue--hidden");
-  }, milliseconds);
-}
-
-function castSpell(spellName = FIST_HERO) {
-  let spell = document.createElement("div");
-
-  if(spellName === METEORITE) {
-    spell.classList.add(METEORITE);
-  } else if (spellName === FIST_MONSTER) {
-    spell.classList.add(FIST_MONSTER);
-  } else if (spellName === FIST_HERO) {
-    spell.classList.add(FIST_HERO);
-  }
-  document.body.appendChild(spell);
-
-  setTimeout(() => {
-    document.body.removeChild(spell);
-  }, 5000);
-
-  let animationDuration = getComputedStyle(spell).animationDuration;
-  animationDuration = Number.parseFloat(animationDuration) * 1000;
-  return animationDuration;
 }
 
 function sayAfterDelay(func, message, delay){
