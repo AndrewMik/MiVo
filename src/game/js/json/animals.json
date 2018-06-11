@@ -1,0 +1,118 @@
+[{
+	"coordinates": "0 0",
+	"answers": ["утка", "уточка"]
+}, {
+	"coordinates": "-300px 0",
+	"answers": ["носорог"]
+}, {
+	"coordinates": "-600px 0",
+	"answers": ["олень"]
+}, {
+	"coordinates": "-900px 0",
+	"answers": ["заяц", "зайчик", "кролик"]
+}, {
+	"coordinates": "-1200px 0",
+	"answers": ["крокодил"]
+}, {
+	"coordinates": "-1500px 0",
+	"answers": ["обезьяна", "обезяьнка"]
+}, {
+	"coordinates": "-1800px 0",
+	"answers": ["утка", "уточка", "селезень"]
+}, {
+	"coordinates": "-2100px 0",
+	"answers": ["снегирь", "птица", "птичка"]
+}, {
+	"coordinates": "-2400px 0",
+	"answers": ["лев"]
+}, {
+	"coordinates": "-2700px 0",
+	"answers": ["змея", "змейка"]
+}, {
+	"coordinates": "-3000px 0",
+	"answers": ["кит"]
+}, {
+	"coordinates": "-3300px 0",
+	"answers": ["собака", "пес", "песик", "собачка"]
+}, {
+	"coordinates": "-3600px 0",
+	"answers": ["еж", "ёж", "ежик", "ёжик"]
+}, {
+	"coordinates": "-3900px 0",
+	"answers": ["кенгуру"]
+}, {
+	"coordinates": "-4200px 0",
+	"answers": ["слон", "слоник"]
+}, {
+	"coordinates": "-4500px 0",
+	"answers": ["сова"]
+}, {
+	"coordinates": "-4800px 0",
+	"answers": ["волк"]
+}, {
+	"coordinates": "-5100px 0",
+	"answers": ["осел", "осёл", "ослик"]
+}, {
+	"coordinates": "-5400px 0",
+	"answers": ["верблюд"]
+}, {
+	"coordinates": "-5700px 0",
+	"answers": ["акула"]
+}, {
+	"coordinates": "-6000px 0",
+	"answers": ["рыба", "рыбка"]
+}, {
+	"coordinates": "-6300px 0",
+	"answers": ["кот", "котик", "котенок", "котёнок"]
+}, {
+	"coordinates": "-6600px 0",
+	"answers": ["медведь", "мишка"]
+}, {
+	"coordinates": "-6900px 0",
+	"answers": ["тигр"]
+}, {
+	"coordinates": "-7200px 0",
+	"answers": ["жираф"]
+}, {
+	"coordinates": "-7500px 0",
+	"answers": ["белка", "белочка"]
+}, {
+	"coordinates": "-7800px 0",
+	"answers": ["мышь", "мышка"]
+}, {
+	"coordinates": "-8100px 0",
+	"answers": ["ласточка", "птица", "птичка"]
+}, {
+	"coordinates": "-8400px 0",
+	"answers": ["курица", "курочка"]
+}, {
+	"coordinates": "-8700px 0",
+	"answers": ["корова", "коровка"]
+}, {
+	"coordinates": "-9000px 0",
+	"answers": ["леопард"]
+}, {
+	"coordinates": "-9300px 0",
+	"answers": ["свинья", "свин", "свинка"]
+}, {
+	"coordinates": "-9600px 0",
+	"answers": ["петух", "петушок"]
+}, {
+	"coordinates": "-9900px 0",
+	"answers": ["воробей", "птица", "птичка"]
+}, {
+	"coordinates": "-10200px 0",
+	"answers": ["зебра"]
+}, {
+	"coordinates": "-10500px 0",
+	"answers": ["овца", "овечка"]
+}, {
+	"coordinates": "-10800px 0",
+	"answers": ["лиса", "лисица", "лисичка"]
+}, {
+	"coordinates": "-11100px 0",
+	"answers": ["черепаха", "черепашка"]
+}, {
+	"coordinates": "-11400px 0",
+	"answers": ["лошадь", "лошадка", "конь"]
+}]

@@ -5,6 +5,7 @@ import words from './json/words.json';
 import antonyms from './json/antonyms.json';
 import oddWords from './json/oddword.json';
 import casesDB from './json/cases.json';
+import animals from './json/animals.json';
 const pathToImgs = require.context("../img", true);
 import $ from 'jquery';
 import 'jquery-ui';
@@ -202,6 +203,9 @@ function chooseSpell() {
 
   let spellCases = document.getElementById('cases');
   setSpellTask(spellCases, generateTaskCases);
+
+  let spellGuessAnimal = document.getElementById('animals');
+  setSpellTask(spellGuessAnimal, generateTaskGuessAnimal);
 
   document.body.addEventListener('click', view.checkModalChooseSpellClicked);
 }
@@ -607,7 +611,7 @@ function generateTaskTranslation() {
 
   const taskName = "translation";
   const taskMessage = "Переведи слово";
-  let condition;
+  let conditions;
  
   const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
   const word = dictionary[randomWordInDictionary]['word'];
@@ -692,6 +696,26 @@ function generateTaskCases() {
     }
   }
   
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
+}
+
+function generateTaskGuessAnimal() {
+  $(".task__condition").sortable("disable");
+  $(".task__condition").selectable("disable");
+
+  const taskName = "guess-animal";
+  const taskMessage = "Напиши имя животного";
+  let conditions;
+ 
+  const randomAnimal = animals[getRandomInt(0, animals.length-1)];
+  const randomAnimalCoord = randomAnimal['coordinates'];
+  const correctAnswer = randomAnimal['answers'];
+
+  let img = document.createElement('img');
+  img.classList.add('task__img');
+  img.style.backgroundPosition = randomAnimalCoord;
+  conditions = [img];
+
   generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
