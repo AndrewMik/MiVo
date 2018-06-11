@@ -476,7 +476,7 @@ function generateTask(taskMessage, conditions, correctAnswer, className) {
 function checkAnswer(userAnswer, correctAnswer) {
   let flag = false;
 
-  if( +userAnswer === correctAnswer || userAnswer === correctAnswer) {
+  if( +userAnswer === correctAnswer || userAnswer === correctAnswer || userAnswer.toLocaleLowerCase() === correctAnswer) {
     return true;
   } else if (Array.isArray(correctAnswer)) {
     correctAnswer.forEach(answer => {
@@ -520,8 +520,8 @@ function getUserAnswer(className, userInput) {
 }
 
 function generateTaskAntonyms() {
-  $(".task__condition").sortable("disable");
-  $(".task__condition").selectable("disable");
+  isSortable(false);
+  isSelectable(false);
 
   const taskName = "antonyms";
   const taskMessage = "Наколдуй антоним";
@@ -543,8 +543,8 @@ function generateTaskAntonyms() {
 }
 
 function generateTaskListening() {
-  $(".task__condition").sortable("disable");
-  $(".task__condition").selectable("disable");
+  isSortable(false);
+  isSelectable(false);
 
   const taskName = "listening";
   const taskMessage = "Напиши услышанное слово";
@@ -573,9 +573,8 @@ function generateTaskListening() {
 }
 
 function generateTaskSortLetters() {
-
-  $(".task__condition").sortable("enable");
-  $(".task__condition").selectable("disable");
+  isSortable(true);
+  isSelectable(false);
 
   const taskName = 'sortletters';
   const taskMessage = "Двигай буквы и собери слово";
@@ -593,9 +592,8 @@ function generateTaskSortLetters() {
 }
 
 function generateTaskOddWord() {
-
-  $(".task__condition").sortable("disable");
-  $(".task__condition").selectable("enable");
+  isSortable(false);
+  isSelectable(true);
 
   const taskName = 'oddword';
   const taskMessage = "Выбери лишнее слово";
@@ -613,9 +611,8 @@ function generateTaskOddWord() {
 }
 
 function generateTaskTranslation() {
-  
-  $(".task__condition").sortable("disable");
-  $(".task__condition").selectable("disable");
+  isSortable(false);
+  isSelectable(false);
 
   const taskName = "translation";
   const taskMessage = "Переведи слово";
@@ -632,8 +629,8 @@ function generateTaskTranslation() {
 }
 
 function generateTaskMath() {
-  $(".task__condition").sortable("disable");
-  $(".task__condition").selectable("disable");
+  isSortable(false);
+  isSelectable(false);
 
   const taskName = 'math';
   const taskMessage = "Реши пример";
@@ -682,8 +679,8 @@ function generateTaskMath() {
 }
 
 function generateTaskCases() {
-  $(".task__condition").sortable("disable");
-  $(".task__condition").selectable("disable");
+  isSortable(false);
+  isSelectable(false);
 
   const taskName = 'cases';
   const taskMessage = "Введите слово в правильном падеже";
@@ -708,8 +705,8 @@ function generateTaskCases() {
 }
 
 function generateTaskGuessAnimal() {
-  $(".task__condition").sortable("disable");
-  $(".task__condition").selectable("disable");
+  isSortable(false);
+  isSelectable(false);
 
   const taskName = "guess-animal";
   const taskMessage = "Напиши имя животного";
@@ -728,8 +725,8 @@ function generateTaskGuessAnimal() {
 }
 
 function generateTaskSpelling() {
-  $(".task__condition").sortable("disable");
-  $(".task__condition").selectable("disable");
+  isSortable(false);
+  isSelectable(false);
 
   const taskName = 'spelling';
   const taskMessage = "Вставь букву, две или ничего";
@@ -746,6 +743,18 @@ function generateTaskSpelling() {
   conditions = [firstPart, userInput, secondPart];
 
   generateTask(taskMessage, conditions, correctAnswer, taskName);
+}
+
+function isSortable(isSortable) {
+  isSortable 
+  ? $(".task__condition").sortable("enable")
+  : $(".task__condition").sortable("disable") ;
+}
+
+function isSelectable(isSelectable) {
+  isSelectable
+  ? $(".task__condition").selectable("enable")
+  : $(".task__condition").selectable("disable");
 }
 
 function shuffle(array) {
