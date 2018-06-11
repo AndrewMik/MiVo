@@ -4,6 +4,7 @@ import dictionary from './json/dictionary.json';
 import words from './json/words.json';
 import antonyms from './json/antonyms.json';
 import oddWords from './json/oddword.json';
+import casesDB from './json/cases.json';
 const pathToImgs = require.context("../img", true);
 import $ from 'jquery';
 import 'jquery-ui';
@@ -199,6 +200,9 @@ function chooseSpell() {
   let spellOddWord = document.getElementById('odd-word');
   setSpellTask(spellOddWord, generateTaskOddWord);
 
+  let spellCases = document.getElementById('cases');
+  setSpellTask(spellCases, generateTaskCases);
+
   document.body.addEventListener('click', view.checkModalChooseSpellClicked);
 }
 
@@ -213,56 +217,6 @@ function setSpellTask(spell, generateSpellTask) {
     view.toggleElementVisibility(taskScreen);
   });
   spell.addEventListener('click', generateSpellTask);
-}
-
-function generateTaskMath() {
-  $(".task__condition").sortable("disable");
-  $(".task__condition").selectable("disable");
-
-  const taskName = 'math';
-  const taskMessage = "Реши пример";
-  let conditions;
-
-  const min = 1;
-  const max = 10;
-
-  const operations = ['add', 'sub', 'mult', 'div'];
-
-  const math = {
-    'add': function(first, second) {
-      mathOperator = '+';
-      correctAnswer = first + second;
-    },
-    'sub': function(first, second) {
-      mathOperator = '-';
-      if (first < second) {
-        [first, second] = [second, first];
-        [firstNumber, secondNumber] = [secondNumber, firstNumber];
-      }
-      correctAnswer = first - second;
-    },
-    'mult': function(first, second) {
-      mathOperator = '*';
-      correctAnswer = first * second;
-    },
-    'div': function(first, second) {
-      mathOperator = '÷';
-      correctAnswer = first;
-      firstNumber = first * second;
-    }
-  };
-  
-  let correctAnswer;
-  let firstNumber = getRandomInt(min, max);
-  let secondNumber = getRandomInt(min, max);
-  let mathOperator;
-  let mathOperation = operations[getRandomInt(0, 3)];
-  math[mathOperation](firstNumber, secondNumber);
-  const EQUALS = '=';
-
-  conditions = [firstNumber, mathOperator, secondNumber, EQUALS];
-
-  generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
 function solveTask(taskElement, isAnswerCorrect, eventHandlerFunction, currentEvent) {
@@ -477,27 +431,8 @@ function checkIsDead(healthBar, damage){
   return false;
 }
 
-function generateTaskTranslation() {
-  
-  $(".task__condition").sortable("disable");
-  $(".task__condition").selectable("disable");
-
-  const taskName = "translation";
-  const taskMessage = "Переведи слово";
-  let condition;
- 
-  const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
-  const word = dictionary[randomWordInDictionary]['word'];
-  const correctAnswer = dictionary[randomWordInDictionary]['translation'];
-
-  conditions = [word];
-
-  generateTask(taskMessage, conditions, correctAnswer, taskName);
-
-}
-
 function generateTask(taskMessage, conditions, correctAnswer, className) {
-
+  
   let taskCondContainer = view.getCondContainer();
 
   view.clearContainer(taskCondContainer);
@@ -505,7 +440,7 @@ function generateTask(taskMessage, conditions, correctAnswer, className) {
   view.showTaskMessage(taskMessage);
   let userInput;  
 
-  if (className !== 'sortletters' && className !== 'oddword') {
+  if (className !== 'sortletters' && className !== 'oddword' && className !== 'cases') {
     userInput = view.createInputForAnswer(className);  
     conditions.push(userInput);
   }
@@ -562,6 +497,9 @@ function getUserAnswer(className, userInput) {
     case 'oddword':
       let word = container.querySelector('.ui-selected').textContent;
       return word;
+      break;
+    case 'cases':
+      return document.querySelector('.task__input').value;
       break;
   
     default:
@@ -659,6 +597,101 @@ function generateTaskOddWord() {
     conditions.push(word);
   });
 
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
+}
+
+function generateTaskTranslation() {
+  
+  $(".task__condition").sortable("disable");
+  $(".task__condition").selectable("disable");
+
+  const taskName = "translation";
+  const taskMessage = "Переведи слово";
+  let condition;
+ 
+  const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
+  const word = dictionary[randomWordInDictionary]['word'];
+  const correctAnswer = dictionary[randomWordInDictionary]['translation'];
+
+  conditions = [word];
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
+
+}
+
+function generateTaskMath() {
+  $(".task__condition").sortable("disable");
+  $(".task__condition").selectable("disable");
+
+  const taskName = 'math';
+  const taskMessage = "Реши пример";
+  let conditions;
+
+  const min = 1;
+  const max = 10;
+
+  const operations = ['add', 'sub', 'mult', 'div'];
+
+  const math = {
+    'add': function(first, second) {
+      mathOperator = '+';
+      correctAnswer = first + second;
+    },
+    'sub': function(first, second) {
+      mathOperator = '-';
+      if (first < second) {
+        [first, second] = [second, first];
+        [firstNumber, secondNumber] = [secondNumber, firstNumber];
+      }
+      correctAnswer = first - second;
+    },
+    'mult': function(first, second) {
+      mathOperator = '*';
+      correctAnswer = first * second;
+    },
+    'div': function(first, second) {
+      mathOperator = '÷';
+      correctAnswer = first;
+      firstNumber = first * second;
+    }
+  };
+  
+  let correctAnswer;
+  let firstNumber = getRandomInt(min, max);
+  let secondNumber = getRandomInt(min, max);
+  let mathOperator;
+  let mathOperation = operations[getRandomInt(0, 3)];
+  math[mathOperation](firstNumber, secondNumber);
+  const EQUALS = '=';
+
+  conditions = [firstNumber, mathOperator, secondNumber, EQUALS];
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
+}
+
+function generateTaskCases() {
+  $(".task__condition").sortable("disable");
+  $(".task__condition").selectable("disable");
+
+  const taskName = 'cases';
+  const taskMessage = "Введите слово в правильном падеже";
+  let conditions = [];
+ 
+  const cases = casesDB['cases'];
+  const randomSet = casesDB['words'][getRandomInt(0, casesDB['words'].length-1)];
+  const randomCaseIndex = getRandomInt(1, randomSet.length-1);
+  const correctAnswer = randomSet[randomCaseIndex];
+
+  for (let i = 0; i < cases.length; i++) {
+    conditions.push(cases[i]); 
+    if (i === randomCaseIndex) {
+      let userInput = view.createInputForAnswer(taskName);  
+      conditions.push(userInput);
+    } else {
+      conditions.push(randomSet[i]);
+    }
+  }
+  
   generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 

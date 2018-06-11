@@ -321,6 +321,7 @@ input[type="submit"]:hover {
   display: flex;
   width: 100%;
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .task__button {
@@ -342,6 +343,10 @@ input[type="submit"]:hover {
 
 .task__listening {
   width: 230px;
+}
+
+.task__cases {
+  width: 170px;
 }
 
 .modal__spells,
