@@ -6,6 +6,7 @@ import antonyms from './json/antonyms.json';
 import oddWords from './json/oddword.json';
 import casesDB from './json/cases.json';
 import animals from './json/animals.json';
+import spelling from './json/spelling.json';
 const pathToImgs = require.context("../img", true);
 import $ from 'jquery';
 import 'jquery-ui';
@@ -206,6 +207,9 @@ function chooseSpell() {
 
   let spellGuessAnimal = document.getElementById('animals');
   setSpellTask(spellGuessAnimal, generateTaskGuessAnimal);
+
+  let spellSpelling = document.getElementById('spelling');
+  setSpellTask(spellSpelling, generateTaskSpelling);
 
   document.body.addEventListener('click', view.checkModalChooseSpellClicked);
 }
@@ -444,8 +448,11 @@ function generateTask(taskMessage, conditions, correctAnswer, className) {
   view.showTaskMessage(taskMessage);
   let userInput;  
 
-  if (className !== 'sortletters' && className !== 'oddword' && className !== 'cases') {
-    userInput = view.createInputForAnswer(className);  
+  if (className !== 'sortletters' && 
+      className !== 'oddword' && 
+      className !== 'cases' && 
+      className !== 'spelling') {
+    userInput = view.createInputForAnswer(className);
     conditions.push(userInput);
   }
 
@@ -503,6 +510,7 @@ function getUserAnswer(className, userInput) {
       return word;
       break;
     case 'cases':
+    case 'spelling':
       return document.querySelector('.task__input').value;
       break;
   
@@ -715,6 +723,27 @@ function generateTaskGuessAnimal() {
   img.classList.add('task__img');
   img.style.backgroundPosition = randomAnimalCoord;
   conditions = [img];
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
+}
+
+function generateTaskSpelling() {
+  $(".task__condition").sortable("disable");
+  $(".task__condition").selectable("disable");
+
+  const taskName = 'spelling';
+  const taskMessage = "Вставь букву, две или ничего";
+  let conditions = [];
+ 
+  const randomSet = spelling[getRandomInt(0, spelling.length-1)];
+  const firstPart = randomSet['firstPart'];
+  const secondPart = randomSet['secondPart'];
+  const correctAnswer = randomSet['letter'];
+
+  let userInput = view.createInputForAnswer(taskName);  
+  conditions.push(userInput);
+  
+  conditions = [firstPart, userInput, secondPart];
 
   generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
