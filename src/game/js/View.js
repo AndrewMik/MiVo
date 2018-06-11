@@ -1,6 +1,10 @@
 const METEORITE = 'meteorite';
 const FIST_HERO = 'fist-hero';
 const FIST_MONSTER = 'fist-monster';
+import $ from 'jquery';
+import 'jquery-ui';
+import 'jquery-ui/ui/widgets/sortable';
+import 'jquery-ui/ui/widgets/selectable';
 
 export default class {
   constructor() {
@@ -279,6 +283,18 @@ export default class {
     let animationDuration = getComputedStyle(spell).animationDuration;
     animationDuration = Number.parseFloat(animationDuration) * 1000;
     return animationDuration;
+  }
+
+  toggleSortable(isSortable) {
+    isSortable 
+    ? $(".task__condition").sortable("enable")
+    : $(".task__condition").sortable("disable") ;
+  }
+  
+  toggleSelectable(isSelectable) {
+    isSelectable
+    ? $(".task__condition").selectable("enable")
+    : $(".task__condition").selectable("disable");
   }
 
 }

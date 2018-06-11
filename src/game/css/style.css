@@ -490,9 +490,10 @@ input[type="submit"]:hover {
 
 .state__health-hero,
 .state__health-monster {
-    height: inherit;
-    width: 100%;
-    background-color: rgb(255, 0, 0);
+  height: inherit;
+  width: 100%;
+  background-color: rgb(255, 0, 0);
+  transition: width 1s;
 }
 
 .panel__level {
