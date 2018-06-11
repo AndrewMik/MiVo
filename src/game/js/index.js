@@ -184,32 +184,7 @@ function chooseSpell() {
 
   view.toggleElementVisibility(modalChooseSpell);
 
-  let spellMath = document.getElementById('spell-math');
-  setSpellTask(spellMath, generateTaskMath);
-
-  let spellTranslation = document.getElementById('spell-translation');
-  setSpellTask(spellTranslation, generateTaskTranslation);
-
-  let spellSortLetters = document.getElementById('spell-sort-letters');
-  setSpellTask(spellSortLetters, generateTaskSortLetters);
-
-  let spellListening = document.getElementById('listening');
-  setSpellTask(spellListening, generateTaskListening);
-
-  let spellAntonyms = document.getElementById('antonyms');
-  setSpellTask(spellAntonyms, generateTaskAntonyms);
-
-  let spellOddWord = document.getElementById('odd-word');
-  setSpellTask(spellOddWord, generateTaskOddWord);
-
-  let spellCases = document.getElementById('cases');
-  setSpellTask(spellCases, generateTaskCases);
-
-  let spellGuessAnimal = document.getElementById('animals');
-  setSpellTask(spellGuessAnimal, generateTaskGuessAnimal);
-
-  let spellSpelling = document.getElementById('spelling');
-  setSpellTask(spellSpelling, generateTaskSpelling);
+  generateSpellsForNextRound();
 
   document.body.addEventListener('click', view.checkModalChooseSpellClicked);
 }
@@ -284,6 +259,9 @@ function fightRound(isHeroHitsMonster) {
       }
     }, milliseconds);
   }
+
+  generateSpellsForNextRound();
+
   return isHeroDead;
 }
 
@@ -751,3 +729,88 @@ function sayAfterDelay(func, message, delay){
     func(message);
   }, delay);
 }
+
+const TASK_MATH = 'task-math';
+const TASK_TRANSLATION = 'task-translation';
+const TASK_SORT_LETTERS = 'task-sort-letters';
+const TASK_LISTENING = 'task-listening';
+const TASK_ANTONYMS = 'task-antonyms';
+const TASK_ODD_WORD = 'task-odd-word';
+const TASK_CASES = 'task-cases';
+const TASK_ANIMALS = 'task-animals';
+const TASK_SPELLING = 'task-spelling';
+
+const TASKS = [
+  TASK_MATH,
+  TASK_TRANSLATION,
+  TASK_SORT_LETTERS,
+  TASK_LISTENING,
+  TASK_ANTONYMS,
+  TASK_ODD_WORD,
+  TASK_CASES,
+  TASK_ANIMALS,
+  TASK_SPELLING
+];
+
+function generateSpellsForNextRound(numberOfSpells = 4) {
+  const spells = document.getElementById('spells');
+
+  view.clearContainer(spells);
+
+  //copy array from all possible Tasks to create unique spells for round
+  let taskOptions = TASKS.slice(0);
+
+  let maxNumberOfSpells = taskOptions.length;
+
+  if(numberOfSpells > maxNumberOfSpells) {
+    numberOfSpells = maxNumberOfSpells;
+  }
+
+  for (let i = 0; i < numberOfSpells; i++) {
+
+    let randomIndex = getRandomInt(0, taskOptions.length - 1);
+    let randomTaskInArray = taskOptions.splice(randomIndex, 1);
+    let randomTask = randomTaskInArray[0];
+
+    //TODO: Remove in last version
+    //FOR TESTING new spells just set your spell to randomTask
+    //randomTask = TASK_MATH;
+    let spell = document.createElement('img');
+
+    spell.classList.add("spells__item");
+    spell.classList.add(randomTask);
+
+    spells.appendChild(spell);
+
+    switch (randomTask) {
+      case TASK_MATH:
+        setSpellTask(spell, generateTaskMath);
+        break;
+      case TASK_TRANSLATION:
+        setSpellTask(spell, generateTaskTranslation);
+        break;
+      case TASK_SORT_LETTERS:
+        setSpellTask(spell, generateTaskSortLetters);
+        break;
+      case TASK_LISTENING:
+        setSpellTask(spell, generateTaskListening);
+        break;
+      case TASK_ANTONYMS:
+        setSpellTask(spell, generateTaskAntonyms);
+        break;
+      case TASK_ODD_WORD:
+        setSpellTask(spell, generateTaskOddWord);
+        break;
+      case TASK_CASES:
+        setSpellTask(spell, generateTaskCases);
+        break;
+      case TASK_ANIMALS:
+        setSpellTask(spell, generateTaskGuessAnimal);
+        break;
+      case TASK_SPELLING:
+        setSpellTask(spell, generateTaskSpelling);
+        break;
+    }
+  }
+}
+
