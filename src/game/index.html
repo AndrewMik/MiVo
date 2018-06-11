@@ -6,13 +6,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>MiVo</title>
-    <!-- <link rel="stylesheet" href="./dist/style.css"> -->
 </head>
 
 <body>
     
     <div class="game-container">
-        <form class="register-form register-form--hidden form">
+        <form class="register-form form">
             <h2 class="form__title">MiVo Game</h2>
             <input class="form__input" type="text" id="login" placeholder="Имя" autofocus>
             <br>
@@ -36,7 +35,7 @@
             <input class="form__button" type="submit" value="Играть">
         </form>
 
-        <div class="game-info-panel panel panel--hidden">
+        <div class="game-info-panel panel element--hidden">
             <div class="panel__hero-state state">
                 <h2 class="state__name state__name--hero"></h2>
                 <div class="state__health-box">
@@ -66,12 +65,11 @@
             </div>
         </div>
         <div class="monster">
-            <!-- <div class="monster__head"></div>
-            <div class="monster__body"></div> -->
+
         </div>
     </div>
 
-    <section class="modal modal--hidden" id="choose-spell">
+    <section class="modal element--hidden" id="choose-spell">
         <div class="modal__content" id="choose-spell-content">
             <p class="modal__text">Произнести заклинание</p>
             <div class="modal__spells spells">
@@ -86,7 +84,7 @@
         </div>
     </section>
 
-    <section class="modal modal--task modal--hidden" id="task">
+    <section class="modal modal--task element--hidden" id="task">
         <div class="modal__content modal__content--task" id="task-content">
             <p class="modal__text modal__text--task" id="task-todo-message">Решите пример</p>
             <form class="modal__task task" id="task-to-solve">
@@ -98,8 +96,7 @@
         </div>
     </section>
 
-    <!-- <section class="modal" id="top-scores"> -->
-    <section class="modal modal--hidden" id="top-scores">
+    <section class="modal element--hidden" id="top-scores">
         <div class="modal__content modal__content--scores" id="top-scores-content">
             <p class="modal__text modal__text--scores">Таблица лучших среди неудачников</p>
             <div class="modal__top-scores">
@@ -108,7 +105,6 @@
         </div>
         </div>
     </section>
-    <!-- <script src="./dist/main.js"></script> -->
 </body>
 
 </html>

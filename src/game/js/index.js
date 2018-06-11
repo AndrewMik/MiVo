@@ -12,6 +12,10 @@ import 'jquery-ui/ui/widgets/selectable';
 import 'jquery-ui/ui/disable-selection';
 import View from "./View";
 
+const METEORITE = 'meteorite';
+const FIST_HERO = 'fist-hero';
+const FIST_MONSTER = 'fist-monster';
+
 // Should run only once
 $( function() {
   $( ".task__condition" ).sortable({
@@ -123,42 +127,41 @@ function startGame(level = 1) {
     view.hideFightBox();
     setTimeout(view.showHeroMessage, 1000);
     setTimeout(view.showMonsterMessage, 3000);
-    setTimeout(chooseSpell, 5000);
+    if (level === 1) {
+      setTimeout(chooseSpell, 5000);    
+    } else {
+      let modalChooseSpell = document.querySelector('#choose-spell');
+      setTimeout(() => {view.toggleElementVisibility(modalChooseSpell);}, 5000);    
+    }
   }, 6000);
 }
 
 function generateMonsterName() {
-  
-  // let monsterNames = ;
 
   let name = '';
   let i = 0;
   let j = 0;
   let k = 0;
   
-  i = rand(0, monsterNames.adj.length - 1);
+  i = getRandomInt(0, monsterNames.adj.length - 1);
   name += monsterNames.adj[i] + ' ';
-  j = rand(0, monsterNames.root.length - 1);
+  j = getRandomInt(0, monsterNames.root.length - 1);
   name += monsterNames.root[i] + ' ';
-  k = rand(0, monsterNames.name.length - 1);
+  k = getRandomInt(0, monsterNames.name.length - 1);
   name += monsterNames.name[i];
-  
-
-  function rand(min, max) { 
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
 
   return name;
 }
 
 function registerPlayer() {
-  view.toggleRegisterFieldVisibility();
+
+  let form = document.querySelector(".register-form");
+  let infoPanel = document.querySelector(".game-info-panel");
   view.initCharacterSelectField();
   let login;
   let mail;
   let char;
 
-  let form = document.querySelector(".register-form");
   form.addEventListener("submit", e => {
     e.preventDefault();
     login = document.getElementById("login").value;
@@ -166,8 +169,8 @@ function registerPlayer() {
     char = document
       .querySelector(".role__slide--active")
       .getAttribute("data-slide");
-    view.toggleRegisterFieldVisibility();
-    view.showGameInfoPanel();
+    view.toggleElementVisibility(form);
+    view.toggleElementVisibility(infoPanel);
     initHero(login, char);
     startGame();
   });
@@ -200,12 +203,14 @@ function chooseSpell() {
 }
 
 function setSpellTask(spell, generateSpellTask) {
+  let modalChooseSpell = document.querySelector('#choose-spell');
+  let taskScreen = document.querySelector('#task');
   spell.addEventListener('click', () => {
-    view.hideModalChooseSpell();
+    view.toggleElementVisibility(modalChooseSpell);
     document.body.removeEventListener('click', view.checkModalChooseSpellClicked);
   });
   spell.addEventListener('click', () => {
-    view.toggleTaskScreen();
+    view.toggleElementVisibility(taskScreen);
   });
   spell.addEventListener('click', generateSpellTask);
 }
@@ -312,7 +317,8 @@ function fightRound(isHeroHitsMonster) {
       if (isHeroDead) {
         gameOver();
       } else {
-        setTimeout(chooseSpell, 3000);
+        let modalChooseSpell = document.querySelector('#choose-spell');
+        setTimeout(view.toggleElementVisibility(modalChooseSpell), 3000);
       }
     }, milliseconds);
   }

@@ -553,11 +553,7 @@ input[type="submit"]:hover {
     }
 }
 
-.landing-container--hidden,
-.game-container--hidden,
-.register-form--hidden,
-.modal--hidden,
-.panel--hidden {
+.element--hidden {
   display: none;
 }
 

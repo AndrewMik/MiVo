@@ -7,10 +7,6 @@ export default class {
 
   }
 
-  showGameInfoPanel() {
-    document.querySelector('.panel').classList.remove('panel--hidden');
-  }
-
   showHeroes() {
     let heroContainer = document.querySelector(".hero");
     let monsterContainer = document.querySelector(".monster");
@@ -51,9 +47,8 @@ export default class {
     document.querySelector(".level__num").innerText = level;
   }
 
-  toggleRegisterFieldVisibility() {
-    let form = document.querySelector(".register-form");
-    form.classList.toggle("register-form--hidden");
+  toggleElementVisibility(element) {
+    element.classList.toggle('element--hidden');
   }
 
   initCharacterSelectField() {
@@ -161,15 +156,6 @@ export default class {
       activeSlide.classList.remove("role__slide--active");
     }
   }
-
-  toggleElementVisibility(element) {
-    element.classList.toggle("modal--hidden");
-  }
-
-  toggleTaskScreen() {
-    let taskScreen = document.getElementById('task');    
-    this.toggleElementVisibility(taskScreen);
-  }
   
   checkModalChooseSpellClicked() {
     let modalChooseSpell = document.getElementById('choose-spell');
@@ -187,18 +173,13 @@ export default class {
     }
   
     if (!isModalContentClicked) {
-      modalChooseSpell.classList.toggle("modal--hidden");
+      modalChooseSpell.classList.toggle("element--hidden");
     }
   }
 
-  hideModalChooseSpell() {
-    let modalChooseSpell = document.getElementById('choose-spell');
-    modalChooseSpell.classList.add('modal--hidden');
-  }
-
-  closeTask(taskElement, eventHandlerFunction) {
+  closeTask(taskElement, eventHandlerFunction) {  
     taskElement.removeEventListener('submit', eventHandlerFunction);
-    document.getElementById('task').classList.add("modal--hidden");
+    this.toggleElementVisibility(document.getElementById('task'));
   }
 
   setHealthZero(healthBar){
