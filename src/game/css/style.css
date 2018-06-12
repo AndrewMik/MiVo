@@ -290,7 +290,7 @@ input[type="submit"]:hover {
 }
 
 .modal__content--task {
-  height: 30%;
+  height: fit-content;
   background-image: none;
   min-height: 150px;
   min-width: 400px;
@@ -674,49 +674,58 @@ input[type="submit"]:hover {
   text-align: center;
 }
 
-.meteorite,
-.fist-hero,
-.fist-monster {
-  position: absolute;
-  top: 50%;
+.meteorite-hero,
+.fist-hero {
   left: -300px;
-  background-image: url('../img/meteorite.png');
-  background-size: cover;
-  width: 300px;
-  height: 150px;
+}
+
+.meteorite-monster,
+.fist-monster {
+  right: -300px;
 }
 
 .fist-hero {
   background-image: url('../img/fist-red.png');
-  width: 200px;
-  height: 250px;
-}
-
-.fist-monster {
-  background-image: url('../img/fist-yellow.png');
-  width: 200px;
-  height: 250px;
-}
-
-.meteorite {
-  animation: flightMeteorite 1.5s;
-  animation-timing-function: cubic-bezier(1,.2,1,.98);
-}
-
-.fist-hero {
   animation: flightFistHero 3s;
 }
 
 .fist-monster {
+  background-image: url('../img/fist-yellow.png');
   animation: flightFistMonster 3s;
+}
+
+.meteorite-hero,
+.meteorite-monster {
+  background-image: url('../img/meteorite.png');
+}
+
+.meteorite-hero {
+  animation: flightMeteoriteHero 1.5s; 
+}
+
+.meteorite-monster {
+  animation: flightMeteoriteMonster 1.5s;
+}
+
+.meteorite-monster,
+.meteorite-hero,
+.fist-hero,
+.fist-monster {
+  position: absolute;
+  top: 50%;
+  background-size: cover;
+  width: 300px;
+  height: 150px;
+  animation-timing-function: cubic-bezier(1,.2,1,.98);
 }
 
 .fist-hero,
 .fist-monster {
-  animation-timing-function: cubic-bezier(1,.2,1,.98);
+  width: 200px;
+  height: 250px;
 }
 
-@keyframes flightMeteorite {
+@keyframes flightMeteoriteHero {
   0% {
       transform: translate(500px, -500px) scale(-1, 1) rotate(-45deg);
   }
@@ -730,13 +739,13 @@ input[type="submit"]:hover {
   }
 }
 
-@keyframes flightFistHero {
+@keyframes flightMeteoriteMonster {
   0% {
-      transform: translate(0px, 0px) scale(-1, 1) rotate(-90deg);
+      transform: translate(500px, -500px) scale(-1, 1) rotate(-135deg);
   }
 
   99% {
-    transform: translate(82vw, 0px) scale(-1, 1) rotate(-90deg);
+    transform: translate(-77vw, 0px) scale(-3, 3) rotate(-135deg);
   }
 
   100% {
@@ -744,17 +753,33 @@ input[type="submit"]:hover {
   }
 }
 
-@keyframes flightFistMonster {
+@keyframes flightFistHero {
   0% {
-      transform: translate(150vw, 0px) scale(-1, -1) rotate(90deg);
+      transform: scale(-1, 1) rotate(-90deg);
   }
 
   99% {
-    transform: translate(40vw, 0px) scale(-1, -1) rotate(90deg);
+    transform: translateX(82vw) scale(-1, 1) rotate(-90deg);
   }
 
   100% {
-    transform: scale(0, 0);
+    display: none;
+    /* transform: scale(0, 0); */
+  }
+}
+
+@keyframes flightFistMonster {
+  0% {
+      transform: scale(-1, -1) rotate(90deg);
+  }
+
+  99% {
+    transform: translateX(-82vw) scale(-1, -1) rotate(90deg);
+  }
+
+  100% {
+    display: none;
+    /* transform: scale(0, 0); */
   }
 }
 

@@ -15,10 +15,6 @@ import 'jquery-ui/ui/widgets/selectable';
 import 'jquery-ui/ui/disable-selection';
 import View from "./View";
 
-const METEORITE = 'meteorite';
-const FIST_HERO = 'fist-hero';
-const FIST_MONSTER = 'fist-monster';
-
 // Should run only once
 $( function() {
   $( ".task__condition" ).sortable({
@@ -40,13 +36,11 @@ let view = new View();
 
 // Temporary loads the game
 // TODO: Remove in last version
-document.addEventListener("DOMContentLoaded", registerPlayer);
+$( document ).ready(registerPlayer);
 
 function initHero(heroName, char) {
 
-  let character = document.querySelector(".hero");
-  character.style.backgroundPosition = -(12 - char) * 267 + "px 0";
-  
+  $(".hero").css("backgroundPosition", -(12 - char) * 267 + "px 0");
   view.setHeroName(heroName);
 }
 
@@ -55,61 +49,58 @@ function generateMonster() {
   let bodiesNum = 23;
   let satellitesNum = 5;
 
-  let monsterHead = document.createElement("div");
-  monsterHead.classList.add("monster__head");
+  let monsterHead = $("<div>")
+  .addClass("monster__head")
+  .css('backgroundPosition',
+  Math.round(Math.random() * (headsNum + 1)) * 184 + "px 0");
 
-  let monsterBody = document.createElement("div");
-  monsterBody.classList.add("monster__body");
+  let monsterBody = $("<div>")
+  .addClass("monster__body")
+  .css('backgroundPosition',
+  Math.round(Math.random() * (bodiesNum + 1)) * 234 + "px 0");
 
-  let monsterSatellite = document.createElement("div");
-  monsterSatellite.classList.add("monster__satellite");
+  let monsterSatellite = $("<div>")
+  .addClass("monster__satellite")
+  .css('backgroundPosition',
+  Math.round(Math.random() * (satellitesNum + 1)) * 92 + "px 0");
 
-  let monsterFigure = document.createElement('div');
-  monsterFigure.classList.add('monster__figure');
+  let monsterFigure = $('<div>')
+  .addClass('monster__figure')
+  .append(monsterHead)
+  .append(monsterBody);
 
-  let monster = document.querySelector('.monster');
-
-  monsterHead.style.backgroundPosition =
-  Math.round(Math.random() * (headsNum + 1)) * 184 + "px 0";
-
-  monsterBody.style.backgroundPosition =
-  Math.round(Math.random() * (bodiesNum + 1)) * 234 + "px 0";
-
-  monsterSatellite.style.backgroundPosition =
-  Math.round(Math.random() * (satellitesNum + 1)) * 92 + "px 0";
-
-  monsterFigure.appendChild(monsterHead);
-  monsterFigure.appendChild(monsterBody);
-  monster.appendChild(monsterFigure);
-  monster.appendChild(monsterSatellite);
+  let monster = $('.monster')
+  .append(monsterFigure)
+  .append(monsterSatellite);
 
   createMonsterDialogue(monsterFigure);
 }
 
 function createMonsterDialogue(monsterDiv) {
-  let monsterDialogue= document.createElement("div");
-  monsterDialogue.classList.add("dialogue__monster");
-  monsterDialogue.classList.add("dialogue--hidden");
 
-  monsterDiv.appendChild(monsterDialogue);
+  let monsterMessage = $("<p>")
+  .addClass("dialogue__monster-message");
 
-  let monsterMessage = document.createElement("p");
-  monsterMessage.classList.add("dialogue__monster-message");
-  monsterDialogue.appendChild(monsterMessage);
+  let monsterDialogue = $("<div>")
+  .addClass("dialogue__monster")
+  .addClass("dialogue--hidden")
+  .append(monsterMessage);
+
+  monsterDiv.append(monsterDialogue);
 }
 
 function changeMonster() {
-  let monster = document.querySelector('.monster');
-  monster.classList.add('monster--hide');
+  let monster = $('.monster');
+  monster.addClass('monster--hide');
   setTimeout(() => {
     view.clearContainer(monster);
     generateMonster();
-    monster.classList.remove('monster--hide');
+    monster.removeClass('monster--hide');
   }, 2000);  
 }
 
 function startGame(level = 1) {
-  
+
   view.setFullHealth();
 
   if (level !== 1) {
@@ -133,7 +124,7 @@ function startGame(level = 1) {
     if (level === 1) {
       setTimeout(chooseSpell, 5000);    
     } else {
-      let modalChooseSpell = document.querySelector('#choose-spell');
+      let modalChooseSpell = $('#choose-spell');
       setTimeout(() => {view.toggleElementVisibility(modalChooseSpell);}, 5000);    
     }
   }, 6000);
@@ -158,20 +149,18 @@ function generateMonsterName() {
 
 function registerPlayer() {
 
-  let form = document.querySelector(".register-form");
-  let infoPanel = document.querySelector(".game-info-panel");
+  let form = $(".register-form");
+  let infoPanel = $(".game-info-panel");
   view.initCharacterSelectField();
   let login;
   let mail;
   let char;
 
-  form.addEventListener("submit", e => {
+  form.on("submit", e => {
     e.preventDefault();
-    login = document.getElementById("login").value;
-    mail = document.getElementById("email").value;
-    char = document
-      .querySelector(".role__slide--active")
-      .getAttribute("data-slide");
+    login = $("#login").val();
+    mail = $("#email").val();
+    char = $(".role__slide--active").attr("data-slide");
     view.toggleElementVisibility(form);
     view.toggleElementVisibility(infoPanel);
     initHero(login, char);
@@ -180,107 +169,155 @@ function registerPlayer() {
 }
 
 function chooseSpell() {
-  let modalChooseSpell = document.getElementById('choose-spell');
 
+  let modalChooseSpell = $('#choose-spell');
   view.toggleElementVisibility(modalChooseSpell);
-
   generateSpellsForNextRound();
 
-  document.body.addEventListener('click', view.checkModalChooseSpellClicked);
+  $('body').on('click', view.checkModalChooseSpellClicked);
 }
 
 function setSpellTask(spell, generateSpellTask) {
-  let modalChooseSpell = document.querySelector('#choose-spell');
-  let taskScreen = document.querySelector('#task');
-  spell.addEventListener('click', () => {
+  let modalChooseSpell = $('#choose-spell');
+  let taskScreen = $('#task');
+  spell.on('click', () => {
     view.toggleElementVisibility(modalChooseSpell);
-    document.body.removeEventListener('click', view.checkModalChooseSpellClicked);
+    $('body').off('click', view.checkModalChooseSpellClicked);
   });
-  spell.addEventListener('click', () => {
+  spell.on('click', () => {
     view.toggleElementVisibility(taskScreen);
   });
-  spell.addEventListener('click', generateSpellTask);
+  spell.on('click', generateSpellTask);
 }
 
-function solveTask(taskElement, isAnswerCorrect, eventHandlerFunction, currentEvent) {
-  currentEvent.preventDefault();
+function fightRound(isAnswerCorrect) {
 
-  fightRound(isAnswerCorrect);
+  let isDead = false;
+  let modalChooseSpell = $('#choose-spell');
+  let monsterHealth = $('.state__health-monster');
+  let heroHealth = $('.state__health-hero');
 
-  view.closeTask(taskElement, eventHandlerFunction);
-}
-
-function fightRound(isHeroHitsMonster) {
-  let monsterHealth = document.querySelector('.state__health-monster');
-  let heroHealth = document.querySelector('.state__health-hero');
-  let isMonsterDead = false;
-  let isHeroDead = false;
-
-  const delayMonsterSpellAnimation = 3000;
+  const delaySpellAnimation = 3000;
   let delayMonsterHit = 0;
 
-  if (isHeroHitsMonster) {
-    isMonsterDead = damageMonster();
+  if (isAnswerCorrect) {
     view.showMonsterMessage('Как ты догадался?!');
+    view.showHeroMessage();
+    isDead = damageOpponent('monster', monsterHealth, maxDamageFromUser);
 
-    if (isMonsterDead) {
+    if (isDead) {
       return;
     }
-
+    
     setTimeout(() => {
-      delayMonsterHit = view.castSpell(FIST_MONSTER);
-      damageHero(delayMonsterHit);
-    }, delayMonsterSpellAnimation);
+      isDead = damageOpponent('hero', heroHealth, maxDamageFromMonster); 
+      setTimeout(() => {
+        view.toggleElementVisibility(modalChooseSpell);
+      }, delaySpellAnimation + 1000);
+    }, delaySpellAnimation);
+
+    if (isDead) {
+      return;
+    }
   } else {
     view.showMonsterMessage(`Уха-ХA-ха!`);
-    delayMonsterHit = view.castSpell(FIST_MONSTER);
-    damageHero(delayMonsterHit);
-  }
+    isDead = damageOpponent('hero', heroHealth, maxDamageFromMonster);
 
-  function damageMonster(){
-      isMonsterDead = damageOpponent(monsterHealth, maxDamageFromUser);
-      if (isMonsterDead) {
-        victory();
-        setTimeout(() => {
-          startGame(+document.querySelector('.level__num').textContent + 1);
-        }, 4000);
-      } 
-    return isMonsterDead;
-  }
-
-  function damageHero(milliseconds = 3000){
     setTimeout(() => {
-      isHeroDead = damageOpponent(heroHealth, maxDamageFromMonster);
-      if (isHeroDead) {
-        gameOver();
-      } else {
-        let modalChooseSpell = document.querySelector('#choose-spell');
-        setTimeout(view.toggleElementVisibility(modalChooseSpell), 3000);
-      }
-    }, milliseconds);
+      view.toggleElementVisibility(modalChooseSpell);
+    }, delaySpellAnimation + 1000);
+
+    if (isDead) {
+      return;
+    }
   }
 
   generateSpellsForNextRound();
-
-  return isHeroDead;
 }
 
-function victory(){
+function damageOpponent(opponent, opponentHealth, maxDamage) {
+
+  const monsterAnimations = ['fist-monster', 'meteorite-monster'];
+  const heroAnimations = ['fist-hero', 'meteorite-hero'];
+  const monsterPhrases = ['Пффф... Слабак!<br><br> Каши мало ел?!', 'А мне не больно,<br> курица довольна!', 'Вот это уже похоже на удар'];
+  const heroPhrases = ['Я есть Грут!<br><br>***Чертовски крут!***', 'Я <strong>грууууут</strong>!', 'Я есть грустный грут :('];
+  
+  let currentDamage = Math.floor((Math.random() * maxDamage));
+  let durationSpellAnimation = 2000;
+
+  let isDead = checkIsDead(opponentHealth, currentDamage);
+
+  let animation;
+  let phrase;
+  let message;
+
+  if (opponent === 'monster') {
+    animation = heroAnimations;
+    phrase = monsterPhrases;
+    message = view.showMonsterMessage;
+  } else {
+    animation = monsterAnimations;
+    phrase = heroPhrases;
+    message = view.showHeroMessage;
+    
+  }
+
+  if (currentDamage > maxDamage * 0.8) {
+    durationSpellAnimation = view.castSpell(animation[1]);
+    sayAfterDelay(message, phrase[2], durationSpellAnimation);
+  } else if (currentDamage < maxDamage * 0.2) {
+    durationSpellAnimation = view.castSpell(animation[0]);
+    sayAfterDelay(message, phrase[0], durationSpellAnimation);
+  } else {
+    durationSpellAnimation = view.castSpell(animation[0]);
+    sayAfterDelay(message, phrase[1], durationSpellAnimation);
+  }
+
+  setTimeout(() => {
+    view.reduceHealth(opponentHealth, currentDamage);
+    if (isDead) {
+      if (opponent === 'monster') {
+        setTimeout(() => {
+          finishRound();
+          setTimeout(() => {
+            startGame(+($('.level__num').text()) + 1);
+          }, 4000);
+        }, 0);
+        
+      } else {
+        setTimeout(() => {
+          finishGame();
+        }, 0);
+      }
+    }
+  }, durationSpellAnimation);
+
+  return isDead;
+}
+
+function checkIsDead(healthBar, currentDamage){
+  let health = Number.parseInt(view.getWidth(healthBar));
+  if(health - currentDamage <= 0) {
+    return true;
+  }
+  return false;
+}
+
+function finishRound(){
   view.showHeroMessage(`Я ЕСТЬ ГРУУУУУУУТ!!!`);
   maxDamageFromUser -= 1;
   maxDamageFromMonster += 2; 
 }
 
-function gameOver(){
+function finishGame(){
   sayAfterDelay(view.showMonsterMessage, `Лузер!`, 1000);
 
   let winner = {};
 
-  winner.nickName = document.getElementById('login').value || "Грут-аноним";
-  winner.email = document.getElementById('email').value || "groot@groot.I.am";
+  winner.nickName = $('#login').val() || "Грут-аноним";
+  winner.email = $('#email').val() || "groot@groot.I.am";
 
-  let currentLevel = document.querySelector('.level__text').innerText;
-  currentLevel = currentLevel.replace("Уровень ", "");
+  let currentLevel = $('.level__num').text();
   
   winner.monsterKilled = +currentLevel - 1;
  
@@ -312,110 +349,27 @@ function gameOver(){
     return bestPlayers;
   }
 
-      function showBestPlayers(bestPlayers) {
-        let topScoresDiv = document.querySelector('.modal__top-scores');
+  function showBestPlayers(bestPlayers) {
 
-        view.clearContainer(topScoresDiv);
+    let topScoresDiv = $('.modal__top-scores');
+    // view.clearContainer(topScoresDiv);
+    let table = $('<table><tr><th>Место</th><th>Игрок</th><th>Убито монстров</th></tr></table>');
 
-        let table = document.createElement('table');
-        let tr = document.createElement('tr');
-        let placeHeader = document.createElement('th');
-        let nickName = document.createElement('th');
-        let monsterKilled = document.createElement('th');
+    bestPlayers.forEach((player, place) => {
+      let currentPlayerRow = $('<tr><td>' + (place + 1) + '</td><td>' + player.nickName + '</td><td>' + player.monsterKilled + '</td></tr>');
+      table.append(currentPlayerRow);
+    });
 
-        placeHeader.innerText = "Место";
-        nickName.innerText = "Игрок";
-        monsterKilled.innerText = "Убито монстров";
+    topScoresDiv.append(table);
 
-        tr.appendChild(placeHeader);
-        tr.appendChild(nickName);
-        tr.appendChild(monsterKilled);
-        table.appendChild(tr);
-
-        let place = 1;
-
-        bestPlayers.forEach((player) => {
-          let currentPlayerRow = document.createElement('tr');
-          let placeOfPlayer = document.createElement('td');
-          let playerNickName = document.createElement('td');
-          let playerMonsterKilled = document.createElement('td');
-
-          placeOfPlayer.innerText = place;
-          playerNickName.innerText = player.nickName;
-          playerMonsterKilled.innerText = player.monsterKilled;
-
-          currentPlayerRow.appendChild(placeOfPlayer);
-          currentPlayerRow.appendChild(playerNickName);
-          currentPlayerRow.appendChild(playerMonsterKilled);
-          table.appendChild(currentPlayerRow);
-
-          place++;
-        });
-
-        topScoresDiv.appendChild(table);
-
-        setTimeout(() => {
-          view.toggleElementVisibility(document.getElementById('top-scores'));
-        }, 3000);
-      }
+    setTimeout(() => {
+      view.toggleElementVisibility($('#top-scores'));
+    }, 3000);
+  }
 }
 
 let maxDamageFromUser = 40;
 let maxDamageFromMonster = 40;
-
-function damageOpponent(opponentHealth, maxDamage) {
-  let isDead = false;
-
-  let heroHealth = document.querySelector('.state__health-hero');
-
-  let currentDamage = Math.floor((Math.random() * maxDamage));
-
-  let durationSpellAnimation = 2000;
-
-  isDead = checkIsDead(opponentHealth, currentDamage);
-
-  if (opponentHealth !== heroHealth) {
-    view.showHeroMessage();
-
-    if (currentDamage > maxDamage * 0.8) {
-      durationSpellAnimation = view.castSpell(METEORITE);
-    } else {
-      durationSpellAnimation = view.castSpell(FIST_HERO);
-    }
-
-    let delayAfterSpellAnimation = durationSpellAnimation;
-
-    setTimeout(() => {
-      if(isDead){
-          view.setHealthZero(opponentHealth);
-          return;
-      }
-      view.reduceHealth(opponentHealth, currentDamage);
-
-      if (currentDamage > maxDamage * 0.8) {
-        sayAfterDelay(view.showHeroMessage, `Я есть Грут!<br><br>***Чертовски крут!***`, 1000);
-      } else if (currentDamage < maxDamage * 0.2) {
-        sayAfterDelay(view.showMonsterMessage, `Пффф... Слабак!<br><br> Каши мало ел?!`, 1000);
-      }
-    }, delayAfterSpellAnimation);
-
-  } else if (isDead){
-      view.setHealthZero(opponentHealth);
-  } else {
-      view.showMonsterMessage(`Получай!`);   
-      view.reduceHealth(opponentHealth, currentDamage);
-  }
-
-  return isDead;
-}
-
-function checkIsDead(healthBar, damage){
-  let health = Number.parseInt(healthBar.style.width);
-  if(health - damage <= 0) {
-    return true;
-  }
-  return false;
-}
 
 function generateTask(taskMessage, conditions, correctAnswer, className, isSortable = false, isSelectable = false) {
   view.toggleSortable(isSortable);
@@ -424,6 +378,7 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
   let taskCondContainer = view.getCondContainer();
   view.clearContainer(taskCondContainer);
   view.showTaskMessage(taskMessage);
+  taskCondContainer.addClass('task__condition--' + className);
 
   let userInput;  
 
@@ -431,16 +386,16 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
       className !== 'oddword' && 
       className !== 'cases' && 
       className !== 'spelling') {
-    userInput = view.createInputForAnswer(className);
+    userInput = view.createInputForAnswer();
     conditions.push(userInput);
   }
 
   const taskForm = view.getTaskForm();
   view.appendCondition(taskCondContainer, conditions);
 
-  taskForm.addEventListener('submit', solveCurrentTask);
+  taskForm.on('submit', solveTask);
   let userAnswer;
-  function solveCurrentTask() {
+  function solveTask() {
     if (userInput) {
       userAnswer = getUserAnswer(className, userInput);
     } else {
@@ -448,7 +403,9 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
     }
     
     let isAnswerCorrect = checkAnswer(userAnswer, correctAnswer); 
-    solveTask(taskForm, isAnswerCorrect, solveCurrentTask, event);
+    event.preventDefault();
+    view.closeTask(taskForm, solveTask);
+    fightRound(isAnswerCorrect);
   }
 }
 
@@ -472,25 +429,25 @@ function checkAnswer(userAnswer, correctAnswer) {
 
 function getUserAnswer(className, userInput) {
   if (userInput) {
-    return userInput.value;
+    return userInput.val();
   } 
 
   let container = view.getCondContainer();
   switch (className) {
     case 'sortletters':
-      let letters = [...container.children];
+      let letters = [...container.children()];
       letters = letters.map((letter) => {
         return letter.innerText;
       });
       return letters.join('');
       break;
     case 'oddword':
-      let word = container.querySelector('.ui-selected').textContent;
+      let word = $('.ui-selected').text();
       return word;
       break;
     case 'cases':
     case 'spelling':
-      return document.querySelector('.task__input').value;
+      return $('.task__input').val();
       break;
   
     default:
@@ -531,11 +488,11 @@ function generateTaskListening() {
 
   utterance.text = word;
 
-  let button = document.createElement('button');
-  button.classList.add('task__repeat-button');
-  button.innerText = 'Послушать';
+  let button = $('<button>')
+  .addClass('task__repeat-button')
+  .text('Послушать');
 
-  button.addEventListener('click', listenAgain);
+  button.on('click', listenAgain);
 
   function listenAgain() {
     event.preventDefault();
@@ -680,9 +637,9 @@ function generateTaskGuessAnimal() {
   const randomAnimalPos = randomAnimal['coordinates'];
   const correctAnswer = randomAnimal['answers'];
 
-  let img = document.createElement('img');
-  img.classList.add('task__img');
-  img.style.backgroundPosition = randomAnimalPos;
+  let img = $('<img>')
+  .addClass('task__img')
+  .css('backgroundPosition', randomAnimalPos);
   conditions = [img];
 
   generateTask(taskMessage, conditions, correctAnswer, taskName);
@@ -754,7 +711,7 @@ const TASKS = [
 ];
 
 function generateSpellsForNextRound(numberOfSpells = 4) {
-  const spells = document.getElementById('spells');
+  const spells = $('#spells');
 
   view.clearContainer(spells);
 
@@ -776,12 +733,11 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
     //TODO: Remove in last version
     //FOR TESTING new spells just set your spell to randomTask
     //randomTask = TASK_MATH;
-    let spell = document.createElement('img');
+    let spell = $('<img>')
+    .addClass("spells__item")
+    .addClass(randomTask);
 
-    spell.classList.add("spells__item");
-    spell.classList.add(randomTask);
-
-    spells.appendChild(spell);
+    spells.append(spell);
 
     switch (randomTask) {
       case TASK_MATH:
