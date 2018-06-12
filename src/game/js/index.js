@@ -39,7 +39,6 @@ let view = new View();
 $( document ).ready(registerPlayer);
 
 function initHero(heroName, char) {
-
   $(".hero").css("backgroundPosition", -(12 - char) * 267 + "px 0");
   view.setHeroName(heroName);
 }
@@ -259,7 +258,6 @@ function damageOpponent(opponent, opponentHealth, maxDamage) {
     animation = monsterAnimations;
     phrase = heroPhrases;
     message = view.showHeroMessage;
-    
   }
 
   if (currentDamage > maxDamage * 0.8) {
@@ -283,7 +281,6 @@ function damageOpponent(opponent, opponentHealth, maxDamage) {
             startGame(+($('.level__num').text()) + 1);
           }, 4000);
         }, 0);
-        
       } else {
         setTimeout(() => {
           finishGame();
@@ -410,21 +407,17 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
 }
 
 function checkAnswer(userAnswer, correctAnswer) {
-  let flag = false;
-
   if( +userAnswer === correctAnswer || userAnswer === correctAnswer || userAnswer.toLocaleLowerCase() === correctAnswer) {
     return true;
   } else if (Array.isArray(correctAnswer)) {
     correctAnswer.forEach(answer => {
       if(answer === userAnswer) {
-        flag = true;
+        return true;
       }
     });
-  } else {
-    return false;
-  }
-
-  return flag;
+  } 
+  
+  return false;
 }
 
 function getUserAnswer(className, userInput) {
@@ -688,29 +681,30 @@ function sayAfterDelay(func, message, delay){
   }, delay);
 }
 
-const TASK_MATH = 'task-math';
-const TASK_TRANSLATION = 'task-translation';
-const TASK_SORT_LETTERS = 'task-sort-letters';
-const TASK_LISTENING = 'task-listening';
-const TASK_ANTONYMS = 'task-antonyms';
-const TASK_ODD_WORD = 'task-odd-word';
-const TASK_CASES = 'task-cases';
-const TASK_ANIMALS = 'task-animals';
-const TASK_SPELLING = 'task-spelling';
-
-const TASKS = [
-  TASK_MATH,
-  TASK_TRANSLATION,
-  TASK_SORT_LETTERS,
-  TASK_LISTENING,
-  TASK_ANTONYMS,
-  TASK_ODD_WORD,
-  TASK_CASES,
-  TASK_ANIMALS,
-  TASK_SPELLING
-];
-
 function generateSpellsForNextRound(numberOfSpells = 4) {
+
+  const taskMath = 'task-math';
+  const taskTranslation = 'task-translation';
+  const taskSortLetters = 'task-sort-letters';
+  const taskListening = 'task-listening';
+  const taskAntonyms = 'task-antonyms';
+  const taskOddWord = 'task-odd-word';
+  const taskCases = 'task-cases';
+  const taskAnimals = 'task-animals';
+  const taskSpelling = 'task-spelling';
+
+  const TASKS = [
+    taskMath,
+    taskTranslation,
+    taskSortLetters,
+    taskListening,
+    taskAntonyms,
+    taskOddWord,
+    taskCases,
+    taskAnimals,
+    taskSpelling
+  ];
+
   const spells = $('#spells');
 
   view.clearContainer(spells);
@@ -732,7 +726,7 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
 
     //TODO: Remove in last version
     //FOR TESTING new spells just set your spell to randomTask
-    //randomTask = TASK_MATH;
+    //randomTask = taskMath;
     let spell = $('<img>')
     .addClass("spells__item")
     .addClass(randomTask);
@@ -740,31 +734,31 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
     spells.append(spell);
 
     switch (randomTask) {
-      case TASK_MATH:
+      case taskMath:
         setSpellTask(spell, generateTaskMath);
         break;
-      case TASK_TRANSLATION:
+      case taskTranslation:
         setSpellTask(spell, generateTaskTranslation);
         break;
-      case TASK_SORT_LETTERS:
+      case taskSortLetters:
         setSpellTask(spell, generateTaskSortLetters);
         break;
-      case TASK_LISTENING:
+      case taskListening:
         setSpellTask(spell, generateTaskListening);
         break;
-      case TASK_ANTONYMS:
+      case taskAntonyms:
         setSpellTask(spell, generateTaskAntonyms);
         break;
-      case TASK_ODD_WORD:
+      case taskOddWord:
         setSpellTask(spell, generateTaskOddWord);
         break;
-      case TASK_CASES:
+      case taskCases:
         setSpellTask(spell, generateTaskCases);
         break;
-      case TASK_ANIMALS:
+      case taskAnimals:
         setSpellTask(spell, generateTaskGuessAnimal);
         break;
-      case TASK_SPELLING:
+      case taskSpelling:
         setSpellTask(spell, generateTaskSpelling);
         break;
     }
