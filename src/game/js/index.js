@@ -528,13 +528,13 @@ function generateTaskAntonyms() {
 
   const keys = ['word', 'antonym'];
  
-  const randomPair = getRandomInt(0, antonyms.length-1);
+  const randomPair = antonyms[getRandomInt(0, antonyms.length-1)];
   const randomIndex = getRandomInt(0, 1);
   const randomKey = keys[randomIndex];
   const correctAnswerKey = keys[Math.abs(randomIndex-1)];
   
-  const word = antonyms[randomPair][randomKey];
-  const correctAnswer = antonyms[randomPair][correctAnswerKey];
+  const word = randomPair[randomKey];
+  const correctAnswer = randomPair[correctAnswerKey];
 
   conditions = [word];
   
@@ -547,8 +547,8 @@ function generateTaskListening() {
   const taskMessage = "Напиши услышанное слово";
   let conditions;
  
-  const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
-  const word = dictionary[randomWordInDictionary]['word'];
+  const randomSet = dictionary[getRandomInt(0, dictionary.length-1)];
+  const word = randomSet['word'];
   const correctAnswer = word;
 
   utterance.text = word;
@@ -575,8 +575,8 @@ function generateTaskSortLetters() {
   const taskMessage = "Двигай буквы и собери слово";
   let conditions= [];
  
-  const randomWord = getRandomInt(0, words.length-1);
-  const correctAnswer = words[randomWord];
+  const randomWord = words[getRandomInt(0, words.length-1)];
+  const correctAnswer = randomWord;
   const letters = shuffle(correctAnswer.split(''));  
 
   letters.forEach((letter) => {
@@ -592,9 +592,9 @@ function generateTaskOddWord() {
   const taskMessage = "Выбери лишнее слово";
   let conditions = [];
  
-  const randomWord = getRandomInt(0, oddWords.length-1);
-  const correctAnswer = oddWords[randomWord]['oddWord'];
-  const words = shuffle(oddWords[randomWord]['words']);  
+  const randomSet = oddWords[getRandomInt(0, oddWords.length-1)];
+  const correctAnswer = randomSet['oddWord'];
+  const words = shuffle(randomSet['words']);  
 
   words.forEach((word) => {
     conditions.push(word);
@@ -609,9 +609,9 @@ function generateTaskTranslation() {
   const taskMessage = "Переведи слово";
   let conditions;
  
-  const randomWordInDictionary = getRandomInt(0, dictionary.length-1);
-  const word = dictionary[randomWordInDictionary]['word'];
-  const correctAnswer = dictionary[randomWordInDictionary]['translation'];
+  const randomSet = dictionary[getRandomInt(0, dictionary.length-1)];
+  const word = randomSet['word'];
+  const correctAnswer = randomSet['translation'];
 
   conditions = [word];
 
@@ -629,37 +629,38 @@ function generateTaskMath() {
   const max = 10;
 
   const operations = ['add', 'sub', 'mult', 'div'];
-
-  const math = {
-    'add': function(first, second) {
-      mathOperator = '+';
-      correctAnswer = first + second;
-    },
-    'sub': function(first, second) {
-      mathOperator = '-';
-      if (first < second) {
-        [first, second] = [second, first];
-        [firstNumber, secondNumber] = [secondNumber, firstNumber];
-      }
-      correctAnswer = first - second;
-    },
-    'mult': function(first, second) {
-      mathOperator = '*';
-      correctAnswer = first * second;
-    },
-    'div': function(first, second) {
-      mathOperator = '÷';
-      correctAnswer = first;
-      firstNumber = first * second;
-    }
-  };
   
   let correctAnswer;
   let firstNumber = getRandomInt(min, max);
   let secondNumber = getRandomInt(min, max);
   let mathOperator;
   let mathOperation = operations[getRandomInt(0, 3)];
-  math[mathOperation](firstNumber, secondNumber);
+
+  switch (mathOperation) {
+    case 'add':
+      mathOperator = '+';
+      correctAnswer = firstNumber + secondNumber;
+      break;
+    case 'sub':
+      mathOperator = '-';
+      if (firstNumber < secondNumber) {
+        [firstNumber, secondNumber] = [secondNumber, firstNumber];
+      }
+      correctAnswer = firstNumber - secondNumber;
+      break;
+    case 'mult':
+      mathOperator = '*';
+      correctAnswer = firstNumber * secondNumber;
+      break;
+    case 'div':
+      mathOperator = '÷';
+      correctAnswer = firstNumber;
+      firstNumber = firstNumber * secondNumber;
+      break;
+    default:
+      break;
+  }
+
   const EQUALS = '=';
 
   conditions = [firstNumber, mathOperator, secondNumber, EQUALS];
@@ -698,12 +699,12 @@ function generateTaskGuessAnimal() {
   let conditions;
  
   const randomAnimal = animals[getRandomInt(0, animals.length-1)];
-  const randomAnimalCoord = randomAnimal['coordinates'];
+  const randomAnimalPos = randomAnimal['coordinates'];
   const correctAnswer = randomAnimal['answers'];
 
   let img = document.createElement('img');
   img.classList.add('task__img');
-  img.style.backgroundPosition = randomAnimalCoord;
+  img.style.backgroundPosition = randomAnimalPos;
   conditions = [img];
 
   generateTask(taskMessage, conditions, correctAnswer, taskName);
