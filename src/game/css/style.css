@@ -684,11 +684,11 @@ input[type="submit"]:hover {
 }
 
 .meteorite-hero {
-  animation: flightMeteoriteHero 1.5s; 
+  animation: flightMeteoriteHero 3s; 
 }
 
 .meteorite-monster {
-  animation: flightMeteoriteMonster 1.5s;
+  animation: flightMeteoriteMonster 3s;
 }
 
 .meteorite-monster,

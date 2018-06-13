@@ -7,6 +7,8 @@ import oddWords from './json/oddword.json';
 import casesDB from './json/cases.json';
 import animals from './json/animals.json';
 import spelling from './json/spelling.json';
+import monsterPhrases from './json/monsterPhrases.json';
+import heroPhrases from './json/heroPhrases';
 const pathToImgs = require.context("../img", true);
 import $ from 'jquery';
 import 'jquery-ui';
@@ -116,10 +118,16 @@ function startGame(level = 1) {
   view.setLevel(level);
   view.setMonsterName(monsterName);
   setTimeout(view.showFightBox, 2000);
+
   setTimeout(() => {
     view.hideFightBox();
-    setTimeout(view.showHeroMessage, 1000);
-    setTimeout(view.showMonsterMessage, 3000);
+
+    let greetingsHeroMessage = `${getRandomPhrase(heroPhrases.hello)}, ${$(".state__name--monster").text().split(" ")[2]}!`;
+    sayAfterDelay(view.showHeroMessage.bind(view), greetingsHeroMessage, 1000);
+
+    let greetingsMonsterMessage = `${getRandomPhrase(monsterPhrases.hello)}, ${$(".state__name--hero").text() ? $(".state__name--hero").text() : "чужестранец"}!`;
+    sayAfterDelay(view.showMonsterMessage.bind(view), greetingsMonsterMessage, 3000);
+
     if (level === 1) {
       setTimeout(chooseSpell, 5000);    
     } else {
@@ -200,8 +208,8 @@ function fightRound(isAnswerCorrect) {
   let delayMonsterHit = 0;
 
   if (isAnswerCorrect) {
-    view.showMonsterMessage('Как ты догадался?!');
-    view.showHeroMessage();
+    view.showMonsterMessage(getRandomPhrase(monsterPhrases.surprise));
+    view.showHeroMessage(getRandomPhrase(heroPhrases.correctAnswer));
     isDead = damageOpponent('monster', monsterHealth, maxDamageFromUser);
 
     if (isDead) {
@@ -219,7 +227,6 @@ function fightRound(isAnswerCorrect) {
       return;
     }
   } else {
-    view.showMonsterMessage(`Уха-ХA-ха!`);
     isDead = damageOpponent('hero', heroHealth, maxDamageFromMonster);
 
     setTimeout(() => {
@@ -234,13 +241,16 @@ function fightRound(isAnswerCorrect) {
   generateSpellsForNextRound();
 }
 
+function getRandomPhrase(arrayOfPhrases) {
+  let randomPhraseNumber = getRandomInt(0, arrayOfPhrases.length - 1);
+  return arrayOfPhrases[randomPhraseNumber];
+}
+
 function damageOpponent(opponent, opponentHealth, maxDamage) {
 
   const monsterAnimations = ['fist-monster', 'meteorite-monster'];
   const heroAnimations = ['fist-hero', 'meteorite-hero'];
-  const monsterPhrases = ['Пффф... Слабак!<br><br> Каши мало ел?!', 'А мне не больно,<br> курица довольна!', 'Вот это уже похоже на удар'];
-  const heroPhrases = ['Я есть Грут!<br><br>***Чертовски крут!***', 'Я <strong>грууууут</strong>!', 'Я есть грустный грут :('];
-  
+
   let currentDamage = Math.floor((Math.random() * maxDamage));
   let durationSpellAnimation = 2000;
 
@@ -249,26 +259,30 @@ function damageOpponent(opponent, opponentHealth, maxDamage) {
   let animation;
   let phrase;
   let message;
+  let messageToSay;
 
   if (opponent === 'monster') {
     animation = heroAnimations;
     phrase = monsterPhrases;
-    message = view.showMonsterMessage;
+    message = view.showMonsterMessage.bind(view);
   } else {
     animation = monsterAnimations;
     phrase = heroPhrases;
-    message = view.showHeroMessage;
+    message = view.showHeroMessage.bind(view);
   }
 
   if (currentDamage > maxDamage * 0.8) {
     durationSpellAnimation = view.castSpell(animation[1]);
-    sayAfterDelay(message, phrase[2], durationSpellAnimation);
+    messageToSay = getRandomPhrase(phrase.criticalDamage);
+    sayAfterDelay(message, messageToSay, durationSpellAnimation);
   } else if (currentDamage < maxDamage * 0.2) {
     durationSpellAnimation = view.castSpell(animation[0]);
-    sayAfterDelay(message, phrase[0], durationSpellAnimation);
+    messageToSay = getRandomPhrase(phrase.weakDamage);
+    sayAfterDelay(message, messageToSay, durationSpellAnimation);
   } else {
     durationSpellAnimation = view.castSpell(animation[0]);
-    sayAfterDelay(message, phrase[1], durationSpellAnimation);
+    messageToSay = getRandomPhrase(phrase.normalDamage);
+    sayAfterDelay(message, messageToSay, durationSpellAnimation);
   }
 
   setTimeout(() => {
@@ -300,14 +314,18 @@ function checkIsDead(healthBar, currentDamage){
   return false;
 }
 
+let maxDamageFromUser = 50;
+let maxDamageFromMonster = 40;
+
 function finishRound(){
-  view.showHeroMessage(`Я ЕСТЬ ГРУУУУУУУТ!!!`);
+  view.showHeroMessage(getRandomPhrase(heroPhrases.victory));
   maxDamageFromUser -= 1;
   maxDamageFromMonster += 2; 
 }
 
 function finishGame(){
-  sayAfterDelay(view.showMonsterMessage, `Лузер!`, 1000);
+  let messageMonsterSay = getRandomPhrase(monsterPhrases.victory);
+  sayAfterDelay(view.showMonsterMessage.bind(view), messageMonsterSay, 0);
 
   let winner = {};
 
@@ -365,9 +383,6 @@ function finishGame(){
   }
 }
 
-let maxDamageFromUser = 40;
-let maxDamageFromMonster = 40;
-
 function generateTask(taskMessage, conditions, correctAnswer, className, isSortable = false, isSelectable = false) {
   view.toggleSortable(isSortable);
   view.toggleSelectable(isSelectable);
@@ -408,18 +423,36 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
 
 function checkAnswer(userAnswer, correctAnswer) {
 
-  let flag = false;
+  let isCorrect = false;
   if( +userAnswer === correctAnswer || userAnswer === correctAnswer || userAnswer.toLocaleLowerCase() === correctAnswer) {
     return true;
   } else if (Array.isArray(correctAnswer)) {
     correctAnswer.forEach(answer => {
       if(answer === userAnswer || userAnswer.toLocaleLowerCase() === answer) {
-        flag = true;
+        isCorrect = true;
       }
     });
+  } 
+
+  let answerToShow = Array.isArray(correctAnswer) ? correctAnswer[0]: correctAnswer;
+  answerToShow = capitalizeFirstLetter(answerToShow);
+
+  if(!isCorrect) {
+    let messageMonsterSay = getRandomPhrase(monsterPhrases.wrongAnswer);
+    sayAfterDelay(view.showMonsterMessage.bind(view), messageMonsterSay, 0);
+    messageMonsterSay = getRandomPhrase(monsterPhrases.correctAnswer);
+    sayAfterDelay(view.showMonsterMessage.bind(view), `${messageMonsterSay} ${answerToShow}`, 700);
   }
 
-  return flag;
+  return isCorrect;
+}
+
+function capitalizeFirstLetter(string) {
+  if(typeof string === "string") {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+  } 
+  
+  return string;
 }
 
 function getUserAnswer(className, userInput) {

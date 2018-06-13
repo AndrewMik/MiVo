@@ -254,24 +254,22 @@ export default class {
   }
 
   showHeroMessage(message, milliseconds) {
-    message = message || "Я есть Грут!";
-    milliseconds = milliseconds || 2000;
-  
-    $(".dialogue__hero").removeClass("dialogue--hidden");
-    $(".dialogue__hero-message").html(message);
-    setTimeout(() => {
-       $(".dialogue__hero").addClass("dialogue--hidden");
-    }, milliseconds);
+    message = message || `Привет, ${$(".state__name--monster").text().split(" ")[2]}!`;
+    this.showMessage("hero", message, milliseconds);
   }
 
   showMonsterMessage(message, milliseconds) {
-    message = message || "Ты есть грунт!!!";
+    message = message || `Привет, ${$(".state__name--hero").text() ? $(".state__name--hero").text() : "чужестранец"}!`;
+    this.showMessage("monster", message, milliseconds);
+  }
+
+  showMessage(talker, message, milliseconds) {
     milliseconds = milliseconds || 2000;
   
-    $(".dialogue__monster").removeClass("dialogue--hidden");
-    $(".dialogue__monster-message").html(message);
+    $(`.dialogue__${talker}`).removeClass("dialogue--hidden");
+    $(`.dialogue__${talker}-message`).html(message);
     setTimeout(() => {
-       $(".dialogue__monster").addClass("dialogue--hidden");
+       $(`.dialogue__${talker}`).addClass("dialogue--hidden");
     }, milliseconds);
   }
 
