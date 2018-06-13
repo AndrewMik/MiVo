@@ -8,8 +8,6 @@
   background-color: #f3f4f5;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
   font-family: "Open Sans", sans-serif;
-  /* justify-content: flex-end; */
-  /* position: fixed; */
   margin: 0 auto;
   width: 320px;
   height: 94vh;
@@ -38,18 +36,6 @@ input[type="text"] {
 
 .form__input {
   width: 100%;
-}
-
-.task__repeat-button {
-  width: 100px;
-  border-radius: 5px;
-  color: #fff;
-  background-color: #494949;
-  font-size: 14px;
-}
-
-.task__repeat-button:focus {
-  outline: none;
 }
 
 input[type="text"]:focus {
@@ -85,24 +71,11 @@ input[type="submit"]:hover {
   border: 2px solid #f2c201;
 }
 
-/* 
- * Copied css 
- */
-
-/* .role__slide img {
-  height: inherit;
-} */
-
 .slide__img {
   background-image: url('../img/heros-sprite.png');
   width: 267px;
   height: 391px;
 }
-
-/* .role__slide div {
-  background-image: url('../img/heros-sprite.png');
-  background-size: cover;
-} */
 
 .character-select {
   /* position: fixed; */
@@ -112,13 +85,6 @@ input[type="submit"]:hover {
   top: 20px;
   right: 20px;
   width: 300px;
-  /* height: 205px;
-    background-color: rgb(245, 245, 245);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.19), 0 6px 6px rgba(0,0,0,0.23);
-    border-radius: 3px;
-    transition: box-shadow 0.3s, opacity 1s; */
-  /* z-index: -1;
-    opacity: 0; */
 }
 
 .role__slider {
@@ -128,14 +94,12 @@ input[type="submit"]:hover {
   margin: 10px;
   width: 280px;
   height: 391px;
-  /* border: 1px solid rgba(0,0,0,0.1); */
   overflow: hidden;
   position: relative;
 }
 
 .role__slide {
   transition: transform 1s;
-  /* background-color: #fff; */
   text-align: center;
   padding: 0 10px;
   width: 280px;
@@ -300,53 +264,10 @@ input[type="submit"]:hover {
   text-align: center;
   color: azure;
   font-size: 30px;
-  font-weight: bold;
 }
 
 .modal__text--task {
   color: #494949;
-}
-
-.modal__task {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 30px;
-  font-weight: bold;
-  color: blue;
-  flex-wrap: wrap;
-}
-
-.task__condition {
-  display: flex;
-  width: 100%;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.task__button {
-  width: 100%;
-  font-size: 24px;
-}
-
-.task__input {
-  width: 100px;
-  margin-left: 10px;
-  font-size: 40px;
-  text-align: center;
-  color: green;
-}
-
-.task__input:placeholder-shown {
-  font-size: 20px;
-}
-
-.task__listening {
-  width: 230px;
-}
-
-.task__cases {
-  width: 170px;
 }
 
 .task__img {
@@ -505,8 +426,7 @@ input[type="submit"]:hover {
     width: 300px;
     padding: 20px;
     flex-wrap: wrap;
-    display: flex;
-    
+    display: flex; 
 }
 
 .state__name {
@@ -614,32 +534,90 @@ input[type="submit"]:hover {
   margin: 10px;
 }
 
-.task__translation,
-.task__antonyms {
-  width: 230px;
+.modal__task {
+  font-size: 30px;
+  font-weight: bold;
+  color: #0643d6;
 }
 
-.task__condition .ui-selecting { 
-  background: #FECA40; 
+.task__condition {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  align-items: center;
 }
 
-.task__condition .ui-selected { 
+.task__button {
+  width: 100%;
+  font-size: 24px;
+}
+
+.task__repeat-button {
+  width: 100px;
+  border-radius: 5px;
+  color: #fff;
+  background-color: #494949;
+  font-size: 14px;
+  height: 40px;
+}
+
+.task__repeat-button:focus {
+  outline: none;
+}
+
+.task__input {
+  width: 100px;
+  margin-left: 10px;
+  font-size: 40px;
+  text-align: center;
+  color: green;
+}
+
+.task__input:placeholder-shown {
+  font-size: 20px;
+}
+
+.task__condition--listening .task__input,
+.task__condition--antonyms .task__input,
+.task__condition--translation .task__input,
+.task__condition--guess-animal .task__input {
+  width: 250px;
+  margin-left: 30px;
+}
+
+.task__condition--spelling .task__input {
+  width: 45px;
+}
+
+.task__condition--spelling .task__input::-webkit-input-placeholder {
+  color: transparent;
+}
+
+.task__condition--oddword .ui-selected {
   background: #F39814; 
   color: white; 
   border-radius: 5px;
 }
 
-.task__word {
-  padding: 10px;
+.task__condition--oddword p {
+  padding-left: 10px;
+  padding-right: 10px;
 }
 
-.task__letter {
-  padding: 10px;
-  width: 40px;
-  box-sizing: border-box;
-  border: 1px solid black;
-  border-radius: 2px;
-  background-color: #efefef;
+.task__condition--cases {
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-left: auto;
+  margin-right: auto;
+  font-weight: normal;
+}
+
+.task__condition--cases p,
+.task__condition--cases .task__input {
+  width: 45%;
+  text-align: center;
 }
 
 .dialogue__hero,

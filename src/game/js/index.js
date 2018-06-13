@@ -407,17 +407,19 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
 }
 
 function checkAnswer(userAnswer, correctAnswer) {
+
+  let flag = false;
   if( +userAnswer === correctAnswer || userAnswer === correctAnswer || userAnswer.toLocaleLowerCase() === correctAnswer) {
     return true;
   } else if (Array.isArray(correctAnswer)) {
     correctAnswer.forEach(answer => {
-      if(answer === userAnswer) {
-        return true;
+      if(answer === userAnswer || userAnswer.toLocaleLowerCase() === answer) {
+        flag = true;
       }
     });
-  } 
-  
-  return false;
+  }
+
+  return flag;
 }
 
 function getUserAnswer(className, userInput) {

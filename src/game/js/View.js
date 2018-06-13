@@ -164,8 +164,6 @@ export default class {
 
     let modalChooseSpell = $('#choose-spell');
     let modalContentChooseSpell = $('#choose-spell-content');
-  
-    //event.target is read only
     let eventTarget = event.target;
     let isModalContentClicked = false;
   
