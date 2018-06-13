@@ -265,7 +265,17 @@ export default class {
 
   showMessage(talker, message, milliseconds) {
     milliseconds = milliseconds || 2000;
-  
+
+    let utterance = new SpeechSynthesisUtterance();
+    utterance.text = message;
+    utterance.lang = 'ru-RU';
+    if(talker === "monster") {
+      utterance.pitch = 3;
+    } else {
+      utterance.pitch = 1;
+    }
+    window.speechSynthesis.speak(utterance);
+
     $(`.dialogue__${talker}`).removeClass("dialogue--hidden");
     $(`.dialogue__${talker}-message`).html(message);
     setTimeout(() => {

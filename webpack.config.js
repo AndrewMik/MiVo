@@ -43,6 +43,12 @@ let conf = {
       {
         test: /\.html$/,
         loader: 'html-loader'
+      },
+      {
+        test: /\.mp3$/,
+        loader: 'file-loader'
+        // test: /\.(ogg|mp3|wav|mpe?g)$/i,
+        // use: 'file-loader'
       }
     ]
   },
