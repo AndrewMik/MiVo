@@ -161,6 +161,7 @@ export default class {
   }
   
   checkModalChooseSpellClicked() {
+
     let modalChooseSpell = $('#choose-spell');
     let modalContentChooseSpell = $('#choose-spell-content');
   
@@ -168,15 +169,15 @@ export default class {
     let eventTarget = event.target;
     let isModalContentClicked = false;
   
-    while (eventTarget !== $('body')) {
-      if ( eventTarget === modalContentChooseSpell ) {
+    while (eventTarget !== document.body) {
+      if ( eventTarget === modalContentChooseSpell[0] ) {
         isModalContentClicked = true;
       }
       eventTarget = eventTarget.parentElement;
     }
   
     if (!isModalContentClicked) {
-      modalChooseSpell.classList.toggle("element--hidden");
+      modalChooseSpell.toggleClass("element--hidden");
     }
   }
 
