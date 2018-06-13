@@ -683,15 +683,15 @@ function sayAfterDelay(func, message, delay){
 
 function generateSpellsForNextRound(numberOfSpells = 4) {
 
-  const taskMath = 'task-math';
-  const taskTranslation = 'task-translation';
-  const taskSortLetters = 'task-sort-letters';
-  const taskListening = 'task-listening';
-  const taskAntonyms = 'task-antonyms';
-  const taskOddWord = 'task-odd-word';
-  const taskCases = 'task-cases';
-  const taskAnimals = 'task-animals';
-  const taskSpelling = 'task-spelling';
+  const taskMath = 'task--math';
+  const taskTranslation = 'task--translation';
+  const taskSortLetters = 'task--sort-letters';
+  const taskListening = 'task--listening';
+  const taskAntonyms = 'task--antonyms';
+  const taskOddWord = 'task--odd-word';
+  const taskCases = 'task--cases';
+  const taskAnimals = 'task--animals';
+  const taskSpelling = 'task--spelling';
 
   const TASKS = [
     taskMath,

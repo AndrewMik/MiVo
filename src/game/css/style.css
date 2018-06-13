@@ -388,39 +388,39 @@ input[type="submit"]:hover {
   transform: scale(1.2);
 }
 
-.task-math {
+.task--math {
   background-image: url('../img/task-math.png');
 }
 
-.task-translation {
+.task--translation {
   background-image: url('../img/task-translation.png');
 }
 
-.task-sort-letters {
+.task--sort-letters {
   background-image: url('../img/task-sort-letters.png');
 }
 
-.task-listening {
+.task--listening {
   background-image: url('../img/task-listening.png');
 }
 
-.task-antonyms {
+.task--antonyms {
   background-image: url('../img/task-antonyms.png');
 }
 
-.task-odd-word {
+.task--odd-word {
   background-image: url('../img/task-odd-word.png');
 }
 
-.task-cases {
+.task--cases {
   background-image: url('../img/task-cases.jpg');
 }
 
-.task-animals {
+.task--animals {
   background-image: url('../img/task-animals.png');
 }
 
-.task-spelling {
+.task--spelling {
   background-image: url('../img/task-spelling.png');
 }
 
