@@ -270,9 +270,9 @@ export default class {
     utterance.text = message;
     utterance.lang = 'ru-RU';
     if(talker === "monster") {
-      utterance.pitch = 3;
+      utterance.pitch = 2;
     } else {
-      utterance.pitch = 1;
+      utterance.pitch = 0.1;
     }
     window.speechSynthesis.speak(utterance);
 

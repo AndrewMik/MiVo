@@ -49,6 +49,12 @@ let conf = {
         loader: 'file-loader'
         // test: /\.(ogg|mp3|wav|mpe?g)$/i,
         // use: 'file-loader'
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
+        use: [
+        'file-loader'
+        ]
       }
     ]
   },
