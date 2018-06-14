@@ -419,7 +419,8 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
   if (className !== 'sortletters' && 
       className !== 'oddword' && 
       className !== 'cases' && 
-      className !== 'spelling') {
+      className !== 'spelling' &&
+      className !== 'comparison') {
     userInput = view.createInputForAnswer();
     conditions.push(userInput);
   }
@@ -497,6 +498,7 @@ function getUserAnswer(className, userInput) {
       break;
     case 'cases':
     case 'spelling':
+    case 'comparison':
       return $('.task__input').val();
       break;
   
@@ -742,6 +744,32 @@ function generateTaskSequence() {
   generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
+function generateTaskComparison(){
+  const taskName = 'comparison';
+  const taskMessage = 'Сравни числа';
+  let conditions = [];
+ 
+  const firstNumber = getRandomInt(1, 100);
+  const secondNumber = getRandomInt(1, 100);
+
+  let correctAnswer;
+
+  if(firstNumber > secondNumber){
+    correctAnswer = ">";
+  } else if (firstNumber < secondNumber) {
+    correctAnswer = "<";
+  } else {
+    correctAnswer = "=";
+  }
+
+  let userInput = view.createInputForAnswer(taskName);  
+  conditions.push(userInput);
+  
+  conditions = [firstNumber, userInput, secondNumber];
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
+}
+
 function shuffle(array) {
   let currentIndex = array.length;
   let temporaryValue;
@@ -778,6 +806,7 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
   const taskAnimals = 'task--animals';
   const taskSpelling = 'task--spelling';
   const taskSequence = 'task--sequence';
+  const taskComparison = 'task--comparison';
 
   const TASKS = [
     taskMath,
@@ -789,7 +818,8 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
     taskCases,
     taskAnimals,
     taskSpelling,
-    taskSequence
+    taskSequence,
+    taskComparison
   ];
 
   const spells = $('#spells');
@@ -813,7 +843,7 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
 
     //TODO: Remove in last version
     //FOR TESTING new spells just set your spell to randomTask
-    // randomTask = taskSequence;
+    // randomTask = taskComparison;
     let spell = $('<img>')
     .addClass("spells__item")
     .addClass(randomTask);
@@ -850,6 +880,9 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
         break;
       case taskSequence:
         setSpellTask(spell, generateTaskSequence);
+        break;
+      case taskComparison:
+        setSpellTask(spell, generateTaskComparison);
         break;
     }
   }
