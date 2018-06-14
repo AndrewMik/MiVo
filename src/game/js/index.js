@@ -336,7 +336,7 @@ function checkIsDead(healthBar, currentDamage){
   return false;
 }
 
-let maxDamageFromUser = 50;
+let maxDamageFromUser = 60;
 let maxDamageFromMonster = 40;
 
 function finishRound(){
@@ -714,6 +714,34 @@ function generateTaskSpelling() {
   generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
+function generateTaskSequence() {
+
+  const taskName = "sequence";
+  const taskMessage = "Какое число будет следующим";
+  let conditions = [];
+ 
+  const randomNumber = getRandomInt(0, 50);
+  const stepInSequence = getRandomInt(1, 9);
+  const isAddition = getRandomInt(0, 1);
+  let correctAnswer;
+  
+  if (isAddition) {
+    conditions.push(randomNumber);
+    conditions.push(randomNumber + stepInSequence);
+    conditions.push(randomNumber + 2 * stepInSequence);
+
+    correctAnswer = randomNumber + 3 * stepInSequence;
+  } else {
+    conditions.push(randomNumber + 3 * stepInSequence);
+    conditions.push(randomNumber + 2 * stepInSequence);
+    conditions.push(randomNumber + stepInSequence);
+
+    correctAnswer = randomNumber;
+  }
+  
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
+}
+
 function shuffle(array) {
   let currentIndex = array.length;
   let temporaryValue;
@@ -749,6 +777,7 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
   const taskCases = 'task--cases';
   const taskAnimals = 'task--animals';
   const taskSpelling = 'task--spelling';
+  const taskSequence = 'task--sequence';
 
   const TASKS = [
     taskMath,
@@ -759,7 +788,8 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
     taskOddWord,
     taskCases,
     taskAnimals,
-    taskSpelling
+    taskSpelling,
+    taskSequence
   ];
 
   const spells = $('#spells');
@@ -783,7 +813,7 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
 
     //TODO: Remove in last version
     //FOR TESTING new spells just set your spell to randomTask
-    //randomTask = taskMath;
+    // randomTask = taskSequence;
     let spell = $('<img>')
     .addClass("spells__item")
     .addClass(randomTask);
@@ -817,6 +847,9 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
         break;
       case taskSpelling:
         setSpellTask(spell, generateTaskSpelling);
+        break;
+      case taskSequence:
+        setSpellTask(spell, generateTaskSequence);
         break;
     }
   }

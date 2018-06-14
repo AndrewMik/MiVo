@@ -345,6 +345,10 @@ input[type="submit"]:hover {
   background-image: url('../img/task-spelling.png');
 }
 
+.task--sequence {
+  background-image: url('../img/task-sequence.png');
+}
+
 .hero, .monster {
     bottom: 40px;
     width: 300px;
