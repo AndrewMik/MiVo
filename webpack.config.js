@@ -1,6 +1,7 @@
 let path = require('path');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 let conf = {
   entry: {
@@ -59,6 +60,7 @@ let conf = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(['dist']),
     new ExtractTextPlugin("[name].style.css"),
     new HtmlWebpackPlugin({
       title: 'MiVo',
