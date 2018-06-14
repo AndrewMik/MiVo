@@ -1,4 +1,4 @@
-import "../css/style.css";
+import "../assets/css/style.css";
 import monsterNames from './json/monsterNames.json';
 import dictionary from './json/dictionary.json';
 import words from './json/words.json';
@@ -9,7 +9,7 @@ import animals from './json/animals.json';
 import spelling from './json/spelling.json';
 import monsterPhrases from './json/monsterPhrases.json';
 import heroPhrases from './json/heroPhrases';
-const pathToImgs = require.context("../img", true);
+const pathToImgs = require.context("../assets/img", true);
 import $ from 'jquery';
 import 'jquery-ui';
 import 'jquery-ui/ui/widgets/sortable';
@@ -103,13 +103,12 @@ function changeMonster() {
 function startGame(level = 1) {
 
   view.setFullHealth();
-  debugger;
-  let mp3 = require('./../mp3/round-1-fight.mp3');
+  let mp3 = require('./../assets/audio/round-1-fight.mp3');
   let audioPlayer = new Audio(mp3);
   // audioPlayer.src = require('./../mp3/r2d2.mp3');
   if (level !== 1) {
     changeMonster();
-    mp3 = require('./../mp3/r2d2.mp3');
+    mp3 = require('./../assets/audio/r2d2.mp3');
     audioPlayer = new Audio(mp3);
   } else {
     generateMonster();
@@ -282,18 +281,18 @@ function damageOpponent(opponent, opponentHealth, maxDamage) {
     message = view.showHeroMessage.bind(view);
   }
 
-  let mp3 = require('./../mp3/punch.mp3');
+  let mp3 = require('./../assets/audio/punch.mp3');
 
   if (currentDamage > maxDamage * 0.8) {
     durationSpellAnimation = view.castSpell(animation[1]);
     messageToSay = getRandomPhrase(phrase.criticalDamage);
     sayAfterDelay(message, messageToSay, durationSpellAnimation);
-    mp3 = require('./../mp3/meteorite.mp3');
+    mp3 = require('./../assets/audio/meteorite.mp3');
   } else if (currentDamage < maxDamage * 0.2) {
     durationSpellAnimation = view.castSpell(animation[0]);
     messageToSay = getRandomPhrase(phrase.weakDamage);
     sayAfterDelay(message, messageToSay, durationSpellAnimation);
-    mp3 = require('./../mp3/weakHit.mp3');
+    mp3 = require('./../assets/audio/weakHit.mp3');
   } else {
     durationSpellAnimation = view.castSpell(animation[0]);
     messageToSay = getRandomPhrase(phrase.normalDamage);
@@ -309,7 +308,7 @@ function damageOpponent(opponent, opponentHealth, maxDamage) {
     if (isDead) {
       if (opponent === 'monster') {
         setTimeout(() => {
-          let mp3 = require('./../mp3/applause.mp3');
+          let mp3 = require('./../assets/audio/applause.mp3');
           let audioPlayer = new Audio(mp3);
           audioPlayer.play();
           finishRound();
@@ -319,7 +318,7 @@ function damageOpponent(opponent, opponentHealth, maxDamage) {
         }, 0);
       } else {
         setTimeout(() => {
-          let mp3 = require('./../mp3/gameOver.mp3');
+          let mp3 = require('./../assets/audio/gameOver.mp3');
           const audioPlayer = new Audio(mp3);
           setTimeout(() => {
             audioPlayer.play();
