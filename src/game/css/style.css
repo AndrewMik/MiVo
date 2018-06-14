@@ -723,7 +723,7 @@ input[type="submit"]:hover {
   }
 
   99% {
-    transform: translate(77vw, 0px) scale(-3, 3) rotate(-45deg);
+    transform: translate(77vw, 0px) scale(-2, 2) rotate(-45deg);
   }
 
   100% {
@@ -733,11 +733,11 @@ input[type="submit"]:hover {
 
 @keyframes flightMeteoriteMonster {
   0% {
-      transform: translate(500px, -500px) scale(-1, 1) rotate(-135deg);
+      transform: translate(500px, -500px) scale(-1, -1) rotate(135deg);
   }
 
   99% {
-    transform: translate(-77vw, 0px) scale(-3, 3) rotate(-135deg);
+    transform: translate(-77vw, 0px) scale(-2, -2) rotate(135deg);
   }
 
   100% {
@@ -756,7 +756,6 @@ input[type="submit"]:hover {
 
   100% {
     display: none;
-    /* transform: scale(0, 0); */
   }
 }
 
@@ -771,7 +770,6 @@ input[type="submit"]:hover {
 
   100% {
     display: none;
-    /* transform: scale(0, 0); */
   }
 }
 

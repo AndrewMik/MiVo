@@ -284,7 +284,7 @@ function damageOpponent(opponent, opponentHealth, maxDamage) {
 
   let mp3 = require('./../mp3/punch.mp3');
 
-  if (currentDamage > maxDamage * 0.8) {
+  if (currentDamage > maxDamage * 0.1) {
     durationSpellAnimation = view.castSpell(animation[1]);
     messageToSay = getRandomPhrase(phrase.criticalDamage);
     sayAfterDelay(message, messageToSay, durationSpellAnimation);
