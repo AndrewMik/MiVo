@@ -18,17 +18,17 @@ import 'jquery-ui/ui/disable-selection';
 import View from "./View";
 
 // Should run only once
-$( function() {
-  $( ".task__condition" ).sortable({
+$(function () {
+  $(".task__condition").sortable({
     axis: "x",
     cursor: "move"
   });
-  $( ".task__condition" ).disableSelection();
-} );
+  $(".task__condition").disableSelection();
+});
 
-$( function() {
-  $( ".task__condition" ).selectable();
-} );
+$(function () {
+  $(".task__condition").selectable();
+});
 
 // Object used to speak
 let utterance = new SpeechSynthesisUtterance();
@@ -38,7 +38,7 @@ let view = new View();
 
 // Temporary loads the game
 // TODO: Remove in last version
-$( document ).ready(registerPlayer);
+$(document).ready(registerPlayer);
 
 function initHero(heroName, char) {
   $(".hero").css("backgroundPosition", -(12 - char) * 267 + "px 0");
@@ -51,28 +51,28 @@ function generateMonster() {
   let satellitesNum = 5;
 
   let monsterHead = $("<div>")
-  .addClass("monster__head")
-  .css('backgroundPosition',
-  Math.round(Math.random() * (headsNum + 1)) * 184 + "px 0");
+    .addClass("monster__head")
+    .css('backgroundPosition',
+      Math.round(Math.random() * (headsNum + 1)) * 184 + "px 0");
 
   let monsterBody = $("<div>")
-  .addClass("monster__body")
-  .css('backgroundPosition',
-  Math.round(Math.random() * (bodiesNum + 1)) * 234 + "px 0");
+    .addClass("monster__body")
+    .css('backgroundPosition',
+      Math.round(Math.random() * (bodiesNum + 1)) * 234 + "px 0");
 
   let monsterSatellite = $("<div>")
-  .addClass("monster__satellite")
-  .css('backgroundPosition',
-  Math.round(Math.random() * (satellitesNum + 1)) * 92 + "px 0");
+    .addClass("monster__satellite")
+    .css('backgroundPosition',
+      Math.round(Math.random() * (satellitesNum + 1)) * 92 + "px 0");
 
   let monsterFigure = $('<div>')
-  .addClass('monster__figure')
-  .append(monsterHead)
-  .append(monsterBody);
+    .addClass('monster__figure')
+    .append(monsterHead)
+    .append(monsterBody);
 
   let monster = $('.monster')
-  .append(monsterFigure)
-  .append(monsterSatellite);
+    .append(monsterFigure)
+    .append(monsterSatellite);
 
   createMonsterDialogue(monsterFigure);
 }
@@ -80,12 +80,12 @@ function generateMonster() {
 function createMonsterDialogue(monsterDiv) {
 
   let monsterMessage = $("<p>")
-  .addClass("dialogue__monster-message");
+    .addClass("dialogue__monster-message");
 
   let monsterDialogue = $("<div>")
-  .addClass("dialogue__monster")
-  .addClass("dialogue--hidden")
-  .append(monsterMessage);
+    .addClass("dialogue__monster")
+    .addClass("dialogue--hidden")
+    .append(monsterMessage);
 
   monsterDiv.append(monsterDialogue);
 }
@@ -97,16 +97,16 @@ function changeMonster() {
     view.clearContainer(monster);
     generateMonster();
     monster.removeClass('monster--hide');
-  }, 2000);  
+  }, 2000);
 }
 
 function startGame(level = 1) {
 
   view.setFullHealth();
-
+  debugger;
   let mp3 = require('./../mp3/round-1-fight.mp3');
   let audioPlayer = new Audio(mp3);
-
+  // audioPlayer.src = require('./../mp3/r2d2.mp3');
   if (level !== 1) {
     changeMonster();
     mp3 = require('./../mp3/r2d2.mp3');
@@ -115,7 +115,7 @@ function startGame(level = 1) {
     generateMonster();
     view.showHeroes();
   }
-  
+
   // Level by default is 1
   // If level === 1 showGuide() (guidance how to play, where to click and so on)
 
@@ -127,7 +127,7 @@ function startGame(level = 1) {
 
   setTimeout(() => {
     view.hideFightBox();
-  
+
     let greetingsHeroMessage = `${getRandomPhrase(heroPhrases.hello)}, ${$(".state__name--monster").text().split(" ")[2]}!`;
     sayAfterDelay(view.showHeroMessage.bind(view), greetingsHeroMessage, 1000);
 
@@ -135,10 +135,10 @@ function startGame(level = 1) {
     sayAfterDelay(view.showMonsterMessage.bind(view), greetingsMonsterMessage, 3000);
 
     if (level === 1) {
-      setTimeout(chooseSpell, 5000);    
+      setTimeout(chooseSpell, 5000);
     } else {
       let modalChooseSpell = $('#choose-spell');
-      setTimeout(() => {view.toggleElementVisibility(modalChooseSpell);}, 5000);    
+      setTimeout(() => { view.toggleElementVisibility(modalChooseSpell); }, 5000);
     }
   }, 6000);
 }
@@ -149,7 +149,7 @@ function generateMonsterName() {
   let i = 0;
   let j = 0;
   let k = 0;
-  
+
   i = getRandomInt(0, monsterNames.adj.length - 1);
   name += monsterNames.adj[i] + ' ';
   j = getRandomInt(0, monsterNames.root.length - 1);
@@ -221,12 +221,15 @@ function fightRound(isAnswerCorrect) {
     if (isDead) {
       return;
     }
-    
+
     setTimeout(() => {
-      isDead = damageOpponent('hero', heroHealth, maxDamageFromMonster); 
-      setTimeout(() => {
-        view.toggleElementVisibility(modalChooseSpell);
-      }, delaySpellAnimation + 1000);
+      isDead = damageOpponent('hero', heroHealth, maxDamageFromMonster);
+      if (!isDead) {
+        setTimeout(() => {
+          view.toggleElementVisibility(modalChooseSpell);
+        }, delaySpellAnimation + 2000);
+      }
+
     }, delaySpellAnimation);
 
     if (isDead) {
@@ -236,7 +239,9 @@ function fightRound(isAnswerCorrect) {
     isDead = damageOpponent('hero', heroHealth, maxDamageFromMonster);
 
     setTimeout(() => {
-      view.toggleElementVisibility(modalChooseSpell);
+      if (!isDead) {
+        view.toggleElementVisibility(modalChooseSpell);
+      }
     }, delaySpellAnimation + 1000);
 
     if (isDead) {
@@ -328,9 +333,9 @@ function damageOpponent(opponent, opponentHealth, maxDamage) {
   return isDead;
 }
 
-function checkIsDead(healthBar, currentDamage){
+function checkIsDead(healthBar, currentDamage) {
   let health = Number.parseInt(view.getWidth(healthBar));
-  if(health - currentDamage <= 0) {
+  if (health - currentDamage <= 0) {
     return true;
   }
   return false;
@@ -339,13 +344,13 @@ function checkIsDead(healthBar, currentDamage){
 let maxDamageFromUser = 60;
 let maxDamageFromMonster = 40;
 
-function finishRound(){
+function finishRound() {
   view.showHeroMessage(getRandomPhrase(heroPhrases.victory));
   maxDamageFromUser -= 1;
-  maxDamageFromMonster += 2; 
+  maxDamageFromMonster += 2;
 }
 
-function finishGame(){
+function finishGame() {
   let messageMonsterSay = getRandomPhrase(monsterPhrases.victory);
   sayAfterDelay(view.showMonsterMessage.bind(view), messageMonsterSay, 0);
 
@@ -355,15 +360,15 @@ function finishGame(){
   winner.email = $('#email').val() || "groot@groot.I.am";
 
   let currentLevel = $('.level__num').text();
-  
+
   winner.monsterKilled = +currentLevel - 1;
- 
+
   let bestPlayers = JSON.parse(localStorage.getItem('top-players')) || [];
 
   bestPlayers = compareWinnerWithBestPlayers(winner, bestPlayers);
 
   showBestPlayers(bestPlayers);
- 
+
   localStorage.setItem('top-players', JSON.stringify(bestPlayers));
 
   function compareWinnerWithBestPlayers(winner, bestPlayers) {
@@ -414,13 +419,13 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
   view.showTaskMessage(taskMessage);
   taskCondContainer.addClass('task__condition--' + className);
 
-  let userInput;  
+  let userInput;
 
-  if (className !== 'sortletters' && 
-      className !== 'oddword' && 
-      className !== 'cases' && 
-      className !== 'spelling' &&
-      className !== 'comparison') {
+  if (className !== 'sortletters' &&
+    className !== 'oddword' &&
+    className !== 'cases' &&
+    className !== 'spelling' &&
+    className !== 'comparison') {
     userInput = view.createInputForAnswer();
     conditions.push(userInput);
   }
@@ -436,8 +441,8 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
     } else {
       userAnswer = getUserAnswer(className);
     }
-    
-    let isAnswerCorrect = checkAnswer(userAnswer, correctAnswer); 
+
+    let isAnswerCorrect = checkAnswer(userAnswer, correctAnswer);
     event.preventDefault();
     view.closeTask(taskForm, solveTask);
     fightRound(isAnswerCorrect);
@@ -447,20 +452,20 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
 function checkAnswer(userAnswer, correctAnswer) {
 
   let isCorrect = false;
-  if( +userAnswer === correctAnswer || userAnswer === correctAnswer || userAnswer.toLocaleLowerCase() === correctAnswer) {
+  if (+userAnswer === correctAnswer || userAnswer === correctAnswer || userAnswer.toLocaleLowerCase() === correctAnswer) {
     return true;
   } else if (Array.isArray(correctAnswer)) {
     correctAnswer.forEach(answer => {
-      if(answer === userAnswer || userAnswer.toLocaleLowerCase() === answer) {
+      if (answer === userAnswer || userAnswer.toLocaleLowerCase() === answer) {
         isCorrect = true;
       }
     });
-  } 
+  }
 
-  let answerToShow = Array.isArray(correctAnswer) ? correctAnswer[0]: correctAnswer;
+  let answerToShow = Array.isArray(correctAnswer) ? correctAnswer[0] : correctAnswer;
   answerToShow = capitalizeFirstLetter(answerToShow);
 
-  if(!isCorrect) {
+  if (!isCorrect) {
     let messageMonsterSay = getRandomPhrase(monsterPhrases.wrongAnswer);
     sayAfterDelay(view.showMonsterMessage.bind(view), messageMonsterSay, 0);
     messageMonsterSay = getRandomPhrase(monsterPhrases.correctAnswer);
@@ -471,17 +476,17 @@ function checkAnswer(userAnswer, correctAnswer) {
 }
 
 function capitalizeFirstLetter(string) {
-  if(typeof string === "string") {
+  if (typeof string === "string") {
     return string.charAt(0).toUpperCase() + string.slice(1);
-  } 
-  
+  }
+
   return string;
 }
 
 function getUserAnswer(className, userInput) {
   if (userInput) {
     return userInput.val();
-  } 
+  }
 
   let container = view.getCondContainer();
   switch (className) {
@@ -501,7 +506,7 @@ function getUserAnswer(className, userInput) {
     case 'comparison':
       return $('.task__input').val();
       break;
-  
+
     default:
       break;
   }
@@ -514,17 +519,17 @@ function generateTaskAntonyms() {
   let conditions;
 
   const keys = ['word', 'antonym'];
- 
-  const randomPair = antonyms[getRandomInt(0, antonyms.length-1)];
+
+  const randomPair = antonyms[getRandomInt(0, antonyms.length - 1)];
   const randomIndex = getRandomInt(0, 1);
   const randomKey = keys[randomIndex];
-  const correctAnswerKey = keys[Math.abs(randomIndex-1)];
-  
+  const correctAnswerKey = keys[Math.abs(randomIndex - 1)];
+
   const word = randomPair[randomKey];
   const correctAnswer = randomPair[correctAnswerKey];
 
   conditions = [word];
-  
+
   generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
@@ -533,16 +538,16 @@ function generateTaskListening() {
   const taskName = "listening";
   const taskMessage = "Напиши услышанное слово";
   let conditions;
- 
-  const randomSet = dictionary[getRandomInt(0, dictionary.length-1)];
+
+  const randomSet = dictionary[getRandomInt(0, dictionary.length - 1)];
   const word = randomSet['word'];
   const correctAnswer = word;
 
   utterance.text = word;
 
   let button = $('<button>')
-  .addClass('task__repeat-button')
-  .text('Послушать');
+    .addClass('task__repeat-button')
+    .text('Послушать');
 
   button.on('click', listenAgain);
 
@@ -553,18 +558,18 @@ function generateTaskListening() {
 
   conditions = [button];
 
-  generateTask(taskMessage, conditions, correctAnswer, taskName); 
+  generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
 function generateTaskSortLetters() {
 
   const taskName = 'sortletters';
   const taskMessage = "Двигай буквы и собери слово";
-  let conditions= [];
- 
-  const randomWord = words[getRandomInt(0, words.length-1)];
+  let conditions = [];
+
+  const randomWord = words[getRandomInt(0, words.length - 1)];
   const correctAnswer = randomWord;
-  const letters = shuffle(correctAnswer.split(''));  
+  const letters = shuffle(correctAnswer.split(''));
 
   letters.forEach((letter) => {
     conditions.push(letter);
@@ -578,10 +583,10 @@ function generateTaskOddWord() {
   const taskName = 'oddword';
   const taskMessage = "Выбери лишнее слово";
   let conditions = [];
- 
-  const randomSet = oddWords[getRandomInt(0, oddWords.length-1)];
+
+  const randomSet = oddWords[getRandomInt(0, oddWords.length - 1)];
   const correctAnswer = randomSet['oddWord'];
-  const words = shuffle(randomSet['words']);  
+  const words = shuffle(randomSet['words']);
 
   words.forEach((word) => {
     conditions.push(word);
@@ -595,8 +600,8 @@ function generateTaskTranslation() {
   const taskName = "translation";
   const taskMessage = "Переведи слово";
   let conditions;
- 
-  const randomSet = dictionary[getRandomInt(0, dictionary.length-1)];
+
+  const randomSet = dictionary[getRandomInt(0, dictionary.length - 1)];
   const word = randomSet['word'];
   const correctAnswer = randomSet['translation'];
 
@@ -616,7 +621,7 @@ function generateTaskMath() {
   const max = 10;
 
   const operations = ['add', 'sub', 'mult', 'div'];
-  
+
   let correctAnswer;
   let firstNumber = getRandomInt(min, max);
   let secondNumber = getRandomInt(min, max);
@@ -660,22 +665,22 @@ function generateTaskCases() {
   const taskName = 'cases';
   const taskMessage = "Введите слово в правильном падеже";
   let conditions = [];
- 
+
   const cases = casesDB['cases'];
-  const randomSet = casesDB['words'][getRandomInt(0, casesDB['words'].length-1)];
-  const randomCaseIndex = getRandomInt(1, randomSet.length-1);
+  const randomSet = casesDB['words'][getRandomInt(0, casesDB['words'].length - 1)];
+  const randomCaseIndex = getRandomInt(1, randomSet.length - 1);
   const correctAnswer = randomSet[randomCaseIndex];
 
   for (let i = 0; i < cases.length; i++) {
-    conditions.push(cases[i]); 
+    conditions.push(cases[i]);
     if (i === randomCaseIndex) {
-      let userInput = view.createInputForAnswer(taskName);  
+      let userInput = view.createInputForAnswer(taskName);
       conditions.push(userInput);
     } else {
       conditions.push(randomSet[i]);
     }
   }
-  
+
   generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
@@ -684,14 +689,14 @@ function generateTaskGuessAnimal() {
   const taskName = "guess-animal";
   const taskMessage = "Напиши имя животного";
   let conditions;
- 
-  const randomAnimal = animals[getRandomInt(0, animals.length-1)];
+
+  const randomAnimal = animals[getRandomInt(0, animals.length - 1)];
   const randomAnimalPos = randomAnimal['coordinates'];
   const correctAnswer = randomAnimal['answers'];
 
   let img = $('<img>')
-  .addClass('task__img')
-  .css('backgroundPosition', randomAnimalPos);
+    .addClass('task__img')
+    .css('backgroundPosition', randomAnimalPos);
   conditions = [img];
 
   generateTask(taskMessage, conditions, correctAnswer, taskName);
@@ -702,15 +707,15 @@ function generateTaskSpelling() {
   const taskName = 'spelling';
   const taskMessage = "Вставь букву, две или ничего";
   let conditions = [];
- 
-  const randomSet = spelling[getRandomInt(0, spelling.length-1)];
+
+  const randomSet = spelling[getRandomInt(0, spelling.length - 1)];
   const firstPart = randomSet['firstPart'];
   const secondPart = randomSet['secondPart'];
   const correctAnswer = randomSet['letter'];
 
-  let userInput = view.createInputForAnswer(taskName);  
+  let userInput = view.createInputForAnswer(taskName);
   conditions.push(userInput);
-  
+
   conditions = [firstPart, userInput, secondPart];
 
   generateTask(taskMessage, conditions, correctAnswer, taskName);
@@ -721,12 +726,12 @@ function generateTaskSequence() {
   const taskName = "sequence";
   const taskMessage = "Какое число будет следующим";
   let conditions = [];
- 
+
   const randomNumber = getRandomInt(0, 50);
   const stepInSequence = getRandomInt(1, 9);
   const isAddition = getRandomInt(0, 1);
   let correctAnswer;
-  
+
   if (isAddition) {
     conditions.push(randomNumber);
     conditions.push(randomNumber + stepInSequence);
@@ -740,21 +745,21 @@ function generateTaskSequence() {
 
     correctAnswer = randomNumber;
   }
-  
+
   generateTask(taskMessage, conditions, correctAnswer, taskName);
 }
 
-function generateTaskComparison(){
+function generateTaskComparison() {
   const taskName = 'comparison';
   const taskMessage = 'Сравни числа';
   let conditions = [];
- 
+
   const firstNumber = getRandomInt(1, 100);
   const secondNumber = getRandomInt(1, 100);
 
   let correctAnswer;
 
-  if(firstNumber > secondNumber){
+  if (firstNumber > secondNumber) {
     correctAnswer = ">";
   } else if (firstNumber < secondNumber) {
     correctAnswer = "<";
@@ -762,9 +767,9 @@ function generateTaskComparison(){
     correctAnswer = "=";
   }
 
-  let userInput = view.createInputForAnswer(taskName);  
+  let userInput = view.createInputForAnswer(taskName);
   conditions.push(userInput);
-  
+
   conditions = [firstNumber, userInput, secondNumber];
 
   generateTask(taskMessage, conditions, correctAnswer, taskName);
@@ -788,8 +793,8 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-function sayAfterDelay(func, message, delay){
-  setTimeout(() => {  
+function sayAfterDelay(func, message, delay) {
+  setTimeout(() => {
     func(message);
   }, delay);
 }
@@ -831,7 +836,7 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
 
   let maxNumberOfSpells = taskOptions.length;
 
-  if(numberOfSpells > maxNumberOfSpells) {
+  if (numberOfSpells > maxNumberOfSpells) {
     numberOfSpells = maxNumberOfSpells;
   }
 
@@ -845,8 +850,8 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
     //FOR TESTING new spells just set your spell to randomTask
     // randomTask = taskComparison;
     let spell = $('<img>')
-    .addClass("spells__item")
-    .addClass(randomTask);
+      .addClass("spells__item")
+      .addClass(randomTask);
 
     spells.append(spell);
 
