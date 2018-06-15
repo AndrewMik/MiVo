@@ -353,6 +353,10 @@ input[type="submit"]:hover {
   background-image: url('../img/task-comparison.png');
 }
 
+.task--truth-or-lie {
+  background-image: url('../img/task-truth-or-lie.png');
+}
+
 .hero, .monster {
     bottom: 40px;
     width: 300px;
@@ -606,8 +610,13 @@ input[type="submit"]:hover {
   font-weight: normal;
 }
 
-.task__condition--comparison > p {
-  width: 100px;
+.task__condition--comparison > p,
+.task__condition--truth-or-lie > p, 
+.task__condition--oddword p {
+  width: fit-content;
+  min-width: 100px;
+  padding-left: 10px;
+  padding-right: 10px;
   text-align: center;
   border: 1px solid rgba(0, 0, 0, 0.07);
   border-radius: 5px;
@@ -620,6 +629,17 @@ input[type="submit"]:hover {
   align-items: center;
 }
 
+.task__condition--truth-or-lie {
+  flex-wrap: wrap;
+}
+
+.truth-or-lie__question {
+  width: 100%;
+  text-align: center;
+  font-weight: normal;
+  color: green;
+}
+
 .task__condition--spelling .task__input {
   width: 45px;
 }
@@ -629,16 +649,19 @@ input[type="submit"]:hover {
 }
 
 .task__condition--oddword .ui-selected,
-.task__condition--comparison > p.ui-selected {
+.task__condition--comparison > p.ui-selected,
+.task__condition--truth-or-lie > p.ui-selected {
+  padding-left: 10px;
+  padding-right: 10px;
   background: #F39814; 
   color: white; 
   border-radius: 5px;
 }
 
-.task__condition--oddword p {
+/* .task__condition--oddword p {
   padding-left: 10px;
   padding-right: 10px;
-}
+} */
 
 .task__condition--cases {
   flex-wrap: wrap;

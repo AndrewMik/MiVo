@@ -7,6 +7,7 @@ import oddWords from './json/oddword.json';
 import casesDB from './json/cases.json';
 import animals from './json/animals.json';
 import spelling from './json/spelling.json';
+import questions from './json/questions.json';
 import monsterPhrases from './json/monsterPhrases.json';
 import heroPhrases from './json/heroPhrases';
 const pathToImgs = require.context("../assets/img", true);
@@ -430,7 +431,8 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
     className !== 'oddword' &&
     className !== 'cases' &&
     className !== 'spelling' &&
-    className !== 'comparison') {
+    className !== 'comparison' &&
+    className !== 'truth-or-lie') {
     userInput = view.createInputForAnswer();
     conditions.push(userInput);
   }
@@ -494,6 +496,7 @@ function getUserAnswer(className, userInput) {
       break;
     case 'oddword':
     case 'comparison':
+    case 'truth-or-lie':
       let select = $('.ui-selected').text();
       return select;
       break;
@@ -770,11 +773,30 @@ function generateTaskComparison() {
   .append($('<p>').text('?'))
   .append($('<p>').text(secondNumber));
 
-  conditions = [condCont, condCont];
+  conditions = [condCont];
 
   signs.forEach((sign) => { 
     conditions.push(sign);
   });
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName, false, true);
+}
+
+function generateTaskTruthOrLie() {
+  const taskName = 'truth-or-lie';
+  const taskMessage = 'Правда или нет, что:';
+  let conditions;
+
+  let questionIndex = getRandomInt(0, questions.length - 1);
+  let question = questions[questionIndex]['question'];
+
+  let correctAnswer = questions[questionIndex]['answer'];
+
+  let questionCont = $('<div>')
+  .addClass('truth-or-lie__question')
+  .append($('<p>').text(question));
+
+  conditions = [questionCont, 'правда', 'ложь'];
 
   generateTask(taskMessage, conditions, correctAnswer, taskName, false, true);
 }
@@ -816,6 +838,7 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
   const taskSpelling = 'task--spelling';
   const taskSequence = 'task--sequence';
   const taskComparison = 'task--comparison';
+  const taskTruthOrLie = 'task--truth-or-lie';
 
   const TASKS = [
     taskMath,
@@ -828,7 +851,8 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
     taskAnimals,
     taskSpelling,
     taskSequence,
-    taskComparison
+    taskComparison,
+    taskTruthOrLie
   ];
 
   const spells = $('#spells');
@@ -892,6 +916,9 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
         break;
       case taskComparison:
         setSpellTask(spell, generateTaskComparison);
+        break;
+      case taskTruthOrLie:
+        setSpellTask(spell, generateTaskTruthOrLie);
         break;
     }
   }
