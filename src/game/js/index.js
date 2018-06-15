@@ -7,6 +7,9 @@ import oddWords from './json/oddword.json';
 import casesDB from './json/cases.json';
 import animals from './json/animals.json';
 import spelling from './json/spelling.json';
+import questions from './json/questions.json';
+import cities from './json/cities.json';
+import colors from './json/word-colors.json';
 import monsterPhrases from './json/monsterPhrases.json';
 import heroPhrases from './json/heroPhrases';
 const pathToImgs = require.context("../assets/img", true);
@@ -33,11 +36,9 @@ $(function () {
 // Object used to speak
 let utterance = new SpeechSynthesisUtterance();
 
-// Controller object
+// View object
 let view = new View();
 
-// Temporary loads the game
-// TODO: Remove in last version
 $(document).ready(registerPlayer);
 
 function initHero(heroName, char) {
@@ -202,7 +203,7 @@ function setSpellTask(spell, generateSpellTask) {
   spell.on('click', generateSpellTask);
 }
 
-function fightRound(isAnswerCorrect) {
+function fightRound(isAnswerCorrect, correctAnswer) {
 
   let isDead = false;
   let modalChooseSpell = $('#choose-spell');
@@ -212,7 +213,11 @@ function fightRound(isAnswerCorrect) {
   const delaySpellAnimation = 3000;
   let delayMonsterHit = 0;
 
+  let answerToShow = Array.isArray(correctAnswer) ? correctAnswer[0] : correctAnswer;
+  answerToShow = capitalizeFirstLetter(answerToShow);
+
   if (isAnswerCorrect) {
+    
     view.showMonsterMessage(getRandomPhrase(monsterPhrases.surprise));
     view.showHeroMessage(getRandomPhrase(heroPhrases.correctAnswer));
     isDead = damageOpponent('monster', monsterHealth, maxDamageFromUser);
@@ -235,6 +240,10 @@ function fightRound(isAnswerCorrect) {
       return;
     }
   } else {
+    let messageMonsterSay = getRandomPhrase(monsterPhrases.wrongAnswer);
+    sayAfterDelay(view.showMonsterMessage.bind(view), messageMonsterSay, 0);
+    messageMonsterSay = getRandomPhrase(monsterPhrases.correctAnswer);
+    sayAfterDelay(view.showMonsterMessage.bind(view), `${messageMonsterSay} ${answerToShow}`, 700);
     isDead = damageOpponent('hero', heroHealth, maxDamageFromMonster);
 
     setTimeout(() => {
@@ -424,7 +433,9 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
     className !== 'oddword' &&
     className !== 'cases' &&
     className !== 'spelling' &&
-    className !== 'comparison') {
+    className !== 'comparison' &&
+    className !== 'truth-or-lie' &&
+    className !== 'city-or-country') {
     userInput = view.createInputForAnswer();
     conditions.push(userInput);
   }
@@ -444,7 +455,7 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
     let isAnswerCorrect = checkAnswer(userAnswer, correctAnswer);
     event.preventDefault();
     view.closeTask(taskForm, solveTask);
-    fightRound(isAnswerCorrect);
+    fightRound(isAnswerCorrect, correctAnswer);
   }
 }
 
@@ -459,16 +470,6 @@ function checkAnswer(userAnswer, correctAnswer) {
         isCorrect = true;
       }
     });
-  }
-
-  let answerToShow = Array.isArray(correctAnswer) ? correctAnswer[0] : correctAnswer;
-  answerToShow = capitalizeFirstLetter(answerToShow);
-
-  if (!isCorrect) {
-    let messageMonsterSay = getRandomPhrase(monsterPhrases.wrongAnswer);
-    sayAfterDelay(view.showMonsterMessage.bind(view), messageMonsterSay, 0);
-    messageMonsterSay = getRandomPhrase(monsterPhrases.correctAnswer);
-    sayAfterDelay(view.showMonsterMessage.bind(view), `${messageMonsterSay} ${answerToShow}`, 700);
   }
 
   return isCorrect;
@@ -497,12 +498,14 @@ function getUserAnswer(className, userInput) {
       return letters.join('');
       break;
     case 'oddword':
-      let word = $('.ui-selected').text();
-      return word;
+    case 'comparison':
+    case 'truth-or-lie':
+    case 'city-or-country':
+      let select = $('.ui-selected').text();
+      return select;
       break;
     case 'cases':
     case 'spelling':
-    case 'comparison':
       return $('.task__input').val();
       break;
 
@@ -751,7 +754,9 @@ function generateTaskSequence() {
 function generateTaskComparison() {
   const taskName = 'comparison';
   const taskMessage = 'Сравни числа';
-  let conditions = [];
+  let conditions;
+
+  const signs = ['>', '<', '='];
 
   const firstNumber = getRandomInt(1, 100);
   const secondNumber = getRandomInt(1, 100);
@@ -759,19 +764,107 @@ function generateTaskComparison() {
   let correctAnswer;
 
   if (firstNumber > secondNumber) {
-    correctAnswer = ">";
+    correctAnswer = signs[0];
   } else if (firstNumber < secondNumber) {
-    correctAnswer = "<";
+    correctAnswer = signs[1];
   } else {
-    correctAnswer = "=";
+    correctAnswer = signs[2];
   }
 
-  let userInput = view.createInputForAnswer(taskName);
-  conditions.push(userInput);
+  let condCont = $('<div>')
+  .addClass('comparison__nums')
+  .append($('<p>').text(firstNumber))
+  .append($('<p>').text('?'))
+  .append($('<p>').text(secondNumber));
 
-  conditions = [firstNumber, userInput, secondNumber];
+  conditions = [condCont];
 
-  generateTask(taskMessage, conditions, correctAnswer, taskName);
+  signs.forEach((sign) => { 
+    conditions.push(sign);
+  });
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName, false, true);
+}
+
+function generateTaskTruthOrLie() {
+  const taskName = 'truth-or-lie';
+  const taskMessage = 'Правда или нет, что:';
+  let conditions;
+
+  let questionIndex = getRandomInt(0, questions.length - 1);
+  let question = questions[questionIndex]['question'];
+
+  let correctAnswer = questions[questionIndex]['answer'];
+
+  let questionCont = $('<div>')
+  .addClass('truth-or-lie__question')
+  .append($('<p>').text(question));
+
+  conditions = [questionCont, 'правда', 'ложь'];
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName, false, true);
+}
+
+function generateTaskCityOrCountry() {
+  const taskName = 'city-or-country';
+  const taskMessage = 'Город или страна?';
+  let conditions;
+
+  let randomSet = cities[getRandomInt(0, 1)];
+  let nameIndex = getRandomInt(0, randomSet['names'].length - 1);
+  let name = randomSet['names'][nameIndex];
+
+  let correctAnswer = randomSet['answer'];
+
+  let nameCont = $('<div>')
+  .addClass('city-or-country__name')
+  .append($('<p>').text(name));
+
+  conditions = [nameCont, 'город', 'страна'];
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName, false, true);
+}
+
+function generateTaskWordColor() {
+  const taskName = 'word-color';
+  let taskMessage;
+  let conditions;
+  let correctAnswer;
+
+  let randomColorObj = colors['colors'][getRandomInt(0, colors['colors'].length - 1)];
+  let color = randomColorObj['color'];
+  let colorName = randomColorObj['name'];
+  let word = colors['words'][getRandomInt(0, colors['words'].length - 1)];
+  
+  if (getRandomInt(0, 1) === 1) {
+    taskMessage = 'Введите цвет слова (не само слово)';
+    correctAnswer = colorName;
+  } else {
+    taskMessage = 'Введите само слово (не его цвет)';
+    correctAnswer = word;
+  }
+
+  let button = $('<button>')
+  .addClass('task__show-button')
+  .text('Показать слово')
+  .on('click', showWord);
+
+  function showWord() {
+    event.preventDefault();
+    wordCont.css('visibility', 'visible');
+    setTimeout(() => {wordCont.css('visibility', 'hidden')}, 3000);
+    $(this).attr('disabled', 'disabled');
+  }
+
+  let wordCont = $('<p>')
+  .addClass('task__color')
+  .css('visibility', 'hidden')
+  .css('color', color)
+  .text(word);
+
+  conditions = [button, wordCont];
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName, false, false);
 }
 
 function shuffle(array) {
@@ -811,6 +904,9 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
   const taskSpelling = 'task--spelling';
   const taskSequence = 'task--sequence';
   const taskComparison = 'task--comparison';
+  const taskTruthOrLie = 'task--truth-or-lie';
+  const taskCityOrCountry = 'task--city-or-country';
+  const taskWordColor = 'task--word-colors';
 
   const TASKS = [
     taskMath,
@@ -823,7 +919,10 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
     taskAnimals,
     taskSpelling,
     taskSequence,
-    taskComparison
+    taskComparison,
+    taskTruthOrLie,
+    taskCityOrCountry,
+    taskWordColor
   ];
 
   const spells = $('#spells');
@@ -887,6 +986,15 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
         break;
       case taskComparison:
         setSpellTask(spell, generateTaskComparison);
+        break;
+      case taskTruthOrLie:
+        setSpellTask(spell, generateTaskTruthOrLie);
+        break;
+      case taskCityOrCountry:
+        setSpellTask(spell, generateTaskCityOrCountry);
+        break;
+      case taskWordColor:
+        setSpellTask(spell, generateTaskWordColor);
         break;
     }
   }

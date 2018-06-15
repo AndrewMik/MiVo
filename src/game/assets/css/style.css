@@ -258,6 +258,7 @@ input[type="submit"]:hover {
   background-image: none;
   min-height: 150px;
   min-width: 400px;
+  width: fit-content;
 }
 
 .modal__text {
@@ -351,6 +352,18 @@ input[type="submit"]:hover {
 
 .task--comparison {
   background-image: url('../img/task-comparison.png');
+}
+
+.task--truth-or-lie {
+  background-image: url('../img/task-truth-or-lie.png');
+}
+
+.task--city-or-country {
+  background-image: url('../img/task-city-or-country.png');
+}
+
+.task--word-colors {
+  background-image: url('../img/task-word-colors.jpg');
 }
 
 .hero, .monster {
@@ -562,17 +575,32 @@ input[type="submit"]:hover {
   font-size: 24px;
 }
 
-.task__repeat-button {
-  width: 100px;
+.task__repeat-button,
+.task__show-button {
+  min-width: 100px;
   border-radius: 5px;
   color: #fff;
   background-color: #494949;
   font-size: 14px;
   height: 40px;
+  border: none;
+  padding-left: 5px;
+  padding-right: 5px;
 }
 
-.task__repeat-button:focus {
+.task__show-button:disabled {
+  color: gray;
+  opacity: 0.5;
+}
+
+.task__repeat-button:focus,
+.task__show-button:focus {
   outline: none;
+}
+
+.task__color {
+  width: 150px;
+  text-align: center;
 }
 
 .task__input {
@@ -590,9 +618,52 @@ input[type="submit"]:hover {
 .task__condition--listening .task__input,
 .task__condition--antonyms .task__input,
 .task__condition--translation .task__input,
-.task__condition--guess-animal .task__input {
+.task__condition--guess-animal .task__input,
+.task__condition--word-color .task__input {
   width: 250px;
   margin-left: 30px;
+  box-sizing: border-box;
+}
+
+.task__condition--comparison,
+.task__condition--truth-or-lie,
+.task__condition--city-or-country {
+  flex-wrap: wrap;
+}
+
+.comparison__nums p:nth-child(2) {
+  color: green;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.task__condition--comparison > p,
+.task__condition--truth-or-lie > p,
+.task__condition--city-or-country > p, 
+.task__condition--oddword p {
+  width: fit-content;
+  min-width: 100px;
+  padding-left: 10px;
+  padding-right: 10px;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 5px;
+}
+
+.comparison__nums,
+.city-or-country__name {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.truth-or-lie__question,
+.city-or-country__name {
+  width: 100%;
+  text-align: center;
+  font-weight: normal;
+  color: green;
 }
 
 .task__condition--spelling .task__input {
@@ -603,16 +674,21 @@ input[type="submit"]:hover {
   color: transparent;
 }
 
-.task__condition--oddword .ui-selected {
+.task__condition--oddword .ui-selected,
+.task__condition--comparison > p.ui-selected,
+.task__condition--truth-or-lie > p.ui-selected,
+.task__condition--city-or-country > p.ui-selected {
+  padding-left: 10px;
+  padding-right: 10px;
   background: #F39814; 
   color: white; 
   border-radius: 5px;
 }
 
-.task__condition--oddword p {
+/* .task__condition--oddword p {
   padding-left: 10px;
   padding-right: 10px;
-}
+} */
 
 .task__condition--cases {
   flex-wrap: wrap;
