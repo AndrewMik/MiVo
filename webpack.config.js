@@ -80,7 +80,7 @@ let conf = {
 module.exports = (env, options) => {
   let production = options.mode === 'production';
 
-  conf.devtool = production ? 'source-map' : 'eval-sourcemap';
+  conf.devtool = production ? false : 'eval-sourcemap';
 
   return conf;
 };

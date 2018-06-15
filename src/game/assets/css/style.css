@@ -357,6 +357,10 @@ input[type="submit"]:hover {
   background-image: url('../img/task-truth-or-lie.png');
 }
 
+.task--city-or-country {
+  background-image: url('../img/task-city-or-country.png');
+}
+
 .hero, .monster {
     bottom: 40px;
     width: 300px;
@@ -600,7 +604,9 @@ input[type="submit"]:hover {
   margin-left: 30px;
 }
 
-.task__condition--comparison {
+.task__condition--comparison,
+.task__condition--truth-or-lie,
+.task__condition--city-or-country {
   flex-wrap: wrap;
 }
 
@@ -611,7 +617,8 @@ input[type="submit"]:hover {
 }
 
 .task__condition--comparison > p,
-.task__condition--truth-or-lie > p, 
+.task__condition--truth-or-lie > p,
+.task__condition--city-or-country > p, 
 .task__condition--oddword p {
   width: fit-content;
   min-width: 100px;
@@ -622,18 +629,16 @@ input[type="submit"]:hover {
   border-radius: 5px;
 }
 
-.comparison__nums {
+.comparison__nums,
+.city-or-country__name {
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.task__condition--truth-or-lie {
-  flex-wrap: wrap;
-}
-
-.truth-or-lie__question {
+.truth-or-lie__question,
+.city-or-country__name {
   width: 100%;
   text-align: center;
   font-weight: normal;
@@ -650,7 +655,8 @@ input[type="submit"]:hover {
 
 .task__condition--oddword .ui-selected,
 .task__condition--comparison > p.ui-selected,
-.task__condition--truth-or-lie > p.ui-selected {
+.task__condition--truth-or-lie > p.ui-selected,
+.task__condition--city-or-country > p.ui-selected {
   padding-left: 10px;
   padding-right: 10px;
   background: #F39814; 

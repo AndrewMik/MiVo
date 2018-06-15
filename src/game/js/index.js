@@ -8,6 +8,7 @@ import casesDB from './json/cases.json';
 import animals from './json/animals.json';
 import spelling from './json/spelling.json';
 import questions from './json/questions.json';
+import cities from './json/cities.json';
 import monsterPhrases from './json/monsterPhrases.json';
 import heroPhrases from './json/heroPhrases';
 const pathToImgs = require.context("../assets/img", true);
@@ -432,7 +433,8 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
     className !== 'cases' &&
     className !== 'spelling' &&
     className !== 'comparison' &&
-    className !== 'truth-or-lie') {
+    className !== 'truth-or-lie' &&
+    className !== 'city-or-country') {
     userInput = view.createInputForAnswer();
     conditions.push(userInput);
   }
@@ -497,6 +499,7 @@ function getUserAnswer(className, userInput) {
     case 'oddword':
     case 'comparison':
     case 'truth-or-lie':
+    case 'city-or-country':
       let select = $('.ui-selected').text();
       return select;
       break;
@@ -801,6 +804,26 @@ function generateTaskTruthOrLie() {
   generateTask(taskMessage, conditions, correctAnswer, taskName, false, true);
 }
 
+function generateTaskCityOrCountry() {
+  const taskName = 'city-or-country';
+  const taskMessage = 'Город или страна?';
+  let conditions;
+
+  let randomSet = cities[getRandomInt(0, 1)];
+  let nameIndex = getRandomInt(0, randomSet['names'].length - 1);
+  let name = randomSet['names'][nameIndex];
+
+  let correctAnswer = randomSet['answer'];
+
+  let nameCont = $('<div>')
+  .addClass('city-or-country__name')
+  .append($('<p>').text(name));
+
+  conditions = [nameCont, 'город', 'страна'];
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName, false, true);
+}
+
 function shuffle(array) {
   let currentIndex = array.length;
   let temporaryValue;
@@ -839,6 +862,7 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
   const taskSequence = 'task--sequence';
   const taskComparison = 'task--comparison';
   const taskTruthOrLie = 'task--truth-or-lie';
+  const taskCityOrCountry = 'task--city-or-country';
 
   const TASKS = [
     taskMath,
@@ -852,7 +876,8 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
     taskSpelling,
     taskSequence,
     taskComparison,
-    taskTruthOrLie
+    taskTruthOrLie,
+    taskCityOrCountry
   ];
 
   const spells = $('#spells');
@@ -919,6 +944,9 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
         break;
       case taskTruthOrLie:
         setSpellTask(spell, generateTaskTruthOrLie);
+        break;
+      case taskCityOrCountry:
+        setSpellTask(spell, generateTaskCityOrCountry);
         break;
     }
   }
