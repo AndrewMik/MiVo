@@ -569,6 +569,7 @@ input[type="submit"]:hover {
   background-color: #494949;
   font-size: 14px;
   height: 40px;
+  border: none;
 }
 
 .task__repeat-button:focus {
@@ -595,6 +596,30 @@ input[type="submit"]:hover {
   margin-left: 30px;
 }
 
+.task__condition--comparison {
+  flex-wrap: wrap;
+}
+
+.comparison__nums p:nth-child(2) {
+  color: green;
+  font-size: 18px;
+  font-weight: normal;
+}
+
+.task__condition--comparison > p {
+  width: 100px;
+  text-align: center;
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  border-radius: 5px;
+}
+
+.comparison__nums {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .task__condition--spelling .task__input {
   width: 45px;
 }
@@ -603,7 +628,8 @@ input[type="submit"]:hover {
   color: transparent;
 }
 
-.task__condition--oddword .ui-selected {
+.task__condition--oddword .ui-selected,
+.task__condition--comparison > p.ui-selected {
   background: #F39814; 
   color: white; 
   border-radius: 5px;

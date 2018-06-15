@@ -33,11 +33,9 @@ $(function () {
 // Object used to speak
 let utterance = new SpeechSynthesisUtterance();
 
-// Controller object
+// View object
 let view = new View();
 
-// Temporary loads the game
-// TODO: Remove in last version
 $(document).ready(registerPlayer);
 
 function initHero(heroName, char) {
@@ -202,7 +200,7 @@ function setSpellTask(spell, generateSpellTask) {
   spell.on('click', generateSpellTask);
 }
 
-function fightRound(isAnswerCorrect) {
+function fightRound(isAnswerCorrect, correctAnswer) {
 
   let isDead = false;
   let modalChooseSpell = $('#choose-spell');
@@ -212,7 +210,11 @@ function fightRound(isAnswerCorrect) {
   const delaySpellAnimation = 3000;
   let delayMonsterHit = 0;
 
+  let answerToShow = Array.isArray(correctAnswer) ? correctAnswer[0] : correctAnswer;
+  answerToShow = capitalizeFirstLetter(answerToShow);
+
   if (isAnswerCorrect) {
+    
     view.showMonsterMessage(getRandomPhrase(monsterPhrases.surprise));
     view.showHeroMessage(getRandomPhrase(heroPhrases.correctAnswer));
     isDead = damageOpponent('monster', monsterHealth, maxDamageFromUser);
@@ -235,6 +237,10 @@ function fightRound(isAnswerCorrect) {
       return;
     }
   } else {
+    let messageMonsterSay = getRandomPhrase(monsterPhrases.wrongAnswer);
+    sayAfterDelay(view.showMonsterMessage.bind(view), messageMonsterSay, 0);
+    messageMonsterSay = getRandomPhrase(monsterPhrases.correctAnswer);
+    sayAfterDelay(view.showMonsterMessage.bind(view), `${messageMonsterSay} ${answerToShow}`, 700);
     isDead = damageOpponent('hero', heroHealth, maxDamageFromMonster);
 
     setTimeout(() => {
@@ -444,7 +450,7 @@ function generateTask(taskMessage, conditions, correctAnswer, className, isSorta
     let isAnswerCorrect = checkAnswer(userAnswer, correctAnswer);
     event.preventDefault();
     view.closeTask(taskForm, solveTask);
-    fightRound(isAnswerCorrect);
+    fightRound(isAnswerCorrect, correctAnswer);
   }
 }
 
@@ -459,16 +465,6 @@ function checkAnswer(userAnswer, correctAnswer) {
         isCorrect = true;
       }
     });
-  }
-
-  let answerToShow = Array.isArray(correctAnswer) ? correctAnswer[0] : correctAnswer;
-  answerToShow = capitalizeFirstLetter(answerToShow);
-
-  if (!isCorrect) {
-    let messageMonsterSay = getRandomPhrase(monsterPhrases.wrongAnswer);
-    sayAfterDelay(view.showMonsterMessage.bind(view), messageMonsterSay, 0);
-    messageMonsterSay = getRandomPhrase(monsterPhrases.correctAnswer);
-    sayAfterDelay(view.showMonsterMessage.bind(view), `${messageMonsterSay} ${answerToShow}`, 700);
   }
 
   return isCorrect;
@@ -497,12 +493,12 @@ function getUserAnswer(className, userInput) {
       return letters.join('');
       break;
     case 'oddword':
-      let word = $('.ui-selected').text();
-      return word;
+    case 'comparison':
+      let select = $('.ui-selected').text();
+      return select;
       break;
     case 'cases':
     case 'spelling':
-    case 'comparison':
       return $('.task__input').val();
       break;
 
@@ -751,7 +747,9 @@ function generateTaskSequence() {
 function generateTaskComparison() {
   const taskName = 'comparison';
   const taskMessage = 'Сравни числа';
-  let conditions = [];
+  let conditions;
+
+  const signs = ['>', '<', '='];
 
   const firstNumber = getRandomInt(1, 100);
   const secondNumber = getRandomInt(1, 100);
@@ -759,19 +757,26 @@ function generateTaskComparison() {
   let correctAnswer;
 
   if (firstNumber > secondNumber) {
-    correctAnswer = ">";
+    correctAnswer = signs[0];
   } else if (firstNumber < secondNumber) {
-    correctAnswer = "<";
+    correctAnswer = signs[1];
   } else {
-    correctAnswer = "=";
+    correctAnswer = signs[2];
   }
 
-  let userInput = view.createInputForAnswer(taskName);
-  conditions.push(userInput);
+  let condCont = $('<div>')
+  .addClass('comparison__nums')
+  .append($('<p>').text(firstNumber))
+  .append($('<p>').text('?'))
+  .append($('<p>').text(secondNumber));
 
-  conditions = [firstNumber, userInput, secondNumber];
+  conditions = [condCont, condCont];
 
-  generateTask(taskMessage, conditions, correctAnswer, taskName);
+  signs.forEach((sign) => { 
+    conditions.push(sign);
+  });
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName, false, true);
 }
 
 function shuffle(array) {
