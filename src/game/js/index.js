@@ -9,6 +9,7 @@ import animals from './json/animals.json';
 import spelling from './json/spelling.json';
 import questions from './json/questions.json';
 import cities from './json/cities.json';
+import colors from './json/word-colors.json';
 import monsterPhrases from './json/monsterPhrases.json';
 import heroPhrases from './json/heroPhrases';
 const pathToImgs = require.context("../assets/img", true);
@@ -824,6 +825,48 @@ function generateTaskCityOrCountry() {
   generateTask(taskMessage, conditions, correctAnswer, taskName, false, true);
 }
 
+function generateTaskWordColor() {
+  const taskName = 'word-color';
+  let taskMessage;
+  let conditions;
+  let correctAnswer;
+
+  let randomColorObj = colors['colors'][getRandomInt(0, colors['colors'].length - 1)];
+  let color = randomColorObj['color'];
+  let colorName = randomColorObj['name'];
+  let word = colors['words'][getRandomInt(0, colors['words'].length - 1)];
+  
+  if (getRandomInt(0, 1) === 1) {
+    taskMessage = 'Введите цвет слова (не само слово)';
+    correctAnswer = colorName;
+  } else {
+    taskMessage = 'Введите само слово (не его цвет)';
+    correctAnswer = word;
+  }
+
+  let button = $('<button>')
+  .addClass('task__show-button')
+  .text('Показать слово')
+  .on('click', showWord);
+
+  function showWord() {
+    event.preventDefault();
+    wordCont.css('visibility', 'visible');
+    setTimeout(() => {wordCont.css('visibility', 'hidden')}, 3000);
+    $(this).attr('disabled', 'disabled');
+  }
+
+  let wordCont = $('<p>')
+  .addClass('task__color')
+  .css('visibility', 'hidden')
+  .css('color', color)
+  .text(word);
+
+  conditions = [button, wordCont];
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName, false, false);
+}
+
 function shuffle(array) {
   let currentIndex = array.length;
   let temporaryValue;
@@ -863,6 +906,7 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
   const taskComparison = 'task--comparison';
   const taskTruthOrLie = 'task--truth-or-lie';
   const taskCityOrCountry = 'task--city-or-country';
+  const taskWordColor = 'task--word-colors';
 
   const TASKS = [
     taskMath,
@@ -877,7 +921,8 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
     taskSequence,
     taskComparison,
     taskTruthOrLie,
-    taskCityOrCountry
+    taskCityOrCountry,
+    taskWordColor
   ];
 
   const spells = $('#spells');
@@ -947,6 +992,9 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
         break;
       case taskCityOrCountry:
         setSpellTask(spell, generateTaskCityOrCountry);
+        break;
+      case taskWordColor:
+        setSpellTask(spell, generateTaskWordColor);
         break;
     }
   }
