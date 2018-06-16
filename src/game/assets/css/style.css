@@ -259,6 +259,12 @@ input[type="submit"]:hover {
   min-height: 150px;
   min-width: 400px;
   width: fit-content;
+  max-width: 900px;
+}
+
+.task__condition--remember-words p {
+  visibility: hidden;
+  font-size: 21px;
 }
 
 .modal__text {
@@ -364,6 +370,10 @@ input[type="submit"]:hover {
 
 .task--word-colors {
   background-image: url('../img/task-word-colors.jpg');
+}
+
+.task--remember-words {
+  background-image: url('../img/task-remember-words.jpg');
 }
 
 .hero, .monster {
@@ -563,7 +573,7 @@ input[type="submit"]:hover {
 
 .task__condition {
   display: flex;
-  width: 100%;
+  /* width: 100%; */
   justify-content: center;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -619,8 +629,9 @@ input[type="submit"]:hover {
 .task__condition--antonyms .task__input,
 .task__condition--translation .task__input,
 .task__condition--guess-animal .task__input,
-.task__condition--word-color .task__input {
-  width: 250px;
+.task__condition--word-color .task__input,
+.task__condition--remember-words .task__input {
+  width: 210px;
   margin-left: 30px;
   box-sizing: border-box;
 }

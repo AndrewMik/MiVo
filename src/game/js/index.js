@@ -506,6 +506,7 @@ function getUserAnswer(className, userInput) {
       break;
     case 'cases':
     case 'spelling':
+    case 'remember-words':
       return $('.task__input').val();
       break;
 
@@ -852,7 +853,7 @@ function generateTaskWordColor() {
   function showWord() {
     event.preventDefault();
     wordCont.css('visibility', 'visible');
-    setTimeout(() => {wordCont.css('visibility', 'hidden')}, 3000);
+    setTimeout(() => {wordCont.css('visibility', 'hidden')}, 1000);
     $(this).attr('disabled', 'disabled');
   }
 
@@ -863,6 +864,54 @@ function generateTaskWordColor() {
   .text(word);
 
   conditions = [button, wordCont];
+
+  generateTask(taskMessage, conditions, correctAnswer, taskName, false, false);
+}
+
+function generateTaskRemembeWords() {
+  const taskName = 'remember-words';
+  let taskMessage = 'Запомни пять слов и запиши то, которое исчезнет';
+  let conditions = [];
+  let correctAnswer;
+
+  let randomWords = [];
+  for (let i = 0; i < 5; i++) {
+    let word = words[getRandomInt(0, words.length - 1)];
+    if (randomWords.indexOf(word) === -1) {
+      randomWords.push(word);
+    } else {
+      i--;
+    }
+  } 
+
+  let button = $('<button>')
+  .addClass('task__show-button')
+  .text('Показать слова')
+  .on('click', showWords);
+
+  conditions.push(button);
+  
+  let disappearWordIndex = getRandomInt(0, randomWords.length - 1);
+  randomWords.forEach((word, index) => {
+    if (index === disappearWordIndex) {
+      let p = $('<p>')
+      .addClass('hide')
+      .text(word);
+      conditions.push(p);
+      correctAnswer = word;
+    } else {
+      conditions.push(word);
+    }
+  });
+  
+
+  function showWords() {
+    event.preventDefault();
+    $('.task__condition--remember-words p')
+    .css('visibility', 'visible');
+    setTimeout(() => {$('.task__condition--remember-words p.hide').css('visibility', 'hidden')}, 2000);
+    $(this).attr('disabled', 'disabled');
+  }
 
   generateTask(taskMessage, conditions, correctAnswer, taskName, false, false);
 }
@@ -907,6 +956,7 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
   const taskTruthOrLie = 'task--truth-or-lie';
   const taskCityOrCountry = 'task--city-or-country';
   const taskWordColor = 'task--word-colors';
+  const taskRememberWords = 'task--remember-words';
 
   const TASKS = [
     taskMath,
@@ -922,7 +972,8 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
     taskComparison,
     taskTruthOrLie,
     taskCityOrCountry,
-    taskWordColor
+    taskWordColor,
+    taskRememberWords
   ];
 
   const spells = $('#spells');
@@ -995,6 +1046,9 @@ function generateSpellsForNextRound(numberOfSpells = 4) {
         break;
       case taskWordColor:
         setSpellTask(spell, generateTaskWordColor);
+        break;
+      case taskRememberWords:
+        setSpellTask(spell, generateTaskRemembeWords);
         break;
     }
   }
