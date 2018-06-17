@@ -3,10 +3,10 @@ import "bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../assets/css/style.css";
 
-(function($) {
+(function ($) {
   "use strict";
 
-  $("#mainNav").on("click", "a", function(event) {
+  $("#mainNav").on("click", "a", function (event) {
     event.preventDefault();
     let id = $(this).attr("href");
     let top = $(id).offset().top;
@@ -18,11 +18,11 @@ import "../assets/css/style.css";
     offset: 54
   });
 
-  $(".trigger").click(function() {
+  $(".trigger").click(function () {
     $(".navbar-collapse").collapse("hide");
   });
 
-  let navbarCollapse = function() {
+  let navbarCollapse = function () {
     if ($("#mainNav").offset().top > 100) {
       $("#mainNav").addClass("navbar-shrink");
     } else {

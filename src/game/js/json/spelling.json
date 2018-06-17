@@ -1,141 +1,177 @@
-[{
-	"letter": "и",
-  "firstPart": "д",
-  "secondPart": "ректор"
-}, {
-	"letter": "е",
-  "firstPart": "б",
-  "secondPart": "рёза"
-},{
-	"letter": "я",
-  "firstPart": "земл",
-  "secondPart": "ника"
-},{
-	"letter": "е",
-  "firstPart": "картоф",
-  "secondPart": "ль"
-},{
-	"letter": "е",
-  "firstPart": "п",
-  "secondPart": "нал"
-},{
-	"letter": "и",
-  "firstPart": "пом",
-  "secondPart": "дор"
-},{
-	"letter": "е",
-  "firstPart": "д",
-  "secondPart": "ревня"
-},{
-	"letter": "е",
-  "firstPart": "ин",
-  "secondPart": "й"
-},{
-	"letter": "о",
-  "firstPart": "к",
-  "secondPart": "нец"
-},{
-	"letter": "а",
-  "firstPart": "к",
-  "secondPart": "пуста"
-},{
-	"letter": "о",
-  "firstPart": "к",
-  "secondPart": "лхоз"
-},{
-	"letter": "о",
-  "firstPart": "л",
-  "secondPart": "пата"
-},{
-	"letter": "о",
-  "firstPart": "м",
-  "secondPart": "рковь"
-},{
-	"letter": "и",
-  "firstPart": "пр",
-  "secondPart": "вет"
-},{
-	"letter": "а",
-  "firstPart": "п",
-  "secondPart": "льто"
-},{
-	"letter": "о",
-  "firstPart": "п",
-  "secondPart": "суда"
-},{
-	"letter": "е",
-  "firstPart": "п",
-  "secondPart": "тух"
-},{
-	"letter": "а",
-  "firstPart": "пл",
-  "secondPart": "ток"
-},{
-	"letter": "о",
-  "firstPart": "с",
-  "secondPart": "бака"
-},{
-	"letter": "о",
-  "firstPart": "ст",
-  "secondPart": "лица"
-},{
-	"letter": "о",
-  "firstPart": "т",
-  "secondPart": "пор"
-},{
-	"letter": "е",
-  "firstPart": "ин",
-  "secondPart": "й"
-},{
-	"letter": "о",
-  "firstPart": "",
-  "secondPart": "ктябрь"
-},{
-	"letter": "т",
-  "firstPart": "фу",
-  "secondPart": "бол"
-},{
-	"letter": "сс",
-  "firstPart": "шо",
-  "secondPart": "е"
-},{
-	"letter": "сс",
-  "firstPart": "ра",
-  "secondPart": "каз"
-},{
-	"letter": "о",
-  "firstPart": "п",
-  "secondPart": "суда"
-},{
-	"letter": "е",
-  "firstPart": "пш",
-  "secondPart": "ница"
-},{
-	"letter": "а",
-  "firstPart": "",
-  "secondPart": "птека"
-},{
-	"letter": "в",
-  "firstPart": "чу",
-  "secondPart": "ство"
-},{
-	"letter": "т",
-  "firstPart": "лес",
-  "secondPart": "ница"
-},{
-	"letter": "е",
-  "firstPart": "вин",
-  "secondPart": "грет"
-},{
-	"letter": "и",
-  "firstPart": "п",
-  "secondPart": "рог"
-},{
-	"letter": "а",
-  "firstPart": "м",
-  "secondPart": "лина"
-},{
-	"letter": "а",
-  "firstPart": "р",
-  "secondPart": "кета"
-}]
+[
+  {
+    "letter": "и",
+    "firstPart": "д",
+    "secondPart": "ректор"
+  },
+  {
+    "letter": "е",
+    "firstPart": "б",
+    "secondPart": "рёза"
+  },
+  {
+    "letter": "я",
+    "firstPart": "земл",
+    "secondPart": "ника"
+  },
+  {
+    "letter": "е",
+    "firstPart": "картоф",
+    "secondPart": "ль"
+  },
+  {
+    "letter": "е",
+    "firstPart": "п",
+    "secondPart": "нал"
+  },
+  {
+    "letter": "и",
+    "firstPart": "пом",
+    "secondPart": "дор"
+  },
+  {
+    "letter": "е",
+    "firstPart": "д",
+    "secondPart": "ревня"
+  },
+  {
+    "letter": "е",
+    "firstPart": "ин",
+    "secondPart": "й"
+  },
+  {
+    "letter": "о",
+    "firstPart": "к",
+    "secondPart": "нец"
+  },
+  {
+    "letter": "а",
+    "firstPart": "к",
+    "secondPart": "пуста"
+  },
+  {
+    "letter": "о",
+    "firstPart": "к",
+    "secondPart": "лхоз"
+  },
+  {
+    "letter": "о",
+    "firstPart": "л",
+    "secondPart": "пата"
+  },
+  {
+    "letter": "о",
+    "firstPart": "м",
+    "secondPart": "рковь"
+  },
+  {
+    "letter": "и",
+    "firstPart": "пр",
+    "secondPart": "вет"
+  },
+  {
+    "letter": "а",
+    "firstPart": "п",
+    "secondPart": "льто"
+  },
+  {
+    "letter": "о",
+    "firstPart": "п",
+    "secondPart": "суда"
+  },
+  {
+    "letter": "е",
+    "firstPart": "п",
+    "secondPart": "тух"
+  },
+  {
+    "letter": "а",
+    "firstPart": "пл",
+    "secondPart": "ток"
+  },
+  {
+    "letter": "о",
+    "firstPart": "с",
+    "secondPart": "бака"
+  },
+  {
+    "letter": "о",
+    "firstPart": "ст",
+    "secondPart": "лица"
+  },
+  {
+    "letter": "о",
+    "firstPart": "т",
+    "secondPart": "пор"
+  },
+  {
+    "letter": "е",
+    "firstPart": "ин",
+    "secondPart": "й"
+  },
+  {
+    "letter": "о",
+    "firstPart": "",
+    "secondPart": "ктябрь"
+  },
+  {
+    "letter": "т",
+    "firstPart": "фу",
+    "secondPart": "бол"
+  },
+  {
+    "letter": "сс",
+    "firstPart": "шо",
+    "secondPart": "е"
+  },
+  {
+    "letter": "сс",
+    "firstPart": "ра",
+    "secondPart": "каз"
+  },
+  {
+    "letter": "о",
+    "firstPart": "п",
+    "secondPart": "суда"
+  },
+  {
+    "letter": "е",
+    "firstPart": "пш",
+    "secondPart": "ница"
+  },
+  {
+    "letter": "а",
+    "firstPart": "",
+    "secondPart": "птека"
+  },
+  {
+    "letter": "в",
+    "firstPart": "чу",
+    "secondPart": "ство"
+  },
+  {
+    "letter": "т",
+    "firstPart": "лес",
+    "secondPart": "ница"
+  },
+  {
+    "letter": "е",
+    "firstPart": "вин",
+    "secondPart": "грет"
+  },
+  {
+    "letter": "и",
+    "firstPart": "п",
+    "secondPart": "рог"
+  },
+  {
+    "letter": "а",
+    "firstPart": "м",
+    "secondPart": "лина"
+  },
+  {
+    "letter": "а",
+    "firstPart": "р",
+    "secondPart": "кета"
+  }
+]

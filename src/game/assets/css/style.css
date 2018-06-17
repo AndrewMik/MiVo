@@ -78,7 +78,6 @@ input[type="submit"]:hover {
 }
 
 .character-select {
-  /* position: fixed; */
   font-family: "Roboto", sans-serif;
   font-size: 14px;
   font-weight: 400;
@@ -518,39 +517,10 @@ input[type="submit"]:hover {
 
 .fight-box__text {
     font-size: 48px;
-    /* animation-timing-function: cubic-bezier(0.785, 0.135, 0.15, 0.86); */
 }
 
 .fight-box__text--slide {
   animation: fightSlide 4s forwards;
-}
-
-@keyframes fightCollapse {
-    from {
-
-    }
-
-    to {
-        transform: scaleY(0);
-    }
-}
-
-@keyframes fightSlide {
-    0% {
-        transform: translateX(50vw);
-    }
-
-    33% {
-        transform: translateX(0vw);
-    }
-
-    66% {
-        transform: translateX(0vw);
-    }
-
-    100% {
-        transform: translateX(-100vw);
-    }
 }
 
 .element--hidden {
@@ -573,7 +543,6 @@ input[type="submit"]:hover {
 
 .task__condition {
   display: flex;
-  /* width: 100%; */
   justify-content: center;
   margin-top: 20px;
   margin-bottom: 20px;
@@ -696,11 +665,6 @@ input[type="submit"]:hover {
   border-radius: 5px;
 }
 
-/* .task__condition--oddword p {
-  padding-left: 10px;
-  padding-right: 10px;
-} */
-
 .task__condition--cases {
   flex-wrap: wrap;
   justify-content: center;
@@ -804,6 +768,66 @@ input[type="submit"]:hover {
   height: 250px;
 }
 
+.button-play {
+  width: 200px;
+  height: 200px;
+  border-radius: 100px;
+  border: none;
+  color: white;
+  user-select: none;
+  font-size: 30px;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.button-play:hover {
+  background-color: transparent;
+  background-image: url('../img/planet-earth.png');
+  background-size: cover;
+  font-size: 0px;
+  box-shadow: inset 0px 0px 20px 2px black;
+}
+
+.button-play:hover{
+  animation: spin 20s linear 0s infinite;
+}
+
+th, td {
+  padding: 5px 20px;
+  text-align: center;
+}
+
+@keyframes fightCollapse {
+  from {
+
+  }
+
+  to {
+      transform: scaleY(0);
+  }
+}
+
+@keyframes fightSlide {
+  0% {
+      transform: translateX(50vw);
+  }
+
+  33% {
+      transform: translateX(0vw);
+  }
+
+  66% {
+      transform: translateX(0vw);
+  }
+
+  100% {
+      transform: translateX(-100vw);
+  }
+}
+
 @keyframes flightMeteoriteHero {
   0% {
       transform: translate(500px, -500px) scale(-1, 1) rotate(-45deg);
@@ -860,40 +884,7 @@ input[type="submit"]:hover {
   }
 }
 
-
-.button-play {
-  width: 200px;
-  height: 200px;
-  border-radius: 100px;
-  border: none;
-  color: white;
-  user-select: none;
-  font-size: 30px;
-  text-decoration: none;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto;
-}
-
-.button-play:hover {
-  background-color: transparent;
-  background-image: url('../img/planet-earth.png');
-  background-size: cover;
-  font-size: 0px;
-  box-shadow: inset 0px 0px 20px 2px black;
-}
-
 @keyframes spin {
   from {transform:rotate(0deg);}
   to {transform:rotate(360deg);}
-}
-
-.button-play:hover{
-  animation: spin 20s linear 0s infinite;
-}
-
-th, td {
-  padding: 5px 20px;
-  text-align: center;
 }

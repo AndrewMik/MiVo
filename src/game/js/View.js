@@ -4,12 +4,12 @@ import 'jquery-ui/ui/widgets/sortable';
 import 'jquery-ui/ui/widgets/selectable';
 
 export default class {
-  constructor() {}
+  constructor() { }
 
   showHeroes() {
     let heroContainer = $(".hero");
     let monsterContainer = $(".monster");
-  
+
     heroContainer.addClass("hero--appear");
     monsterContainer.addClass("monster--appear");
   }
@@ -52,14 +52,14 @@ export default class {
 
   initCharacterSelectField() {
     let characterSelect = $(".character-select");
-    let partSelect = $(".part-select"); 
-       
+    let partSelect = $(".part-select");
+
     let roleSliders = $(".role__slider");
-    
-    roleSliders.each((index, slider) => {      
+
+    roleSliders.each((index, slider) => {
       this.setParts($(slider), 13, index);
     });
-  
+
     partSelect.each((index, slider) => {
       this.setSliderEvents($(slider));
     });
@@ -69,132 +69,121 @@ export default class {
     for (let i = 0; i < sources; i++) {
 
       let partSlide = $("<div>")
-      .addClass("role__slide")
-      .attr("data-slide", i)
-      .css('left', i * 267 + "px");
-  
+        .addClass("role__slide")
+        .attr("data-slide", i)
+        .css('left', i * 267 + "px");
+
       let character = $("<div>")
-      .addClass("slide__img")
-      .css('backgroundPosition', (i + 1) * 267 + "px 0");
-  
+        .addClass("slide__img")
+        .css('backgroundPosition', (i + 1) * 267 + "px 0");
+
       if (i === 0) {
         partSlide.addClass("role__slide--active");
       }
-  
+
       slider.append(partSlide);
       partSlide.append(character);
     }
   }
 
   setSliderEvents(slider) {
-    // TODO: add listeners for keyboard  
     slider.on("click", this.slide);
   }
 
   slide(e) {
     let slider = $(this);
-    
+
     let slidesList = $(".role__slider");
     let slides = slidesList.children();
-    
+
     let activeSlide = $(".role__slide--active");
     let clickedButton = $(e.target);
-    
-    // PREVIOUS BUTTON
-    // check if clicked button is 'previous button'
-    if (clickedButton.hasClass("role__prev") || clickedButton.hasClass("role__prev-button")) {
-      // check if active indicator is the first one
 
-      if (activeSlide[0] === slides.first()[0]) {       
-        // make the last slide active
+    if (clickedButton.hasClass("role__prev") || clickedButton.hasClass("role__prev-button")) {
+
+      if (activeSlide[0] === slides.first()[0]) {
         let lastSlide = slides.last()
-        .addClass("role__slide--active");
-  
-        // switch to the last slide
+          .addClass("role__slide--active");
+
         let lastSlideNumber = lastSlide.attr("data-slide");
         slides.each((index, slide) => {
           $(slide).css("transform", 'translateX(' + lastSlideNumber * -267 + "px)");
         });
       } else {
-        // make previous indicator active
+
         let prevSlide = activeSlide.prev()
-        .addClass("role__slide--active");
-  
-        // switch to previous slide
+          .addClass("role__slide--active");
+
         let prevSlideNumber = prevSlide.attr("data-slide");
         slides.each((index, slide) => {
           $(slide).css("transform", "translateX(" + prevSlideNumber * -267 + "px)");
         });
       }
-  
+
       activeSlide.removeClass("role__slide--active");
     }
-  
-    // NEXT BUTTON
-    // check if clicked button is 'next button'
+
     if (clickedButton.hasClass("role__next") || clickedButton.hasClass("role__next-button")) {
-      //check if active indicator is the last one
+
       if (activeSlide[0] === slides.last()[0]) {
-        // make the first indicator active
+
         let firstSlide = slides.first()
-        .addClass("role__slide--active");
-  
-        // switch to the first slide
+          .addClass("role__slide--active");
+
         let firstSlideNumber = firstSlide.attr("data-slide");
         slides.each((index, slide) => {
           $(slide).css("transform", "translateX(" + firstSlideNumber * -267 + "px)");
         });
       } else {
-        // make next indicator active
+
         let nextSlide = activeSlide.next()
-        .addClass("role__slide--active");
-  
-        // switch to the next slide
+          .addClass("role__slide--active");
+
         let nextSlideNumber = nextSlide.attr("data-slide");
         slides.each((index, slide) => {
           $(slide).css("transform", "translateX(" + nextSlideNumber * -267 + "px)");
         });
       }
-  
+
       activeSlide.removeClass("role__slide--active");
     }
   }
-  
+
   checkModalChooseSpellClicked() {
 
     let modalChooseSpell = $('#choose-spell');
     let modalContentChooseSpell = $('#choose-spell-content');
     let eventTarget = event.target;
     let isModalContentClicked = false;
-  
+
     while (eventTarget !== document.body) {
-      if ( eventTarget === modalContentChooseSpell[0] ) {
+      if (eventTarget === modalContentChooseSpell[0]) {
         isModalContentClicked = true;
       }
       eventTarget = eventTarget.parentElement;
     }
-  
+
     if (!isModalContentClicked) {
       modalChooseSpell.toggleClass("element--hidden");
     }
   }
 
-  closeTask(taskElement, eventHandlerFunction) {  
+  closeTask(taskElement, eventHandlerFunction) {
     taskElement.off('submit', eventHandlerFunction);
     this.toggleElementVisibility($('#task'));
   }
 
-  setHealthZero(healthBar){
+  setHealthZero(healthBar) {
     healthBar.width('0%');
   }
 
   getWidth(element) {
-    let width = element.width();    
-    let parentWidth = element.parent().width();  
+    let width = element.width();
+    let parentWidth = element.parent().width();
     return Math.floor(100 * width / parentWidth);
   }
 
-  reduceHealth(healthBar, damage){
+  reduceHealth(healthBar, damage) {
     let healthAfterHit = Number.parseInt(this.getWidth(healthBar)) - damage;
     if (healthAfterHit <= 0) {
       this.setHealthZero(healthBar);
@@ -205,22 +194,22 @@ export default class {
 
   clearContainer(container) {
 
-    if(container.children()){
+    if (container.children()) {
       container.children().remove();
     }
-    
+
     if (container.hasClass('task__condition')) {
-      container.removeClass (function (index, className) {
-        return (className.match (/(^|\s)task__condition--\S+/g) || []).join(' ');
-      });   
+      container.removeClass(function (index, className) {
+        return (className.match(/(^|\s)task__condition--\S+/g) || []).join(' ');
+      });
     }
   }
 
   appendCondition(taskForm, conditions) {
-    conditions.forEach( condition => {
+    conditions.forEach(condition => {
       if (typeof condition !== 'object') {
         let conditionElement = $('<p>')
-        .text(condition);  
+          .text(condition);
         taskForm.append(conditionElement);
       } else {
         taskForm.append(condition);
@@ -236,16 +225,16 @@ export default class {
     return $('.task__condition');
   }
 
-  createInputForAnswer() {  
+  createInputForAnswer() {
     let userInput = $('<input>')
-    .addClass('task__input')
-    .attr({
-      placeholder: "Ответ",
-      autofocus: true,
-      autocomplete: "off",
-      type: "text"
-    });
-  
+      .addClass('task__input')
+      .attr({
+        placeholder: "Ответ",
+        autofocus: true,
+        autocomplete: "off",
+        type: "text"
+      });
+
     return userInput;
   }
 
@@ -269,7 +258,7 @@ export default class {
     let utterance = new SpeechSynthesisUtterance();
     utterance.text = message;
     utterance.lang = 'ru-RU';
-    if(talker === "monster") {
+    if (talker === "monster") {
       utterance.pitch = 2;
     } else {
       utterance.pitch = 0.1;
@@ -279,36 +268,36 @@ export default class {
     $(`.dialogue__${talker}`).removeClass("dialogue--hidden");
     $(`.dialogue__${talker}-message`).html(message);
     setTimeout(() => {
-       $(`.dialogue__${talker}`).addClass("dialogue--hidden");
+      $(`.dialogue__${talker}`).addClass("dialogue--hidden");
     }, milliseconds);
   }
 
   castSpell(spellName) {
     let spell = $("<div>")
-    .addClass(spellName);
-    
+      .addClass(spellName);
+
     $('body').append(spell);
-  
+
     setTimeout(() => {
       spell.remove();
     }, 5000);
-  
-    
+
+
     let animationDuration = getComputedStyle(spell[0]).animationDuration;
     animationDuration = Number.parseFloat(animationDuration) * 1000;
     return animationDuration;
   }
 
   toggleSortable(isSortable) {
-    isSortable 
-    ? $(".task__condition").sortable("enable")
-    : $(".task__condition").sortable("disable") ;
+    isSortable
+      ? $(".task__condition").sortable("enable")
+      : $(".task__condition").sortable("disable");
   }
-  
+
   toggleSelectable(isSelectable) {
     isSelectable
-    ? $(".task__condition").selectable("enable")
-    : $(".task__condition").selectable("disable");
+      ? $(".task__condition").selectable("enable")
+      : $(".task__condition").selectable("disable");
   }
 
 }
