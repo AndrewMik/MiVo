@@ -65,12 +65,12 @@ function startGame(level = 1) {
   let monsterName = generateMonsterName();
   view.setLevel(level);
   view.setMonsterName(monsterName);
-  setTimeout(view.showFightBox, 2000);
-  setTimeout(audioPlayer.play.bind(audioPlayer), 2000);
+  
+  $(".monster").one( 'transitionend', view.showFightBox)
+  .one( 'transitionend', audioPlayer.play.bind(audioPlayer));
 
-  setTimeout(() => {
-    view.hideFightBox();
-
+  $(".fight-box").one('animationend', () => {
+    
     let greetingsHeroMessage = `${getRandomPhrase(heroPhrases.hello)}, ${$(".state__name--monster").text().split(" ")[2]}!`;
     sayAfterDelay(view.showHeroMessage.bind(view), greetingsHeroMessage, 1000);
 
@@ -83,7 +83,7 @@ function startGame(level = 1) {
       let modalChooseSpell = $('#choose-spell');
       setTimeout(() => { view.toggleElementVisibility(modalChooseSpell); }, 5000);
     }
-  }, 6000);
+  });
 }
 
 function generateMonster() {
@@ -133,12 +133,12 @@ function createMonsterDialogue(monsterDiv) {
 
 function changeMonster() {
   let monster = $('.monster');
-  monster.addClass('monster--hide');
-  setTimeout(() => {
+  monster.addClass('monster--hide')
+  .one('transitionend', () => {
     view.clearContainer(monster);
     generateMonster();
     monster.removeClass('monster--hide');
-  }, 2000);
+  });
 }
 
 function generateMonsterName() {
@@ -187,8 +187,6 @@ function fightRound(isAnswerCorrect, correctAnswer) {
   let monsterHealth = $('.state__health-monster');
   let heroHealth = $('.state__health-hero');
 
-  const delaySpellAnimation = 3000;
-
   let answerToShow = Array.isArray(correctAnswer) ? correctAnswer[0] : correctAnswer;
   answerToShow = capitalizeFirstLetter(answerToShow);
 
@@ -202,15 +200,14 @@ function fightRound(isAnswerCorrect, correctAnswer) {
       return;
     }
 
-    setTimeout(() => {
+    $('.spell').one('animationend', () => {
       isDead = damageOpponent('hero', heroHealth, maxDamageFromMonster);
       if (!isDead) {
         setTimeout(() => {
           view.toggleElementVisibility(modalChooseSpell);
-        }, delaySpellAnimation + 2000);
+        }, 4000);
       }
-
-    }, delaySpellAnimation);
+    });
 
     if (isDead) {
       return;
@@ -222,11 +219,13 @@ function fightRound(isAnswerCorrect, correctAnswer) {
     sayAfterDelay(view.showMonsterMessage.bind(view), `${messageMonsterSay} ${answerToShow}`, 700);
     isDead = damageOpponent('hero', heroHealth, maxDamageFromMonster);
 
-    setTimeout(() => {
+    $('.spell').one('animationend', () => {
       if (!isDead) {
-        view.toggleElementVisibility(modalChooseSpell);
+        setTimeout(() => {
+          view.toggleElementVisibility(modalChooseSpell);
+        }, 1000);
       }
-    }, delaySpellAnimation + 1000);
+    });
 
     if (isDead) {
       return;
@@ -284,7 +283,7 @@ function damageOpponent(opponent, opponentHealth, maxDamage) {
     sayAfterDelay(message, messageToSay, durationSpellAnimation);
   }
 
-  setTimeout(() => {
+  $('.spell').one('animationend', () => {
     view.reduceHealth(opponentHealth, currentDamage);
 
     const audioPlayer = new Audio(mp3);
@@ -292,27 +291,27 @@ function damageOpponent(opponent, opponentHealth, maxDamage) {
 
     if (isDead) {
       if (opponent === 'monster') {
-        setTimeout(() => {
+        opponentHealth.one('transitionend', () => {
           let mp3 = require('./../assets/audio/applause.mp3');
           let audioPlayer = new Audio(mp3);
           audioPlayer.play();
           finishRound();
           setTimeout(() => {
             startGame(+($('.level__num').text()) + 1);
-          }, 4000);
-        }, 0);
+          }, 2000);
+        });
       } else {
-        setTimeout(() => {
+        opponentHealth.one('transitionend', () => {
           let mp3 = require('./../assets/audio/gameOver.mp3');
           const audioPlayer = new Audio(mp3);
           setTimeout(() => {
             audioPlayer.play();
           }, 2000);
           finishGame();
-        }, 0);
+        });
       }
     }
-  }, durationSpellAnimation);
+  });
 
   return isDead;
 }
@@ -351,46 +350,31 @@ function finishGame() {
 
   bestPlayers = compareWinnerWithBestPlayers(winner, bestPlayers);
 
-  showBestPlayers(bestPlayers);
+  setTimeout(() => {
+    view.showBestPlayers(bestPlayers).bind(view);
+  }, 2500);
 
   localStorage.setItem('top-players', JSON.stringify(bestPlayers));
+}
 
-  function compareWinnerWithBestPlayers(winner, bestPlayers) {
-    const maxNumberOfTopPlayers = 4;
-    let currentTopPlayers = bestPlayers.length;
+function compareWinnerWithBestPlayers(winner, bestPlayers) {
+  const maxNumberOfTopPlayers = 4;
+  let currentTopPlayers = bestPlayers.length;
 
-    for (let i = 0; i < maxNumberOfTopPlayers; i++) {
-      if (bestPlayers[i] === undefined) {
-        bestPlayers.push(winner);
-        break;
-      } else if (bestPlayers[i].monsterKilled < winner.monsterKilled) {
-        bestPlayers.splice(i, 0, winner);
+  for (let i = 0; i < maxNumberOfTopPlayers; i++) {
+    if (bestPlayers[i] === undefined) {
+      bestPlayers.push(winner);
+      break;
+    } else if (bestPlayers[i].monsterKilled < winner.monsterKilled) {
+      bestPlayers.splice(i, 0, winner);
 
-        if (bestPlayers.length === maxNumberOfTopPlayers + 1) {
-          bestPlayers.pop();
-        }
-        break;
+      if (bestPlayers.length === maxNumberOfTopPlayers + 1) {
+        bestPlayers.pop();
       }
+      break;
     }
-    return bestPlayers;
   }
-
-  function showBestPlayers(bestPlayers) {
-
-    let topScoresDiv = $('.modal__top-scores');
-    let table = $('<table><tr><th>Место</th><th>Игрок</th><th>Убито монстров</th></tr></table>');
-
-    bestPlayers.forEach((player, place) => {
-      let currentPlayerRow = $('<tr><td>' + (place + 1) + '</td><td>' + player.nickName + '</td><td>' + player.monsterKilled + '</td></tr>');
-      table.append(currentPlayerRow);
-    });
-
-    topScoresDiv.append(table);
-
-    setTimeout(() => {
-      view.toggleElementVisibility($('#top-scores'));
-    }, 3000);
-  }
+  return bestPlayers;
 }
 
 function generateTask(taskMessage, conditions, correctAnswer, className, isSortable = false, isSelectable = false) {

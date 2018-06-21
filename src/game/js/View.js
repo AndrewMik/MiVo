@@ -19,17 +19,19 @@ export default class {
     $('.state__health-hero').width('100%');
   }
 
-  hideFightBox() {
-    $(".fight-box").addClass("fight-box--collapse");
-    setTimeout(() => {
+  showFightBox() {
+    let fightBox = $(".fight-box");
+    fightBox.removeClass("fight-box--hidden");
+    $('.fight-box__text').addClass('fight-box__text--slide')
+    .one('animationend', () => {
+      event.stopImmediatePropagation();
+      fightBox.addClass("fight-box--collapse");
+    });
+    
+    fightBox.one('animationend', () => {
       $(".fight-box").addClass("fight-box--hidden");
       $(".fight-box").removeClass("fight-box--collapse");
-    }, 1000);
-  }
-
-  showFightBox() {
-    $(".fight-box").removeClass("fight-box--hidden");
-    $('.fight-box__text').addClass('fight-box__text--slide');
+    });
   }
 
   setHeroName(heroName) {
@@ -47,7 +49,15 @@ export default class {
   }
 
   toggleElementVisibility(element) {
-    element.toggleClass('element--hidden');
+
+    if (element.hasClass('element--hidden')) {
+      element.fadeIn("slow")
+      .css("display", "flex");
+    } else {
+      element.fadeOut("slow");
+    }
+
+      element.toggleClass('element--hidden');
   }
 
   initCharacterSelectField() {
@@ -230,7 +240,7 @@ export default class {
       .addClass('task__input')
       .attr({
         placeholder: "Ответ",
-        autofocus: true,
+        autofocus: "autofocus",
         autocomplete: "off",
         type: "text"
       });
@@ -274,13 +284,14 @@ export default class {
 
   castSpell(spellName) {
     let spell = $("<div>")
-      .addClass(spellName);
+      .addClass(spellName)
+      .addClass('spell');
 
     $('body').append(spell);
 
-    setTimeout(() => {
+    spell.on("animationend", () => {
       spell.remove();
-    }, 5000);
+    });
 
 
     let animationDuration = getComputedStyle(spell[0]).animationDuration;
@@ -298,6 +309,21 @@ export default class {
     isSelectable
       ? $(".task__condition").selectable("enable")
       : $(".task__condition").selectable("disable");
+  }
+
+  showBestPlayers(bestPlayers) {
+
+    let topScoresDiv = $('.modal__top-scores');
+    let table = $('<table><tr><th>Место</th><th>Игрок</th><th>Убито монстров</th></tr></table>');
+
+    bestPlayers.forEach((player, place) => {
+      let currentPlayerRow = $('<tr><td>' + (place + 1) + '</td><td>' + player.nickName + '</td><td>' + player.monsterKilled + '</td></tr>');
+      table.append(currentPlayerRow);
+    });
+
+    topScoresDiv.append(table);
+
+    this.toggleElementVisibility($('#top-scores'));
   }
 
 }
